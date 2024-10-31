@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "TWI0_Master_Communication.C": "cpp",
+        "sc_it.h": "c",
+        "sc32_conf.h": "c",
+        "sc_init.h": "c",
+        "sysfunvardefine.h": "c",
+        "buzzer.h": "c",
+        "sc32f1xxx.h": "c",
+        "delay.h": "c",
+        "scdriver_list.h": "c",
+        "stdint.h": "c",
+        "system_sc32f1xxx.h": "c",
+        "sc32f1xxx_tim.h": "c"
+    }
+}
