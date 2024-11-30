@@ -319,7 +319,7 @@ N#ifndef __CORE_CM0PLUS_H_GENERIC
 N#define __CORE_CM0PLUS_H_GENERIC
 N
 N#include <stdint.h>
-L 1 "D:\keil\ARM\ARMCC\bin\..\include\stdint.h" 1
+L 1 "D:\keil\ARM\ARMCC\Bin\..\include\stdint.h" 1
 N/* Copyright (C) ARM Ltd., 1999,2014 */
 N/* All rights reserved */
 N
@@ -8466,7 +8466,7 @@ N#include "sc32f1xxx.h"
 N#include "sc32.h"
 N#include "sc32f1xxx_rcc.h"
 N#include "stdio.h"
-L 1 "D:\keil\ARM\ARMCC\bin\..\include\stdio.h" 1
+L 1 "D:\keil\ARM\ARMCC\Bin\..\include\stdio.h" 1
 N/* stdio.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.9 */
 N/* Copyright (C) Codemist Ltd., 1988-1993                       */
 N/* Copyright 1991-1998 ARM Limited. All rights reserved.        */

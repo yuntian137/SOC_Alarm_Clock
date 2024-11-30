@@ -3,7 +3,11 @@
 #include "Delay.h"
 #include "stdint.h"
 //播放速度，值为四分音符的时长(ms)
-#define Speed 500
+#define Speed0 500/4
+
+//后两首懒得改系数了
+#define Speed1 7
+#define Speed2 5
  
 //音符对应定时器分频系数，P：休止符，L：低音，M：中音，H：高音，下划线：升半音符号#
 #define P	   50000   
@@ -202,50 +206,166 @@ const uint16_t Music[]=
 	
 	0xFF	//终止标志，防止数组越界之后乱音，用一个最大值来做一个终止标志，也可以设别的值
 };
- 
+const int wind_rise[]=
+{	
+		//前奏
+		L7,25,M1,25,M2,25,M3,25,L3,50,M5,25,M3,25,M3,50,P,150, L7,25,M1,25,M2,25,M3,25,L2,50,M5,25,M3,25,M2,25,M3,25,M1,25,M2,25,L7,25,M1,25,L5,25,P,25, L7,25,M1,25,M2,25,M3,25,L3,50,M5,25,M3,75,P,150,L7,25,M1,25,M2,25,M3,25,L2,50,M5,25,M3,25,M2,25,M3,25,M1,25,M2,25,P,20,
+		//这一路上走走停停 顺着少年漂流的痕迹
+		M2,50,M2,50,M1,25,M2,50,M2,50,M1,25,M2,50,M3,50,M5,50,M3,50, M2,50,M2,50,M1,25,M2,50,M2,50,M1,25,M2,25,M3,25,M2,25,M1,25,L6,100,P,10,
+		//迈出车站的前一刻 竟有些犹豫
+		M2,50,M2,50,M1,25,M2,50,M2,50,M1,25,M2,50,M3,50,M5,50,M3,50, M2,50,M2,50,M3,25,M2,50,M1,50,M2,100,P,50,
+		//不仅笑着这近乡情怯 仍无法避免
+		M2,50,M2,50,M1,25,M2,50,M2,50,M1,25,M2,50,M3,50,M5,50,M3,50, M2,50,M2,50,M3,25,M2,50,M1,50,L6,100,P,10,
+		//而长野的天 依旧那么暖 风吹起了从前
+		M3,25,M2,25,M1,25,M2,25,M1,100, M3,25,M2,25,M1,25,M2,25,M1,50,M1,50, M5,25,M3,25,M2,25,M1,25,M2,25,M1,100,M1,150,P,30,
+		//从前初识这世间 万般留恋 看着天边似在眼前 也甘愿赴汤蹈火去走它一遍
+		M1,50,M2,50,M3,50,M1,50,M6,50,M5,25,M6,25,M6,50,M6,50, M1,25,M7,50,M6,25,M7,25,M7,100,P,5, M7,50,M6,25,M7,25,M7,50,M3,50,H1,25,H2,25,H1,25,M7,25,M6,50,M5,50, M6,50,M5,25,M6,25,M6,25,M5,25,M6,25,M5,25,M6,50,M5,25,M2,25,M2,25,M5,50,M5,50,M3,100,M3,100,P,25,
+		//如今走过这世间 万般留恋 翻过岁月不同侧脸 措不及防闯入你的笑颜
+		M1,50,M2,50,M3,50,M1,50,M6,50,M5,25,M6,25,M6,50,M6,50, M1,25,M7,50,M6,25,M7,25,M7,100,P,5, M7,50,M6,25,M7,25,M7,50,M3,50,H1,25,H2,25,H1,25,M7,25,M6,50,M5,50, M6,50,H3,25,H3,25,H3,50,M5,50,M6,50,H3,25,H3,25,H3,25,M5,50,M6,25,M6,100,M6,100,M6,100,P,25,
+		//我曾难自拔于世界之大 也沉溺于其中梦话
+		H1,50,H2,50,H3,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H2,25,H3,25,H3,50, H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,25,H3,50,H3,50,
+		//不得真假 不做挣扎 不惧笑话
+		H2,50,H1,25,M6,25,M6,25,H1,50, M6,25,H2,25,H1,25,M6,50,M6,25,H1,50,H1,50, H3,100,H3,25,H4,25,H3,50,H3,25,H2,50,H2,50,P,25,
+		//我曾将青春翻涌成她 也曾指尖弹出盛夏 心之所动且就随缘去吧
+		H1,50,H2,50,H3,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H2,50, H3,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H3,50,H3,50, H2,50,H1,25,M6,25,M6,25,H3,50,H3,50, H2,50,H1,25,M6,25,M6,25,H1,50,H1,50,H1,100,H1,100,P,10,
+		//短短的路走走停停  也有了几分的距离
+		M2,50,M2,50,M1,25,M2,50,M2,50,M1,25,M2,50,M3,50,M5,50,M3,50, M2,50,M2,50,M1,25,M2,50,M2,50,M1,25,M2,25,M3,25,M2,25,M1,25,L6,100,P,10,
+		//不知抚摸的是故事还是段心情
+		M2,50,M2,50,M1,25,M2,50,M2,50,M1,25,M2,50,M3,50,M5,50,M3,50, M2,50,M2,50,M3,25,M2,50,M1,50,M2,100,P,50,
+		//也许期待的不过是与时间为敌
+		M2,50,M2,50,M1,25,M2,50,M2,50,M1,25,M2,50,M3,50,M5,50,M3,50, M2,50,M2,50,M3,25,M2,50,M1,50,L6,100,P,10,
+		//再次见到你 微凉晨光里 笑的很甜蜜
+		M3,25,M2,25,M1,25,M2,25,M1,100, M3,25,M2,25,M1,25,M2,25,M1,50,M1,50, M5,25,M3,25,M2,25,M1,25,M2,25,M1,100,M1,150,P,30,
+		//从前初识这世间 万般留恋 看着天边似在眼前 也甘愿赴汤蹈火去走它一遍
+		M1,50,M2,50,M3,50,M1,50,M6,50,M5,25,M6,25,M6,50,M6,50, M1,25,M7,50,M6,25,M7,25,M7,100,P,5, M7,50,M6,25,M7,25,M7,50,M3,50,H1,25,H2,25,H1,25,M7,25,M6,50,M5,50, M6,50,M5,25,M6,25,M6,25,M5,25,M6,25,M5,25,M6,50,M5,25,M2,25,M2,25,M5,50,M5,50,M3,100,M3,100,P,25,
+		//如今走过这世间 万般留恋 翻过岁月不同侧脸 措不及防闯入你的笑颜
+		M1,50,M2,50,M3,50,M1,50,M6,50,M5,25,M6,25,M6,50,M6,50, M1,25,M7,50,M6,25,M7,25,M7,100,P,5, M7,50,M6,25,M7,25,M7,50,M3,50,H1,25,H2,25,H1,25,M7,25,M6,50,M5,50, M6,50,H3,25,H3,25,H3,50,M5,50,M6,50,H3,25,H3,25,H3,25,M5,50,M6,25,M6,100,M6,100,M6,100,P,25,
+		//我曾难自拔于世界之大 也沉溺于其中梦话
+		H1,50,H2,50,H3,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H2,25,H3,25,H3,50, H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,25,H3,50,H3,50,
+		//不得真假 不做挣扎 不惧笑话
+		H2,50,H1,25,M6,25,M6,25,H1,50, M6,25,H2,25,H1,25,M6,50,M6,25,H1,50,H1,50, H3,100,H3,25,H4,25,H3,50,H3,25,H2,50,H2,50,P,25,
+		//我曾将青春翻涌成她 也曾指尖弹出盛夏 心之所动且就随缘去吧
+		H1,50,H2,50,H3,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H2,50, H3,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H3,50,H3,50, H2,50,H1,25,M6,25,M6,25,H3,50,H3,50, H2,50,H1,25,M6,25,M6,25,H1,50,H1,50,H1,100,H1,100,P,10,
+		//逆着光行走任风吹雨打吧
+		M6,25,H3,50,H3,50,H2,50,H1,25,M6,25,M6,25,H3,50,H2,50,H1,25,M6,25,M6,25,H1,50,H1,50,H1,50,H1,100,P,25,
+		//晚风吹起你鬓间的白发 抚平回忆留下的疤
+		H1,50,H2,50,H2,25,H3,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H2,25, H3,25,H3,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,25,H3,50,H3,50,P,5,
+		//你的眼中明暗交杂 一笑生花 暮色遮住你蹒跚的步伐
+		H2,50,H1,25,M6,25,M6,25,H1,50,M6,25,H2,25,H1,25,M6,50,M6,50, H1,50,H1,50,H3,100,H3,25,H4,25,H3,50,H3,25,H2,50,H2,50,H1,100,H2,100,H3,100,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H2,50,
+		//走进床头藏起的画 画中的你(低着头说话)
+		H3,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H6,25,H5,25,H3,100,H3,50,H2,50,H1,25,M6,25,M6,25,H3,50,H3,50,H2,50,H1,25,M6,25,M6,25,H1,100,H1,50,P,5,
+		//我仍 了 以爱之名你还愿意吗（衔接头有问题）
+		H1,50,H2,50,H1,50,H1,100,M6,25,H3,50,H3,50,H2,50,H1,25,H6,25,H6,25,H3,50,H3,50,H2,50,H1,25,H6,25,H6,25,H1,50,H1,50,H1,100,P,5,0xFF
+};
+
+const int16_t solitary_brave[]=
+{
+		M6,50,M7,50,H1,50,H2,50,M7,50,H1,50,H1,100,P,10,	//爱你孤身走暗巷
+		H1,50,M7,50,H1,50,H2,50,M7,50,H1,50,H1,100,P,10, 	//爱你不跪的模样
+		H1,50,H2,50,H3,50,H2,50,H3,50,H2,50,H3,100,H3,50,H3,50,H2,50,H3,100,H5,100,H3,100,P,10, //爱你对峙过绝望不肯哭一场
+		0xFF
+};
+
 void PWM_SetHz(uint16_t Hz)
 {
 	//TIM_SetCounter(TIM2, 32768 - Hz);
-    TIM_SetAutoreload(TIM2, 100000/(1.8*Hz));
+    TIM_SetAutoreload(TIM2, 100000/(1.0*Hz));
 	//TIM_SetAutoreload(TIM2, 32768 - Hz);
 }
  
 void test_Buzz()
 {
 	TIM_Cmd(TIM2, ENABLE);
-	PWM_SetHz(M1);
+	PWM_SetHz(H1);
 	Delay_ms(500);
-	PWM_SetHz(P);
+	PWM_SetHz(H2);
 	Delay_ms(500);
-	PWM_SetHz(M2);
+	PWM_SetHz(H3);
 	Delay_ms(500);
-	PWM_SetHz(M3);
+	PWM_SetHz(H4);
 	Delay_ms(500);
-	PWM_SetHz(M4);
+	PWM_SetHz(H5);
+	Delay_ms(500);
+	PWM_SetHz(H6);
+	Delay_ms(500);
+	PWM_SetHz(H7);
 	Delay_ms(700);
 	TIM_Cmd(TIM2, DISABLE);
 }
- 
-void Buzzer_Play()
+/**
+ * @brief 播放音乐 0 天空之城  
+ * 
+ */
+static uint16_t MusicSelect=0,TimeSelect=0;
+void Buzzer_Play(uint8_t var)
 {
-    static uint16_t MusicSelect=0,TimeSelect=0;
- 
-    while(Music[MusicSelect]!=0xFF)
+	MusicSelect = 0;
+	if (var == 0)
+	{
+		while (Music[MusicSelect] != 0xFF)
+		{
+			TIM_Cmd(TIM2, ENABLE);
+			PWM_SetHz(Music[MusicSelect]);
+
+			TimeSelect = Music[++MusicSelect];
+			Delay_ms(Speed0 * TimeSelect);
+			MusicSelect++;
+
+			Delay_ms(10);
+		}
+		if (Music[MusicSelect] == 0xFF)
+		{
+			MusicSelect = 0;
+			TIM_Cmd(TIM2, DISABLE);
+		}
+	}else if(var == 1)
+	{
+		while (wind_rise[MusicSelect] != 0xFF)
+		{
+			TIM_Cmd(TIM2, ENABLE);
+			PWM_SetHz(wind_rise[MusicSelect]);
+
+			TimeSelect = wind_rise[++MusicSelect];
+			Delay_ms(Speed1 * TimeSelect);//起风了慢一点
+			MusicSelect++;
+
+			Delay_ms(10);
+		}
+		if (wind_rise[MusicSelect] == 0xFF)
+		{
+			MusicSelect = 0;
+			TIM_Cmd(TIM2, DISABLE);
+		}
+	}else if(var == 2)
     {
-        TIM_Cmd(TIM2, ENABLE);
-        PWM_SetHz(Music[MusicSelect]);
- 
-        TimeSelect=Music[++MusicSelect];
-        Delay_ms(Speed/4*TimeSelect);
-        MusicSelect++;
- 
-        Delay_ms(10);
-    }
-    if(Music[MusicSelect]==0xFF) 
-    {
-        MusicSelect=0;
-        TIM_Cmd(TIM2, DISABLE);
+        while (solitary_brave[MusicSelect] != 0xFF)
+		{
+			TIM_Cmd(TIM2, ENABLE);
+			PWM_SetHz(solitary_brave[MusicSelect]);
+
+			TimeSelect = solitary_brave[++MusicSelect];
+			Delay_ms(Speed2 * TimeSelect);
+			MusicSelect++;
+			
+			Delay_ms(10);
+		}
+		if (solitary_brave[MusicSelect] == 0xFF)
+		{
+			MusicSelect = 0;
+			TIM_Cmd(TIM2, DISABLE);
+		}
     }
 }
  
+/**
+ * @brief 调节音量
+ * 
+ * @param Volume 1-50有效 50以上听不出来
+ */
+void Buzzer_SetVolume(uint8_t Volume)
+{
+	TIM_PWMSetDuty(TIM2, TIM_PWMChannel_PWMA,Volume);
+}
+
+
 

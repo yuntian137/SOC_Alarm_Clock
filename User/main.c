@@ -38,6 +38,8 @@ int main(void)
     /*<UserCodeStart>*//*<SinOne-Tag><36>*/
     IcResourceInit();
     uint8_t Task_state = 2;
+    TIM_Cmd(TIM2, DISABLE);
+    Buzzer_SetVolume(50);
     /*<UserCodeEnd>*//*<SinOne-Tag><36>*/
     
     /*<UserCodeStart>*//*<SinOne-Tag><4>*/
@@ -55,9 +57,10 @@ int main(void)
             
             break;
             case 2:		//Buzz SET
-            Delay_ms(5000);
+            Delay_ms(1000);
             GPIO_ResetBits(GPIOC,GPIO_Pin_5);
-            Buzzer_Play();
+            
+            //Buzzer_Play(1);
             //test_Buzz();
             Delay_ms(200);
             GPIO_SetBits(GPIOC,GPIO_Pin_5);

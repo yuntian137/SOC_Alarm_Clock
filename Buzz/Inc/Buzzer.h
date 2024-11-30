@@ -5,10 +5,12 @@
  
 void Buzzer_Init(void);
  
-void Buzzer_Play(void);
+void Buzzer_Play(uint8_t var);
 void PWM_SetHz(uint16_t Hz);
 void test_Buzz(void);
-//void Buzzer_SetVolume(uint8_t Volume);
+
+
+void Buzzer_SetVolume(uint8_t Volume);
  
  
  
