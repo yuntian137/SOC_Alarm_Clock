@@ -35,6 +35,7 @@
 ..\output\callbackfunction.o: ..\FWLib\SC32F1XXX_Lib\inc\sc32f1xxx_pwr.h
 ..\output\callbackfunction.o: ..\User\SC_it.h
 ..\output\callbackfunction.o: ..\User\..\Drivers\SCDriver_list.h
+..\output\callbackfunction.o: ..\User\..\Drivers\.\TKDriver\C\TKDriver.h
 ..\output\callbackfunction.o: ..\User\HeadFiles\SysFunVarDefine.h
 ..\output\callbackfunction.o: ..\User\HeadFiles\CustomType.h
 ..\output\callbackfunction.o: ..\User\HeadFiles\UserExport.h

@@ -35,6 +35,7 @@
 ..\output\sysfunvardefine.o: ..\FWLib\SC32F1XXX_Lib\inc\sc32f1xxx_pwr.h
 ..\output\sysfunvardefine.o: ..\User\SC_it.h
 ..\output\sysfunvardefine.o: ..\User\..\Drivers\SCDriver_list.h
+..\output\sysfunvardefine.o: ..\User\..\Drivers\.\TKDriver\C\TKDriver.h
 ..\output\sysfunvardefine.o: ..\User\HeadFiles\SysFunVarDefine.h
 ..\output\sysfunvardefine.o: ..\User\HeadFiles\CustomType.h
 ..\output\sysfunvardefine.o: ..\User\HeadFiles\UserExport.h

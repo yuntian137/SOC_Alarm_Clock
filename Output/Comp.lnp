@@ -17,8 +17,8 @@
 "..\output\startup_sc32f10xx.o"
 "..\output\buzzer.o"
 "..\output\tkdriver.o"
-"..\Drivers\TKDriver\C\sc32f10xx_HighSensitive_lib_Slider_V0.3.lib"
---strict --scatter "..\Output\Comp.sct"
+"..\Drivers\TKDriver\C\sc32f10xx_HighSensitive_lib_T1Slider_V0.3.lib"
+--library_type=microlib --strict --scatter "..\Output\Comp.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
 --list "..\List\Comp.map" -o ..\Output\Comp.axf

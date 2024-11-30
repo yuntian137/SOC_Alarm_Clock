@@ -1,11 +1,11 @@
 //*************************************************************************************************
-//  Copyright (c) 	æ·±åœ³å¸‚èµ›å…ƒå¾®ç”µå­è‚¡ä»½æœ‰é™å…¬å¸
-//	æ–‡ä»¶åç§°	:  SensorMethod.h
-//	ä½œè€…		: 
-//	æ¨¡å—åŠŸèƒ½	:  è§¦æ§ç®—æ³•å¤´æ–‡ä»¶
-// 	ç‰ˆæœ¬	    :
-// 	æ›´æ”¹è®°å½•	:
-//	æ³¨æ„äº‹é¡¹	:    
+//  Copyright (c) 	ÉîÛÚÊĞÈüÔªÎ¢µç×Ó¹É·İÓĞÏŞ¹«Ë¾
+//	ÎÄ¼şÃû³Æ	:  SensorMethod.h
+//	×÷Õß		: 
+//	Ä£¿é¹¦ÄÜ	:  ´¥¿ØËã·¨Í·ÎÄ¼ş
+// 	°æ±¾	    :
+// 	¸ü¸Ä¼ÇÂ¼	:
+//	×¢ÒâÊÂÏî	:    
 //************************************************************************************************
 #ifndef	_SENSORMETHOD_C_H
 #define	_SENSORMETHOD_C_H
@@ -15,30 +15,30 @@
 
 typedef	enum
 {
-	Circle = 0,		//æ»‘è½®
-	Bar = 1	,		//æ»‘æ¡
+	Circle = 0,		//»¬ÂÖ
+	Bar = 1	,		//»¬Ìõ
 	wheel = 0,
     slider =1
 }TKSlideModuleType;
 
 typedef struct
 {
-	TKSlideModuleType	TypeFlag;		//(éœ€ä¿®æ”¹)		æ»‘åŠ¨å—ç±»å‹,Bar:ä¸ºæ»‘æ¡ï¼ŒCircle:ä¸ºæ»‘è½®
-	uint8_t  	TKChannel[16];	 		//(éœ€ä¿®æ”¹)		æŒ‰ç…§æ»‘åŠ¨é¡ºåºï¼Œä¾æ¬¡å°†ä½¿ç”¨åˆ°çš„æ»‘æ¡æŒ‰é”®é€šé“å­˜å…¥æ•°ç»„6->5->4->3æ»‘åŠ¨å€¼é€æ¸å˜å¤§
-	uint8_t 	UsingTKChannelNumber;	//(éœ€ä¿®æ”¹)		å½“å‰æ»‘åŠ¨æ¨¡å—ä½¿ç”¨çš„TKé€šé“æ•°é‡
-	uint16_t 	SideLevel;	            //(éœ€ä¿®æ”¹)		æ»‘åŠ¨è¾“å‡ºçš„æ¡£ä½æœ€å¤§çº§æ•°ï¼ˆä»1ç®—èµ·ï¼‰
+	TKSlideModuleType	TypeFlag;		//(ĞèĞŞ¸Ä)		»¬¶¯¿éÀàĞÍ,Bar:Îª»¬Ìõ£¬Circle:Îª»¬ÂÖ
+	uint8_t  	TKChannel[16];	 		//(ĞèĞŞ¸Ä)		°´ÕÕ»¬¶¯Ë³Ğò£¬ÒÀ´Î½«Ê¹ÓÃµ½µÄ»¬Ìõ°´¼üÍ¨µÀ´æÈëÊı×é6->5->4->3»¬¶¯ÖµÖğ½¥±ä´ó
+	uint8_t 	UsingTKChannelNumber;	//(ĞèĞŞ¸Ä)		µ±Ç°»¬¶¯Ä£¿éÊ¹ÓÃµÄTKÍ¨µÀÊıÁ¿
+	uint16_t 	SideLevel;	            //(ĞèĞŞ¸Ä)		»¬¶¯Êä³öµÄµµÎ»×î´ó¼¶Êı£¨´Ó1ËãÆğ£©
 	
-	int16_t		SUBData;		        //(å¯ä¿®æ”¹)		DDifferå€¼<SUB_DATAè¯¥Differå€¼æ— æ•ˆï¼Œä¼šè®¾ç½®ä¸º0ï¼Œå±è”½å¹²æ‰°ï¼ˆä¿®æ”¹çµæ•åº¦ï¼‰  è¯¥å€¼å»ºè®®é»˜è®¤ 
-	int16_t 	LIBData;		        //Differå€¼>LIB_DATAè¡¨ç¤ºæœ‰é”®ï¼ˆä¿®æ”¹çµæ•åº¦ï¼‰è¯¥å€¼å»ºè®®è®¾ç½®ä¸ºé˜ˆå€¼çš„å››åˆ†ä¹‹ä¸€åˆ°ä¸‰åˆ†ä¹‹ä¸€
+	int16_t		SUBData;		        //(¿ÉĞŞ¸Ä)		DDifferÖµ<SUB_DATA¸ÃDifferÖµÎŞĞ§£¬»áÉèÖÃÎª0£¬ÆÁ±Î¸ÉÈÅ£¨ĞŞ¸ÄÁéÃô¶È£©  ¸ÃÖµ½¨ÒéÄ¬ÈÏ 
+	int16_t 	LIBData;		        //DifferÖµ>LIB_DATA±íÊ¾ÓĞ¼ü£¨ĞŞ¸ÄÁéÃô¶È£©¸ÃÖµ½¨ÒéÉèÖÃÎªãĞÖµµÄËÄ·ÖÖ®Ò»µ½Èı·ÖÖ®Ò»
 	
-	uint8_t 	TKOrderChannel[16];		//(æ— éœ€ä¿®æ”¹)		å­˜æ”¾å†…éƒ¨TKé€šé“æ’åºéƒ½çš„index
-	uint8_t 	MAXUpdateCount;			//(æ— éœ€ä¿®æ”¹)		æ‰«æå¤šå°‘è½®æ— æ»‘æ¡æŒ‰é”®å³æ›´æ–°åŸºçº¿ï¼Œé»˜è®¤10   å¯ä¿®æ”¹
-	uint16_t    LastOutValue;			//(æ— éœ€ä¿®æ”¹)		è®°å½•ä¸Šä¸€æ¬¡è¾“å‡ºçš„å€¼
-	uint16_t 	OutValue;				//(æ— éœ€ä¿®æ”¹)		æ»‘åŠ¨è¾“å‡ºå€¼ï¼Œé€šè¿‡è¯¥å€¼è·å–è¾“å‡ºç»“æœ
-	uint16_t  	UpdateBaseLineNumber;	//(æ— éœ€ä¿®æ”¹)		åŸºçº¿æ›´æ–°è®¡æ•°
-	uint16_t	CouplingValue;			//(æ— éœ€ä¿®æ”¹)		è€¦åˆå‚æ•°èŒƒå›´(100~200)ï¼Œå‚æ•°è¿‡å°ä¼šå‡ºç°å‡ºå€¼ç¼ºå¤±,ä¾‹å¦‚æ»‘åŠ¨å‡ºå€¼OutValueä¸º1->2->3->5->6->7,å‚æ•°è¿‡å¤§ä¼šå‡ºç°å‡ºå€¼é‡å ,ä¾‹å¦‚æ»‘åŠ¨å‡ºå€¼OutValueä¸º1->2->3->4->3->4->5->6->7
-	uint16_t	DebugCouplingValue;		//(æ— éœ€ä¿®æ”¹)		è€¦åˆå‚æ•°ï¼ŒDeBugå€¼,ç”¨äºè°ƒè¯•ï¼Œè°ƒè¯•æ—¶è¾“å‡ºè¯¥å€¼ï¼Œæ»‘åŠ¨æ»‘åŠ¨æ¨¡å—å–è¾“å‡ºçš„æœ€å°å€¼ï¼Œæ ¹æ®æœ€å°å€¼è°ƒèŠ‚CouplingValueè€¦åˆå‚æ•°
-	uint16_t	TriggerFlagCount;		//(æ— éœ€ä¿®æ”¹)		æ»‘åŠ¨æ¨¡å—è§¦å‘è®¡æ•°æ ‡å¿—
+	uint8_t 	TKOrderChannel[16];		//(ÎŞĞèĞŞ¸Ä)		´æ·ÅÄÚ²¿TKÍ¨µÀÅÅĞò¶¼µÄindex
+	uint8_t 	MAXUpdateCount;			//(ÎŞĞèĞŞ¸Ä)		É¨Ãè¶àÉÙÂÖÎŞ»¬Ìõ°´¼ü¼´¸üĞÂ»ùÏß£¬Ä¬ÈÏ10   ¿ÉĞŞ¸Ä
+	uint16_t    LastOutValue;			//(ÎŞĞèĞŞ¸Ä)		¼ÇÂ¼ÉÏÒ»´ÎÊä³öµÄÖµ
+	uint16_t 	OutValue;				//(ÎŞĞèĞŞ¸Ä)		»¬¶¯Êä³öÖµ£¬Í¨¹ı¸ÃÖµ»ñÈ¡Êä³ö½á¹û
+	uint16_t  	UpdateBaseLineNumber;	//(ÎŞĞèĞŞ¸Ä)		»ùÏß¸üĞÂ¼ÆÊı
+	uint16_t	CouplingValue;			//(ÎŞĞèĞŞ¸Ä)		ñîºÏ²ÎÊı·¶Î§(100~200)£¬²ÎÊı¹ıĞ¡»á³öÏÖ³öÖµÈ±Ê§,ÀıÈç»¬¶¯³öÖµOutValueÎª1->2->3->5->6->7,²ÎÊı¹ı´ó»á³öÏÖ³öÖµÖØµş,ÀıÈç»¬¶¯³öÖµOutValueÎª1->2->3->4->3->4->5->6->7
+	uint16_t	DebugCouplingValue;		//(ÎŞĞèĞŞ¸Ä)		ñîºÏ²ÎÊı£¬DeBugÖµ,ÓÃÓÚµ÷ÊÔ£¬µ÷ÊÔÊ±Êä³ö¸ÃÖµ£¬»¬¶¯»¬¶¯Ä£¿éÈ¡Êä³öµÄ×îĞ¡Öµ£¬¸ù¾İ×îĞ¡Öµµ÷½ÚCouplingValueñîºÏ²ÎÊı
+	uint16_t	TriggerFlagCount;		//(ÎŞĞèĞŞ¸Ä)		»¬¶¯Ä£¿é´¥·¢¼ÆÊı±êÖ¾
 	
 }TKSlideModulePCB;
 
@@ -65,11 +65,11 @@ typedef struct
 #define TKChannel3 0 //TKChannel3 
 #define LIBData3 0 //LIBData3 
 #define SCD_TK_Type 1 //SCD_TK_Type 
-#define SCD_Wheel 0 //SCD_Wheel 
-#define SCD_Slider 0 //SCD_Slider 
+#define SCD_Wheel 1 //SCD_Wheel 
+#define SCD_Slider 1 //SCD_Slider 
 #define SCD_Key 1 //SCD_Key 
 
-extern uint8_t    TK_TouchKeyStatus;  //æŒ‰é”®æ‰«æå®Œæˆæ ‡å¿—ä½
+extern uint8_t    TK_TouchKeyStatus;  //°´¼üÉ¨ÃèÍê³É±êÖ¾Î»
 extern  TKSlideModulePCB  TKSlideModulePCBArray[];
 
 extern void   TK_Init(void);

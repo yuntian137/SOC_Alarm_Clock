@@ -35,6 +35,7 @@
 ..\output\compctrldefine.o: ..\FWLib\SC32F1XXX_Lib\inc\sc32f1xxx_pwr.h
 ..\output\compctrldefine.o: ..\User\SC_it.h
 ..\output\compctrldefine.o: ..\User\..\Drivers\SCDriver_list.h
+..\output\compctrldefine.o: ..\User\..\Drivers\.\TKDriver\C\TKDriver.h
 ..\output\compctrldefine.o: ..\User\HeadFiles\SysFunVarDefine.h
 ..\output\compctrldefine.o: ..\User\HeadFiles\CustomType.h
 ..\output\compctrldefine.o: ..\User\HeadFiles\UserExport.h
