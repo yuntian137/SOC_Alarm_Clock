@@ -48,7 +48,11 @@ int main(void)
     {
         /*<UserCodeStart>*//*<SinOne-Tag><14>*/
         /***User program***/
-        
+        GPIO_ResetBits(GPIOC,GPIO_Pin_4);//LED1
+        GPIO_ResetBits(GPIOC,GPIO_Pin_10);//LED3
+        GPIO_ResetBits(GPIOC,GPIO_Pin_11);//LED4
+        GPIO_ResetBits(GPIOA,GPIO_Pin_7);//LED5
+        GPIO_ResetBits(GPIOA,GPIO_Pin_8);//LED6
         switch(Task_state)
         {
             case 0:		//init
@@ -58,9 +62,9 @@ int main(void)
             break;
             case 2:		//Buzz SET
             Delay_ms(1000);
-            GPIO_ResetBits(GPIOC,GPIO_Pin_5);
+            GPIO_ResetBits(GPIOC,GPIO_Pin_5);//LED2
             
-            //Buzzer_Play(1);
+            //Buzzer_Play(0);
             //test_Buzz();
             Delay_ms(200);
             GPIO_SetBits(GPIOC,GPIO_Pin_5);

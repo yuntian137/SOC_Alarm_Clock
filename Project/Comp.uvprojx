@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>SC32f10xx</Define>
               <Undefine></Undefine>
-              <IncludePath>..\FWLib\SC32F1XXX_Lib\inc;..\User\HeadFiles;..\User;..\Drivers;..\Apps;..\CMSIS;..\Buzz\Inc</IncludePath>
+              <IncludePath>..\FWLib\SC32F1XXX_Lib\inc;..\User\HeadFiles;..\User;..\Drivers;..\Apps;..\CMSIS;..\Buzz\Inc;..\Drivers\TKDriver\C</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -488,6 +488,36 @@
               <FileName>Buzzer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Buzz\Src\Buzzer.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>TK_Divers</GroupName>
+          <Files>
+            <File>
+              <FileName>sc32f10xx_TK_ParameterAnalysis.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Drivers\TKDriver\C\sc32f10xx_TK_ParameterAnalysis.h</FilePath>
+            </File>
+            <File>
+              <FileName>TKDriver.C</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\TKDriver\C\TKDriver.C</FilePath>
+            </File>
+            <File>
+              <FileName>TKDriver.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Drivers\TKDriver\C\TKDriver.h</FilePath>
+            </File>
+            <File>
+              <FileName>S_TouchKeyCFG.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Drivers\TKDriver\C\S_TouchKeyCFG.h</FilePath>
+            </File>
+            <File>
+              <FileName>sc32f10xx_HighSensitive_lib_Slider_V0.3.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\Drivers\TKDriver\C\sc32f10xx_HighSensitive_lib_Slider_V0.3.lib</FilePath>
             </File>
           </Files>
         </Group>

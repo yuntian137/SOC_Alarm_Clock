@@ -1,40 +1,66 @@
-L 1 "..\Buzz\Src\Buzzer.c"
-N#include "sc32f1xxx_tim.h"
-L 1 "..\FWLib\SC32F1XXX_Lib\inc\sc32f1xxx_tim.h" 1
-N/**
-N ******************************************************************************
-N * @file    sc32f1xxx_tim.h
-N * @author  SOC AE Team
-N * @version V1.6
-N * @date    04-09-2024
-N * @brief   Header file of TIM module.
-N ******************************************************************************
-N * @attention
-N *
-N *1.This software is supplied by SinOne Microelectronics Co.,Ltd. and is only
-N *intended for use with SinOne products. No other uses are authorized. This
-N *software is owned by SinOne Microelectronics Co.,Ltd. and is protected under
-N *all applicable laws, including copyright laws.
-N *2.The software which is for guidance only aims at providing customers with
-N *coding information regarding their products in order for them to save time.
-N *As a result, SinOne shall not be held liable for any direct, indirect or
-N *consequential damages with respect to any claims arising from the content of
-N *such software and/or the use made by customers of the coding information
-N *contained herein in connection with their products.
-N *
-N *  COPYRIGHT 2024 SinOne Microelectronics
-N */
+L 1 "..\Drivers\TKDriver\C\TKDriver.C"
+N//*************************************************************************************************
+N//  Copyright (c) 	ÉîÛÚÊĞÈüÔªÎ¢µç×Ó¹É·İÓĞÏŞ¹«Ë¾
+N//	ÎÄ¼şÃû³Æ	:  sc32f10xx_TK_FileAnalysis.c
+N//	×÷Õß		: 
+N//	Ä£¿é¹¦ÄÜ	:  ´¥¿Ø¼üÅäÖÃÎÄ¼ş
+N// 	°æ±¾		:
+N// 	¸ü¸Ä¼ÇÂ¼	:
+N//	×¢ÒâÊÂÏî	:  ÓÃ»§ĞèÒªÅäÖÃµÄÎÄ¼şÔÚS_TouchKeyCFG.hÖĞ
+N//  ¿â°æ±¾±ê¼Ç	: 
+N//************************************************************************************************
+N#include "sc32f10xx_TK_ParameterAnalysis.h"
+L 1 "..\Drivers\TKDriver\C\sc32f10xx_TK_ParameterAnalysis.h" 1
+N//*************************************************************************************************
+N//  Copyright (c) 	ÉîÛÚÊĞÈüÔªÎ¢µç×Ó¹É·İÓĞÏŞ¹«Ë¾
+N//	ÎÄ¼şÃû³Æ	:  SensorMethod.h
+N//	×÷Õß		: 
+N//	Ä£¿é¹¦ÄÜ	:  ´¥¿ØËã·¨Í·ÎÄ¼ş
+N// 	°æ±¾	    :
+N// 	¸ü¸Ä¼ÇÂ¼	:
+N//	×¢ÒâÊÂÏî	:    
+N//************************************************************************************************
+N#ifndef	_sc32f10xx_TK_FileAnalysis_H
+N#define	_sc32f10xx_TK_FileAnalysis_H
 N
-N/* Define to prevent recursive inclusion -------------------------------------*/
-N#ifndef __sc32f1xxx_TIM_H
-N#define __sc32f1xxx_TIM_H
+Ntypedef struct
+N{
+N	unsigned short int	Rawdata;   //Ô­Ê¼Êı¾İ
+N	unsigned short int	Baseline;  //»ùÏß
+N	unsigned short int	FilterData;  //Ô­Ê¼Êı¾İÂË²¨»º´æÇø
+N	
+N}TK_BaseLineUpdatePar_StructDef;
 N
-N#ifdef __cplusplus
-Sextern "C"
-S{
-N#endif
+Ntypedef struct
+N{
+N	unsigned char	BaseLineAdjusttmp;   //IA»º´æÊı×é
+N	
+N}TK_ParameterBuffer_StructDef;
 N
-N/* Includes ------------------------------------------------------------------*/
+N
+Nextern TK_BaseLineUpdatePar_StructDef SingleChannelsBaseLineUpdatePar[];
+Nextern TK_BaseLineUpdatePar_StructDef CombineChannelsBaseLineUpdatePar[];
+N
+Nextern TK_ParameterBuffer_StructDef SingleParameterBufferSet[] ;
+N
+N
+N
+N#endif 
+L 12 "..\Drivers\TKDriver\C\TKDriver.C" 2
+N#include "TKDriver.h"
+L 1 "..\Drivers\TKDriver\C\TKDriver.h" 1
+N//*************************************************************************************************
+N//  Copyright (c) 	ÉîÛÚÊĞÈüÔªÎ¢µç×Ó¹É·İÓĞÏŞ¹«Ë¾
+N//	ÎÄ¼şÃû³Æ	:  SensorMethod.h
+N//	×÷Õß		: 
+N//	Ä£¿é¹¦ÄÜ	:  ´¥¿ØËã·¨Í·ÎÄ¼ş
+N// 	°æ±¾	    :
+N// 	¸ü¸Ä¼ÇÂ¼	:
+N//	×¢ÒâÊÂÏî	:    
+N//************************************************************************************************
+N#ifndef	_SENSORMETHOD_C_H
+N#define	_SENSORMETHOD_C_H
+N
 N#include "sc32f1xxx.h"
 L 1 "..\FWLib\SC32F1XXX_Lib\inc\sc32f1xxx.h" 1
 N/**
@@ -5770,7 +5796,46 @@ N/**
 N* @}
 N*/
 N
-L 36 "..\FWLib\SC32F1XXX_Lib\inc\sc32f1xxx_tim.h" 2
+L 14 "..\Drivers\TKDriver\C\TKDriver.h" 2
+N#include "SC32F1xxx_rcc.h"
+L 1 "..\FWLib\SC32F1XXX_Lib\inc\SC32F1xxx_rcc.h" 1
+N/**
+N ******************************************************************************
+N * @file    sc32f1xxx_rcc.h
+N * @author  SOC AE Team
+N * @version V1.6
+N * @date    04-09-2024
+N * @brief   This file contains all the functions prototypes for the RCC
+N *
+N ******************************************************************************
+N * @attention
+N *
+N *1.This software is supplied by SinOne Microelectronics Co.,Ltd. and is only
+N *intended for use with SinOne products. No other uses are authorized. This
+N *software is owned by SinOne Microelectronics Co.,Ltd. and is protected under
+N *all applicable laws, including copyright laws.
+N *2.The software which is for guidance only aims at providing customers with
+N *coding information regarding their products in order for them to save time.
+N *As a result, SinOne shall not be held liable for any direct, indirect or
+N *consequential damages with respect to any claims arising from the content of
+N *such software and/or the use made by customers of the coding information
+N *contained herein in connection with their products.
+N *
+N *  COPYRIGHT 2024 SinOne Microelectronics
+N */
+N
+N/* Define to prevent recursive inclusion -------------------------------------*/
+N#ifndef __sc32f1xxx_RCC_H
+N#define __sc32f1xxx_RCC_H
+N
+N
+N#ifdef __cplusplus
+Sextern "C"
+S{
+N#endif
+N
+N/*!< Includes ----------------------------------------------------------------*/
+N#include "sc32f1xxx.h"
 N#include "sc32.h"
 L 1 "..\FWLib\SC32F1XXX_Lib\inc\sc32.h" 1
 N/**
@@ -5847,47 +5912,7 @@ N* @}
 N*/
 N
 N/************************ (C) COPYRIGHT SIN ONE CHIP *****END OF FILE****/
-L 37 "..\FWLib\SC32F1XXX_Lib\inc\sc32f1xxx_tim.h" 2
-N#include "sc32f1xxx_rcc.h"
-L 1 "..\FWLib\SC32F1XXX_Lib\inc\sc32f1xxx_rcc.h" 1
-N/**
-N ******************************************************************************
-N * @file    sc32f1xxx_rcc.h
-N * @author  SOC AE Team
-N * @version V1.6
-N * @date    04-09-2024
-N * @brief   This file contains all the functions prototypes for the RCC
-N *
-N ******************************************************************************
-N * @attention
-N *
-N *1.This software is supplied by SinOne Microelectronics Co.,Ltd. and is only
-N *intended for use with SinOne products. No other uses are authorized. This
-N *software is owned by SinOne Microelectronics Co.,Ltd. and is protected under
-N *all applicable laws, including copyright laws.
-N *2.The software which is for guidance only aims at providing customers with
-N *coding information regarding their products in order for them to save time.
-N *As a result, SinOne shall not be held liable for any direct, indirect or
-N *consequential damages with respect to any claims arising from the content of
-N *such software and/or the use made by customers of the coding information
-N *contained herein in connection with their products.
-N *
-N *  COPYRIGHT 2024 SinOne Microelectronics
-N */
-N
-N/* Define to prevent recursive inclusion -------------------------------------*/
-N#ifndef __sc32f1xxx_RCC_H
-N#define __sc32f1xxx_RCC_H
-N
-N
-N#ifdef __cplusplus
-Sextern "C"
-S{
-N#endif
-N
-N/*!< Includes ----------------------------------------------------------------*/
-N#include "sc32f1xxx.h"
-N#include "sc32.h"
+L 39 "..\FWLib\SC32F1XXX_Lib\inc\SC32F1xxx_rcc.h" 2
 N
 N/** @addtogroup sc32f1xxx_StdPeriph_Driver
 N * @{
@@ -6582,1017 +6607,672 @@ N* @}
 N*/
 N
 N/************************ (C) COPYRIGHT SOC Microelectronics *****END OF FILE****/
-L 38 "..\FWLib\SC32F1XXX_Lib\inc\sc32f1xxx_tim.h" 2
+L 15 "..\Drivers\TKDriver\C\TKDriver.h" 2
 N
-N/** @addtogroup sc32f1xxx_StdPeriph_Driver
-N * @{
-N */
-N
-N/** @addtogroup TIM
-N * @{
-N */
-N
-N/** @defgroup TIM_Enumerations TIM Enumerations
-N * @{
-N */
-N
-N/** @brief TIM_Prescaler_TypeDef TIM Prescaler
-N * @{
-N */
-Ntypedef enum
+Ntypedef	enum
 N{
-N    TIM_PRESCALER_1   = ( uint16_t ) ( 0x00U << TIM_CON_TIMCLK_Pos ), /*!< Clock division: Fsource/1    */
-X    TIM_PRESCALER_1   = ( uint16_t ) ( 0x00U << (8U) ),  
-N    TIM_PRESCALER_2   = ( uint16_t ) ( 0x01U << TIM_CON_TIMCLK_Pos ), /*!< Clock division: Fsource/2    */
-X    TIM_PRESCALER_2   = ( uint16_t ) ( 0x01U << (8U) ),  
-N    TIM_PRESCALER_4   = ( uint16_t ) ( 0x02U << TIM_CON_TIMCLK_Pos ), /*!< Clock division: Fsource/4    */
-X    TIM_PRESCALER_4   = ( uint16_t ) ( 0x02U << (8U) ),  
-N    TIM_PRESCALER_8   = ( uint16_t ) ( 0x03U << TIM_CON_TIMCLK_Pos ), /*!< Clock division: Fsource/8    */
-X    TIM_PRESCALER_8   = ( uint16_t ) ( 0x03U << (8U) ),  
-N    TIM_PRESCALER_16  = ( uint16_t ) ( 0x04U << TIM_CON_TIMCLK_Pos ), /*!< Clock division: Fsource/16    */
-X    TIM_PRESCALER_16  = ( uint16_t ) ( 0x04U << (8U) ),  
-N    TIM_PRESCALER_32  = ( uint16_t ) ( 0x05U << TIM_CON_TIMCLK_Pos ), /*!< Clock division: Fsource/32    */
-X    TIM_PRESCALER_32  = ( uint16_t ) ( 0x05U << (8U) ),  
-N    TIM_PRESCALER_64  = ( uint16_t ) ( 0x06U << TIM_CON_TIMCLK_Pos ), /*!< Clock division: Fsource/64    */
-X    TIM_PRESCALER_64  = ( uint16_t ) ( 0x06U << (8U) ),  
-N    TIM_PRESCALER_128 = ( uint16_t ) ( 0x07U << TIM_CON_TIMCLK_Pos ), /*!< Clock division: Fsource/128    */
-X    TIM_PRESCALER_128 = ( uint16_t ) ( 0x07U << (8U) ),  
-N} TIM_Prescaler_TypeDef;
+N	Circle = 0,		//»¬ÂÖ
+N	Bar = 1	,		//»¬Ìõ
+N	wheel = 0,
+N    slider =1
+N}TKSlideModuleType;
 N
-N#define IS_TIM_PRESCALER(PRESCALER) (((PRESCALER) == TIM_PRESCALER_1) ||  \
-N                                     ((PRESCALER) == TIM_PRESCALER_2) ||  \
-N                                     ((PRESCALER) == TIM_PRESCALER_4) ||  \
-N                                     ((PRESCALER) == TIM_PRESCALER_8) ||  \
-N                                     ((PRESCALER) == TIM_PRESCALER_16) || \
-N                                     ((PRESCALER) == TIM_PRESCALER_32) || \
-N                                     ((PRESCALER) == TIM_PRESCALER_64) || \
-N                                     ((PRESCALER) == TIM_PRESCALER_128))
-X#define IS_TIM_PRESCALER(PRESCALER) (((PRESCALER) == TIM_PRESCALER_1) ||                                       ((PRESCALER) == TIM_PRESCALER_2) ||                                       ((PRESCALER) == TIM_PRESCALER_4) ||                                       ((PRESCALER) == TIM_PRESCALER_8) ||                                       ((PRESCALER) == TIM_PRESCALER_16) ||                                      ((PRESCALER) == TIM_PRESCALER_32) ||                                      ((PRESCALER) == TIM_PRESCALER_64) ||                                      ((PRESCALER) == TIM_PRESCALER_128))
-N/**
-N * @}
-N */
-N
-N/** @brief TIM_WorkMode TIM WorkMode
-N * @{
-N */
-Ntypedef enum
-N{
-N    TIM_WorkMode_Timer   = ( uint16_t ) ( 0x00U << TIM_CON_CTSEL_Pos ), /*!< Work Mode: Timer Mode */
-X    TIM_WorkMode_Timer   = ( uint16_t ) ( 0x00U << (1U) ),  
-N    TIM_WorkMode_Counter = ( uint16_t ) ( 0x01U << TIM_CON_CTSEL_Pos ), /*!< Work Mode: Counter Mode */
-X    TIM_WorkMode_Counter = ( uint16_t ) ( 0x01U << (1U) ),  
-N} TIM_WorkMode_Typedef;
-N
-N#define IS_TIM_WORKMODE(MODE) (((MODE) == TIM_WorkMode_Timer) || \
-N                               ((MODE) == TIM_WorkMode_Counter))
-X#define IS_TIM_WORKMODE(MODE) (((MODE) == TIM_WorkMode_Timer) ||                                ((MODE) == TIM_WorkMode_Counter))
-N/**
-N * @}
-N */
-N
-N/** @brief TIM_CounterMode TIM Counter Mode
-N * @{
-N */
-Ntypedef enum
-N{
-N    TIM_CounterMode_Up      = ( uint16_t ) ( 0x00U << TIM_CON_DEC_Pos ), /*!< Counter mode: up-counter */
-X    TIM_CounterMode_Up      = ( uint16_t ) ( 0x00U << (6U) ),  
-N    TIM_CounterMode_Down_UP = ( uint16_t ) ( 0x01U << TIM_CON_DEC_Pos ), /*!< Counter mode: down or up counter */
-X    TIM_CounterMode_Down_UP = ( uint16_t ) ( 0x01U << (6U) ),  
-N} TIM_CounterMode_Typedef;
-N
-N#define IS_TIM_COUNTERMODE(MODE) (((MODE) == TIM_CounterMode_Up) || \
-N                                  ((MODE) == TIM_CounterMode_Down_UP))
-X#define IS_TIM_COUNTERMODE(MODE) (((MODE) == TIM_CounterMode_Up) ||                                   ((MODE) == TIM_CounterMode_Down_UP))
-N/**
-N * @}
-N */
-N
-N/** @brief TIM_EXENX TIM EXENX
-N * @{
-N */
-Ntypedef enum
-N{
-N    TIM_EXENX_Disable  = ( uint16_t ) ( 0x00U << TIM_CON_EXENX_Pos ), /*!< External load pin disable */
-X    TIM_EXENX_Disable  = ( uint16_t ) ( 0x00U << (5U) ),  
-N    TIM_EXENX_Enable	 = ( uint16_t ) ( 0x01U << TIM_CON_EXENX_Pos ), /*!< External load pin enable */
-X    TIM_EXENX_Enable	 = ( uint16_t ) ( 0x01U << (5U) ),  
-N} TIM_EXENX_Typedef;
-N
-N#define IS_TIM_EXENX(STATE) (((STATE) == TIM_EXENX_Disable) || \
-N                                  ((STATE) == TIM_EXENX_Enable))
-X#define IS_TIM_EXENX(STATE) (((STATE) == TIM_EXENX_Disable) ||                                   ((STATE) == TIM_EXENX_Enable))
-N/**
-N * @}
-N */
-N
-N/** @brief TIM_RICPIN TIM Rising Input Capture Pin
-N * @{
-N */
-Ntypedef enum
-N{
-N    TIM_RICPin_Disable = ( uint16_t ) ( 0x00U << TIM_CON_EXENR_Pos ), /*!< No rising input is required for capture   */
-X    TIM_RICPin_Disable = ( uint16_t ) ( 0x00U << (2U) ),  
-N    TIM_RICPin_Tn      = ( uint16_t ) ( 0x01U << TIM_CON_EXENR_Pos ), /*!< TIM rising input capture pin is Tn   */
-X    TIM_RICPin_Tn      = ( uint16_t ) ( 0x01U << (2U) ),  
-N} TIM_RICPIN_Typedef;
-N
-N#define IS_TIM_RICPin(RICPin) (((RICPin) == TIM_RICPin_Disable) || \
-N                               ((RICPin) == TIM_RICPin_Tn))
-X#define IS_TIM_RICPin(RICPin) (((RICPin) == TIM_RICPin_Disable) ||                                ((RICPin) == TIM_RICPin_Tn))
-N/**
-N * @}
-N */
-N
-N/** @brief TIM_FICPIN TIM Falling Input Capture Pin
-N * @{
-N */
-Ntypedef enum
-N{
-N    TIM_FICPin_Disable = ( uint16_t ) ( 0x00U ), /*!< No rising input is required for capture   */
-N    TIM_FICPin_Tn      = ( uint16_t ) ( TIM_CON_EXENF ), /*!< TIM failing input capture pin is Tn   */
-X    TIM_FICPin_Tn      = ( uint16_t ) ( (0x1L << (3U)) ),  
-N    TIM_FICPin_TnEx    = ( uint16_t ) ( TIM_CON_EXENX | TIM_CON_FSEL ), /*!< TIM failing input capture pin is TnEx   */
-X    TIM_FICPin_TnEx    = ( uint16_t ) ( (0x1L << (5U)) | (0x1L << (4U)) ),  
-N} TIM_FICPIN_Typedef;
-N
-N#define IS_TIM_FICPin(FICPin) (((FICPin) == TIM_FICPin_Disable) || \
-N                               ((FICPin) == TIM_FICPin_Tn)  || \
-N	                             ((FICPin) == TIM_FICPin_TnEx))
-X#define IS_TIM_FICPin(FICPin) (((FICPin) == TIM_FICPin_Disable) ||                                ((FICPin) == TIM_FICPin_Tn)  || 	                             ((FICPin) == TIM_FICPin_TnEx))
-N/**
-N * @}
-N */
-N
-N/** @brief TIM_PWMChannel TIM PWM Channel
-N * @{
-N */
-Ntypedef enum
-N{
-N    TIM_PWMChannel_Less  = ( uint16_t ) 0x00, /*!< No channels are selected */
-N    TIM_PWMChannel_PWMB = ( uint16_t ) 0x01, /*!< PMWB output channel */
-N    TIM_PWMChannel_PWMA = ( uint16_t ) 0x02, /*!< PMWA output channel */
-N    TIM_PWMChannel_ALL  = (uint16_t)0x03, /*!< PMW All output channel */
-N} TIM_PWMChannel_Typedef;
-N
-N#define IS_TIM_PWMCHANNEL(CHANNEL) (((CHANNEL) & (uint32_t)0xFFFC) == 0x00)
-N/**
-N * @}
-N */
-N
-N/** @brief TIM_PinRemap TIM Pin Remap
-N * @{
-N */
-N#if defined(SC32f10xx) ||defined(SC32f11xx)||defined(SC32f15xx)
-X#if 1L ||0L||0L
-Ntypedef enum
-N{
-N    TIM_PinRemap_Default   = ( uint32_t ) ( 0x00 << TIM_CON_SPOS_Pos ), /*!< TIM Pin Remap: Disable */
-X    TIM_PinRemap_Default   = ( uint32_t ) ( 0x00 << (19U) ),  
-N    TIM_PinRemap_A    = ( uint32_t ) ( 0x01 << TIM_CON_SPOS_Pos ), /*!< TIM  Pin Remap: Remap mode A*/
-X    TIM_PinRemap_A    = ( uint32_t ) ( 0x01 << (19U) ),  
-N#if defined(SC32f15xx)
-X#if 0L
-S	TIM_PinRemap_B    = ( uint32_t ) ( 0x02 << TIM_CON_SPOS_Pos ), /*!< TIM  Pin Remap: Remap mode B*/
-N#endif
-N} TIM_PinRemap_TypeDef;
-N#if defined(SC32f10xx) ||defined(SC32f11xx)
-X#if 1L ||0L
-N#define IS_TIM_PINREMAP(REMAP) (((REMAP) == TIM_PinRemap_Default) ||  \
-N																((REMAP) == TIM_PinRemap_A))
-X#define IS_TIM_PINREMAP(REMAP) (((REMAP) == TIM_PinRemap_Default) ||  																((REMAP) == TIM_PinRemap_A))
-N#elif defined(SC32f15xx)
-S#define IS_TIM_PINREMAP(REMAP) (((REMAP) == TIM_PinRemap_Default) ||  \
-S                                ((REMAP) == TIM_PinRemap_A) ||  \
-S																((REMAP) == TIM_PinRemap_B))
-X#define IS_TIM_PINREMAP(REMAP) (((REMAP) == TIM_PinRemap_Default) ||                                  ((REMAP) == TIM_PinRemap_A) ||  																((REMAP) == TIM_PinRemap_B))
-N#endif
-N#endif
-N/**
-N * @}
-N */
-N
-N/** @brief TIM_IT TIM Interrupt
-N * @{
-N */
-Ntypedef enum
-N{
-N    TIM_IT_INTEN = ( uint8_t ) TIM_IDE_INTEN, /*!< TIM Interrupt: TIM Interrupt Enable */
-X    TIM_IT_INTEN = ( uint8_t ) (0x1L << (0U)),  
-N    TIM_IT_TI    = ( uint8_t ) TIM_IDE_TIE, /*!< TIM Interrupt: TIM overflow  */
-X    TIM_IT_TI    = ( uint8_t ) (0x1L << (1U)),  
-N    TIM_IT_EXR   = ( uint8_t ) TIM_IDE_EXIRE, /*!< TIM Interrupt: Rising edge capture */
-X    TIM_IT_EXR   = ( uint8_t ) (0x1L << (2U)),  
-N    TIM_IT_EXF   = ( uint8_t ) TIM_IDE_EXIFE, /*!< TIM Interrupt: Falling edge capture */
-X    TIM_IT_EXF   = ( uint8_t ) (0x1L << (3U)),  
-N} TIM_IT_TypeDef;
-N
-N#define IS_TIM_IT(IT) ((((IT) & (uint8_t)0xF0) == 0x00) && ((IT) != (uint8_t)0x00))
-N/**
-N * @}
-N */
-N
-N/** @brief TIM_Flag TIM Flag
-N * @{
-N */
-Ntypedef enum
-N{
-N    TIM_Flag_TI  = ( uint8_t ) 0x01, /*!< TIM Flag: TIM overflow */
-N    TIM_Flag_EXR = ( uint8_t ) 0x02, /*!< TIM Flag: Immediate mode */
-N    TIM_Flag_EXF = ( uint8_t ) 0x04, /*!< TIM Flag: Immediate mode */
-N} TIM_Flag_TypeDef;
-N
-N#define IS_TIM_FLAG(FLAG) ((((FLAG) & (uint8_t)0xF8) == 0x00) && ((FLAG) != (uint8_t)0x00))
-N
-N#define IS_GET_TIM_FLAG(FLAG) (((FLAG) == TIM_Flag_TI) ||  \
-N                               ((FLAG) == TIM_Flag_EXR) || \
-N                               ((FLAG) == TIM_Flag_EXF))
-X#define IS_GET_TIM_FLAG(FLAG) (((FLAG) == TIM_Flag_TI) ||                                 ((FLAG) == TIM_Flag_EXR) ||                                ((FLAG) == TIM_Flag_EXF))
-N/**
-N * @}
-N */
-N
-N/** @brief TIM_DMAReq TIM DMAReq
-N * @{
-N */
-Ntypedef enum
-N{
-N    TIM_DMAReq_TI  = ( uint8_t ) TIM_IDE_TIDE, /*!< TIM DMA: TIM overflow */
-X    TIM_DMAReq_TI  = ( uint8_t ) (0x1L << (4U)),  
-N    TIM_DMAReq_CAPR = ( uint8_t ) TIM_IDE_CAPRDE, /*!< TIM DMA: Rising edge capture */
-X    TIM_DMAReq_CAPR = ( uint8_t ) (0x1L << (5)),  
-N    TIM_DMAReq_CAPF = ( uint8_t ) TIM_IDE_CAPFDE, /*!< TIM DMA: Falling edge capture */
-X    TIM_DMAReq_CAPF = ( uint8_t ) (0x1L << (6U)),  
-N} TIM_DMAReq_TypeDef;
-N
-N#define IS_TIM_DMAREQ(DMAREQ) ((((DMAREQ) & (uint8_t)0x8F) == 0x00) && ((DMAREQ) != 0x00))
-N/**
-N * @}
-N */
-N
-N/**
-N * @}
-N */
-N/* End of enumerations -----------------------------------------------------*/
-N
-N/** @brief TIM_Constants TIM Constants
-N  * @{
-N  */
-N#if defined(SC32f10xx) ||  defined(SC32f11xx) ||  defined(SC32f12xx)
-X#if 1L ||  0L ||  0L
-N#define IS_TIM_ALL_PERIPH(PERIPH) (((PERIPH) == TIM0) || \
-N																	((PERIPH) == TIM1) || \
-N																	((PERIPH) == TIM2) || \
-N																	((PERIPH) == TIM3) || \
-N																	((PERIPH) == TIM4) || \
-N																	((PERIPH) == TIM5) || \
-N																	((PERIPH) == TIM6) || \
-N																	((PERIPH) == TIM7))
-X#define IS_TIM_ALL_PERIPH(PERIPH) (((PERIPH) == TIM0) || 																	((PERIPH) == TIM1) || 																	((PERIPH) == TIM2) || 																	((PERIPH) == TIM3) || 																	((PERIPH) == TIM4) || 																	((PERIPH) == TIM5) || 																	((PERIPH) == TIM6) || 																	((PERIPH) == TIM7))
-N#elif  defined(SC32f15xx)
-S#define IS_TIM_ALL_PERIPH(PERIPH) (((PERIPH) == TIM0) || \
-S                                   ((PERIPH) == TIM1) || \
-S                                   ((PERIPH) == TIM2) || \
-S                                   ((PERIPH) == TIM3) )
-X#define IS_TIM_ALL_PERIPH(PERIPH) (((PERIPH) == TIM0) ||                                    ((PERIPH) == TIM1) ||                                    ((PERIPH) == TIM2) ||                                    ((PERIPH) == TIM3) )
-S#define IS_TIM_REMAP_PERIPH(PERIPH) (((PERIPH) == TIM0) || \
-S                                   ((PERIPH) == TIM1) || \
-S                                   ((PERIPH) == TIM2) || \
-S                                   ((PERIPH) == TIM3) )
-X#define IS_TIM_REMAP_PERIPH(PERIPH) (((PERIPH) == TIM0) ||                                    ((PERIPH) == TIM1) ||                                    ((PERIPH) == TIM2) ||                                    ((PERIPH) == TIM3) )
-N#endif
-N#define IS_TIM_TN_PERIPH(PERIPH) (((PERIPH) == TIM1) || \
-N																	((PERIPH) == TIM2) || \
-N																	((PERIPH) == TIM3) || \
-N																	((PERIPH) == TIM4) || \
-N																	((PERIPH) == TIM5) || \
-N																	((PERIPH) == TIM6) || \
-N																	((PERIPH) == TIM7))
-X#define IS_TIM_TN_PERIPH(PERIPH) (((PERIPH) == TIM1) || 																	((PERIPH) == TIM2) || 																	((PERIPH) == TIM3) || 																	((PERIPH) == TIM4) || 																	((PERIPH) == TIM5) || 																	((PERIPH) == TIM6) || 																	((PERIPH) == TIM7))
-N
-N#define IS_TIM_TNEX_PERIPH(PERIPH) ((PERIPH) == TIM0)
-N
-N#define IS_TIM_DMA_PERIPH(PERIPH) (((PERIPH) == TIM0) || \
-N																	((PERIPH) == TIM1))
-X#define IS_TIM_DMA_PERIPH(PERIPH) (((PERIPH) == TIM0) || 																	((PERIPH) == TIM1))
-N#if defined(SC32f10xx)
-X#if 1L
-N#define IS_TIM_REMAP_PERIPH(PERIPH) (((PERIPH) == TIM2) || \
-N                                    ((PERIPH) == TIM3) || \
-N                                    ((PERIPH) == TIM7))
-X#define IS_TIM_REMAP_PERIPH(PERIPH) (((PERIPH) == TIM2) ||                                     ((PERIPH) == TIM3) ||                                     ((PERIPH) == TIM7))
-N#elif  defined(SC32f11xx)
-S#define IS_TIM_REMAP_PERIPH(PERIPH) (((PERIPH) == TIM2) || \
-S                                    ((PERIPH) == TIM3) || \
-S                                    ((PERIPH) == TIM4) ||\
-S																		((PERIPH) == TIM5) ||\
-S																		((PERIPH) == TIM6) ||\
-S																		((PERIPH) == TIM7))
-X#define IS_TIM_REMAP_PERIPH(PERIPH) (((PERIPH) == TIM2) ||                                     ((PERIPH) == TIM3) ||                                     ((PERIPH) == TIM4) ||																		((PERIPH) == TIM5) ||																		((PERIPH) == TIM6) ||																		((PERIPH) == TIM7))
-S
-N#endif
-N
-N/**
-N * @}
-N */
-N/* End of constants -----------------------------------------------------*/
-N
-N/** @defgroup TIM_Struct TIM Struct
-N * @{
-N */
-N
-N/** @brief TIM_TimeBaseInitTypeDef TIM Time base Configuration Structure definition
-N * @{
-N */
 Ntypedef struct
 N{
-N    uint16_t TIM_Prescaler; /*!<  Specifies the clock division.
-N                                      This parameter can be a value of @ref TIM_Prescaler_TypeDef */
+N	TKSlideModuleType	TypeFlag;		//(ĞèĞŞ¸Ä)		»¬¶¯¿éÀàĞÍ,Bar:Îª»¬Ìõ£¬Circle:Îª»¬ÂÖ
+N	uint8_t  	TKChannel[16];	 		//(ĞèĞŞ¸Ä)		°´ÕÕ»¬¶¯Ë³Ğò£¬ÒÀ´Î½«Ê¹ÓÃµ½µÄ»¬Ìõ°´¼üÍ¨µÀ´æÈëÊı×é6->5->4->3»¬¶¯ÖµÖğ½¥±ä´ó
+N	uint8_t 	UsingTKChannelNumber;	//(ĞèĞŞ¸Ä)		µ±Ç°»¬¶¯Ä£¿éÊ¹ÓÃµÄTKÍ¨µÀÊıÁ¿
+N	uint16_t 	SideLevel;	            //(ĞèĞŞ¸Ä)		»¬¶¯Êä³öµÄµµÎ»×î´ó¼¶Êı£¨´Ó1ËãÆğ£©
+N	
+N	int16_t		SUBData;		        //(¿ÉĞŞ¸Ä)		DDifferÖµ<SUB_DATA¸ÃDifferÖµÎŞĞ§£¬»áÉèÖÃÎª0£¬ÆÁ±Î¸ÉÈÅ£¨ĞŞ¸ÄÁéÃô¶È£©  ¸ÃÖµ½¨ÒéÄ¬ÈÏ 
+N	int16_t 	LIBData;		        //DifferÖµ>LIB_DATA±íÊ¾ÓĞ¼ü£¨ĞŞ¸ÄÁéÃô¶È£©¸ÃÖµ½¨ÒéÉèÖÃÎªãĞÖµµÄËÄ·ÖÖ®Ò»µ½Èı·ÖÖ®Ò»
+N	
+N	uint8_t 	TKOrderChannel[16];		//(ÎŞĞèĞŞ¸Ä)		´æ·ÅÄÚ²¿TKÍ¨µÀÅÅĞò¶¼µÄindex
+N	uint8_t 	MAXUpdateCount;			//(ÎŞĞèĞŞ¸Ä)		É¨Ãè¶àÉÙÂÖÎŞ»¬Ìõ°´¼ü¼´¸üĞÂ»ùÏß£¬Ä¬ÈÏ10   ¿ÉĞŞ¸Ä
+N	uint16_t    LastOutValue;			//(ÎŞĞèĞŞ¸Ä)		¼ÇÂ¼ÉÏÒ»´ÎÊä³öµÄÖµ
+N	uint16_t 	OutValue;				//(ÎŞĞèĞŞ¸Ä)		»¬¶¯Êä³öÖµ£¬Í¨¹ı¸ÃÖµ»ñÈ¡Êä³ö½á¹û
+N	uint16_t  	UpdateBaseLineNumber;	//(ÎŞĞèĞŞ¸Ä)		»ùÏß¸üĞÂ¼ÆÊı
+N	uint16_t	CouplingValue;			//(ÎŞĞèĞŞ¸Ä)		ñîºÏ²ÎÊı·¶Î§(100~200)£¬²ÎÊı¹ıĞ¡»á³öÏÖ³öÖµÈ±Ê§,ÀıÈç»¬¶¯³öÖµOutValueÎª1->2->3->5->6->7,²ÎÊı¹ı´ó»á³öÏÖ³öÖµÖØµş,ÀıÈç»¬¶¯³öÖµOutValueÎª1->2->3->4->3->4->5->6->7
+N	uint16_t	DebugCouplingValue;		//(ÎŞĞèĞŞ¸Ä)		ñîºÏ²ÎÊı£¬DeBugÖµ,ÓÃÓÚµ÷ÊÔ£¬µ÷ÊÔÊ±Êä³ö¸ÃÖµ£¬»¬¶¯»¬¶¯Ä£¿éÈ¡Êä³öµÄ×îĞ¡Öµ£¬¸ù¾İ×îĞ¡Öµµ÷½ÚCouplingValueñîºÏ²ÎÊı
+N	uint16_t	TriggerFlagCount;		//(ÎŞĞèĞŞ¸Ä)		»¬¶¯Ä£¿é´¥·¢¼ÆÊı±êÖ¾
+N	
+N}TKSlideModulePCB;
 N
-N    uint16_t TIM_WorkMode; /*!< Specifies the Word mode.
-N                                          This parameter can be a value of @ref TIM_WordMode_Typedef */
+N//<<<Use SPTML>>>
+N#define USING_TKSlideModule_Number_Set 1 //USING_TKSlideModule_Number_Set 
+N#define TypeFlag0 wheel //TypeFlag0 
+N#define UsingTKChannelNumber0 0 //UsingTKChannelNumber0 
+N#define SideLevel0 0 //SideLevel0 
+N#define TKChannel0 0 //TKChannel0 
+N#define LIBData0 0 //LIBData0 
+N#define TypeFlag1 wheel //TypeFlag1 
+N#define UsingTKChannelNumber1 0 //UsingTKChannelNumber1 
+N#define SideLevel1 0 //SideLevel1 
+N#define TKChannel1 0 //TKChannel1 
+N#define LIBData1 0 //LIBData1 
+N#define TypeFlag2 wheel //TypeFlag2 
+N#define UsingTKChannelNumber2 0 //UsingTKChannelNumber2 
+N#define SideLevel2 0 //SideLevel2 
+N#define TKChannel2 0 //TKChannel2 
+N#define LIBData2 0 //LIBData2 
+N#define TypeFlag3 wheel //TypeFlag3 
+N#define UsingTKChannelNumber3 0 //UsingTKChannelNumber3 
+N#define SideLevel3 0 //SideLevel3 
+N#define TKChannel3 0 //TKChannel3 
+N#define LIBData3 0 //LIBData3 
+N#define SCD_TK_Type 1 //SCD_TK_Type 
+N#define SCD_Wheel 0 //SCD_Wheel 
+N#define SCD_Slider 0 //SCD_Slider 
+N#define SCD_Key 1 //SCD_Key 
 N
-N    uint16_t TIM_CounterMode; /*!< Specifies the Counter mode.
-N                                      This parameter can be a value of @ref TIM_CounterMode_Typedef */
+Nextern uint8_t    TK_TouchKeyStatus;  //°´¼üÉ¨ÃèÍê³É±êÖ¾Î»
+Nextern  TKSlideModulePCB  TKSlideModulePCBArray[];
 N
-N    uint16_t TIM_EXENX; /*!< Specifies whether falling edge reloading on the TnEX pin is enabled.
-N                                 This parameter can be a value of @ref	TnEX_Reload	*/
-N
-N    uint16_t TIM_Preload; /*!< Specifies the preload value to be loaded into the active
-N                                  Auto-Reload Register at the next update event.
-N                                  This parameter can be a number between Min_Data = 0x0000 and Max_Data = 0xFFFF.  */
-N
-N} TIM_TimeBaseInitTypeDef;
-N/**
-N * @}
-N */
-N
-N/** @brief TIM_IC_InitTypeDef Configuration Structure definition
-N * @{
-N */
-Ntypedef struct
-N{
-N    uint16_t TIM_RICPIN; /*!<  Specifies the rising input capture pin.
-N                                      This parameter can be a value of @ref TIM_RICPIN_Typedef */
-N
-N    uint16_t TIM_FICPIN; /*!<  Specifies the failing input capture pin.
-N                                      This parameter can be a value of @ref TIM_FICPIN_Typedef */
-N
-N} TIM_IC_InitTypeDef;
-N/**
-N * @}
-N */
-N
-N/** @brief TIM_PWM TIM PWM
-N * @{
-N */
-Ntypedef struct
-N{
-N    uint16_t TIM_PWMOutputChannl; /*!<	TIM PWM Channel to be enabled.
-N																			 This parameter can be a value of @ref TIM_PWMChannel_Typedef */
-N
-N    uint16_t TIM_PWMLowPolarityChannl; /*!< TIM PWM Channl Polarity is set to Low.
-N                                            This parameter can be a value of @ref TIM_PWMChannel_Typedef */
-N
-N} TIM_PWM_InitTypeDef;
-N/**
-N * @}
-N */
-N
-N/**
-N * @}
-N */
-N/* End of struct -----------------------------------------------------*/
-N
-N/** @addtogroup TIM_Functions TIM Functions
-N * @{
-N */
-N
-N/* Time Base functions ********************************************************/
-Nvoid TIM_DeInit ( TIM_TypeDef* TIMx );
-Nvoid TIM_TIMBaseInit ( TIM_TypeDef* TIMx, TIM_TimeBaseInitTypeDef* TIM_TimeBaseInitStruct );
-Nvoid TIM_TimeBaseStructInit ( TIM_TimeBaseInitTypeDef* TIM_TimeBaseInitStruct );
-Nvoid TIM_SetCounter ( TIM_TypeDef* TIMx, uint32_t Counter );
-Nuint32_t TIM_GetCounter ( TIM_TypeDef* TIMx );
-Nvoid TIM_SetAutoreload ( TIM_TypeDef* TIMx, uint16_t Autoreload );
-Nuint16_t TIM_GetAutoreload ( TIM_TypeDef* TIMx );
-Nvoid TIM_SetPerscaler ( TIM_TypeDef* TIMx, TIM_Prescaler_TypeDef TIM_Perscaler );
-NTIM_Prescaler_TypeDef TIM_GetPrescaler ( TIM_TypeDef* TIMx );
-Nvoid TIM_Cmd ( TIM_TypeDef* TIMx, FunctionalState NewState );
-N
-N/* Timer Input Capture functions **********************************************/
-Nvoid TIM_ICInit ( TIM_TypeDef* TIMx, TIM_IC_InitTypeDef* TIM_IC_InitStruct );
-Nvoid TIM_ICStructInit ( TIM_IC_InitTypeDef* TIM_IC_InitStruct );
-Nvoid TIM_ICCmd ( TIM_TypeDef* TIMx, FunctionalState NewState );
-Nuint32_t TIM_GetRisingCapture ( TIM_TypeDef* TIMx );
-Nuint32_t TIM_GetFailingCapture ( TIM_TypeDef* TIMx );
-N
-N/* Timer PWM functions **********************************************/
-Nvoid TIM_PWMInit ( TIM_TypeDef* TIMx, TIM_PWM_InitTypeDef* TIM_PWM_InitStruct );
-Nvoid TIM_PWMStructInit ( TIM_PWM_InitTypeDef* TIM_PWM_InitStruct );
-Nvoid TIM_PWMSetDuty ( TIM_TypeDef* TIMx, TIM_PWMChannel_Typedef TIM_PWMChannel, uint16_t PWM_DutyValue );
-Nuint16_t TIM_PWMGetDuty ( TIM_TypeDef* TIMx, TIM_PWMChannel_Typedef TIM_PWMChannel );
-N
-N/* Clocks Output management functions**********************************************/
-Nvoid TIM_ClockOutputCmd ( TIM_TypeDef* TIMx, FunctionalState NewState );
-N
-N/* Pin Remap functions**********************************************/
-N#if defined(SC32f10xx) || defined(SC32f11xx)|| defined(SC32f15xx)
-X#if 1L || 0L|| 0L
-Nvoid TIM_PinRemapConfig ( TIM_TypeDef* TIMx, TIM_PinRemap_TypeDef TIM_Remap );
-N#endif
-N/* Interrupts, DMA and flags management functions  ***********************************************/
-Nvoid TIM_ITConfig ( TIM_TypeDef* TIMx, uint16_t TIM_IT, FunctionalState NewState );
-NFlagStatus TIM_GetFlagStatus ( TIM_TypeDef* TIMx, TIM_Flag_TypeDef TIM_FLAG );
-Nvoid TIM_ClearFlag ( TIM_TypeDef* TIMx, uint16_t TIM_FLAG );
-Nvoid TIM_DMACmd ( TIM_TypeDef* TIMx, uint16_t TIM_DMAReq, FunctionalState NewState );
-N
-N/**
-N * @}
-N */
-N
-N/* End of exported functions --------------------------------------------------*/
-N
-N/**
-N * @}
-N */
-N
-N/**
-N * @}
-N */
-N
-N#ifdef __cplusplus
-S}
-N#endif
-N
-N#endif
-L 2 "..\Buzz\Src\Buzzer.c" 2
-N#include "Buzzer.h"
-L 1 "..\Buzz\Inc\Buzzer.h" 1
-N#ifndef       _BUZZER_H_
-N#define				_BUZZER_H_
-N 
-N 
-N 
-Nvoid Buzzer_Init(void);
-N 
-Nvoid Buzzer_Play(uint8_t var);
-Nvoid PWM_SetHz(uint16_t Hz);
-Nvoid test_Buzz(void);
+Nextern void   TK_Init(void);
+Nextern void   TK_Restart(void);
+Nextern uint32_t  TK_TouchKeyScan(void);
+N//<<<end of SPTML>>>
 N
 N
-Nvoid Buzzer_SetVolume(uint8_t Volume);
-N 
-N 
-N 
-N#endif
-L 3 "..\Buzz\Src\Buzzer.c" 2
-N#include "Delay.h"
-L 1 "..\User\HeadFiles\Delay.h" 1
-N#ifndef         _DELAY_H_
-N#define		    _DELAY_H_
-N 
-N/*å»¶æ—¶å‡½æ•°*/
-Nvoid Delay_us(uint16_t xus);
-Nvoid Delay_ms(uint16_t xms);
 N
-N#endif
-L 4 "..\Buzz\Src\Buzzer.c" 2
-N#include "stdint.h"
-N//æ’­æ”¾é€Ÿåº¦ï¼Œå€¼ä¸ºå››åˆ†éŸ³ç¬¦çš„æ—¶é•¿(ms)
-N#define Speed0 500/4
+Nextern uint8_t	 	ConfirmTouchCnt;
 N
-N//åä¸¤é¦–æ‡’å¾—æ”¹ç³»æ•°äº†
-N#define Speed1 7
-N#define Speed2 5
-N 
-N//éŸ³ç¬¦å¯¹åº”å®šæ—¶å™¨åˆ†é¢‘ç³»æ•°ï¼ŒPï¼šä¼‘æ­¢ç¬¦ï¼ŒLï¼šä½éŸ³ï¼ŒMï¼šä¸­éŸ³ï¼ŒHï¼šé«˜éŸ³ï¼Œä¸‹åˆ’çº¿ï¼šå‡åŠéŸ³ç¬¦å·#
-N#define P	   50000   
-N#define L1     131
-N#define L2     147
-N#define L3     165
-N#define L4     175
-N#define L5     196
-N#define L6     221
-N#define L7     248
-N#define M1     262
-N#define M2     294
-N#define M3     330
-N#define M4     350
-N#define M5     393
-N#define M6     441
-N#define M7     495
-N#define H1     525
-N#define H2     589
-N#define H3     661
-N#define H4     700
-N#define H5     786
-N#define H6     882
-N#define H7     990
+Nextern uint8_t   	RestAreaCnt[]; 
+Nextern uint8_t   	TouchCnt[];				
+Nextern uint8_t   	NoTouchCnt[];
+Nextern uint8_t		CurrentChannel[];
+Nextern uint8_t   	LowFingerDataCnt[];
+Nextern int16_t   	DifferAccum[];
+Nextern uint8_t	 	FloatAreaCnt[]; 
+Nextern uint8_t	 	MultipleDealTpye;
+Nextern int8_t		SetNoiseThreshold;
 N
-N 
-N//å¤©ç©ºä¹‹åŸä¹è°±
-Nconst uint16_t Music[]=
-N{
-N	//éŸ³ç¬¦,æ—¶å€¼,
-N	
-N	//1
-N	P,	4,
-X	50000,	4,
-N	P,	4,
-X	50000,	4,
-N	P,	4,
-X	50000,	4,
-N	M6,	2,
-X	441,	2,
-N	M7,	2,
-X	495,	2,
-N	
-N	H1,	4+2,
-X	525,	4+2,
-N	M7,	2,
-X	495,	2,
-N	H1,	4,
-X	525,	4,
-N	H3,	4,
-X	661,	4,
-N	
-N	M7,	4+4+4,
-X	495,	4+4+4,
-N	M3,	2,
-X	330,	2,
-N	M3,	2,
-X	330,	2,
-N	
-N	//2
-N	M6,	4+2,
-X	441,	4+2,
-N	M5,	2,
-X	393,	2,
-N	M6, 4,
-X	441, 4,
-N	H1,	4,
-X	525,	4,
-N	
-N	M5,	4+4+4,
-X	393,	4+4+4,
-N	M3,	4,
-X	330,	4,
-N	
-N	M4,	4+2,
-X	350,	4+2,
-N	M3,	2,
-X	330,	2,
-N	M4,	4,
-X	350,	4,
-N	H1,	4,
-X	525,	4,
-N	
-N	//3
-N	M3,	4+4,
-X	330,	4+4,
-N	P,	2,
-X	50000,	2,
-N	H1,	2,
-X	525,	2,
-N	H1,	2,
-X	525,	2,
-N	H1,	2,
-X	525,	2,
-N	
-N	M7,	4+2,
-X	495,	4+2,
-N	M4,2,
-X	350,2,
-N	M4,4,
-X	350,4,
-N	M7,	4,
-X	495,	4,
-N	
-N	M7,	8,
-X	495,	8,
-N	P,	4,
-X	50000,	4,
-N	M6,	2,
-X	441,	2,
-N	M7,	2,
-X	495,	2,
-N	
-N	//4
-N	H1,	4+2,
-X	525,	4+2,
-N	M7,	2,
-X	495,	2,
-N	H1,	4,
-X	525,	4,
-N	H3,	4,
-X	661,	4,
-N	
-N	M7,	4+4+4,
-X	495,	4+4+4,
-N	M3,	2,
-X	330,	2,
-N	M3,	2,
-X	330,	2,
-N	
-N	M6,	4+2,
-X	441,	4+2,
-N	M5,	2,
-X	393,	2,
-N	M6, 4,
-X	441, 4,
-N	H1,	4,
-X	525,	4,
-N	
-N	//5
-N	M5,	4+4+4,
-X	393,	4+4+4,
-N	M2,	2,
-X	294,	2,
-N	M3,	2,
-X	330,	2,
-N	
-N	M4,	4,
-X	350,	4,
-N	H1,	2,
-X	525,	2,
-N	M7,	2+2,
-X	495,	2+2,
-N	H1,	2+4,
-X	525,	2+4,
-N	
-N	H2,	2,
-X	589,	2,
-N	H2,	2,
-X	589,	2,
-N	H3,	2,
-X	661,	2,
-N	H1,	2+4+4,
-X	525,	2+4+4,
-N	
-N	//6
-N	H1,	2,
-X	525,	2,
-N	M7,	2,
-X	495,	2,
-N	M6,	2,
-X	441,	2,
-N	M6,	2,
-X	441,	2,
-N	M7,	4,
-X	495,	4,
-N	M5,4,
-X	393,4,
-N	
-N	
-N	M6,	4+4+4,
-X	441,	4+4+4,
-N	H1,	2,
-X	525,	2,
-N	H2,	2,
-X	589,	2,
-N	
-N	H3,	4+2,
-X	661,	4+2,
-N	H2,	2,
-X	589,	2,
-N	H3,	4,
-X	661,	4,
-N	H5,	4,
-X	786,	4,
-N	
-N	//7
-N	H2,	4+4+4,
-X	589,	4+4+4,
-N	M5,	2,
-X	393,	2,
-N	M5,	2,
-X	393,	2,
-N	
-N	H1,	4+2,
-X	525,	4+2,
-N	M7,	2,
-X	495,	2,
-N	H1,	4,
-X	525,	4,
-N	H3,	4,
-X	661,	4,
-N	
-N	H3,	4+4+4+4,
-X	661,	4+4+4+4,
-N	
-N	//8
-N	M6,	2,
-X	441,	2,
-N	M7,	2,
-X	495,	2,
-N	H1,	4,
-X	525,	4,
-N	M7,	4,
-X	495,	4,
-N	H2,	2,
-X	589,	2,
-N	H2,	2,
-X	589,	2,
-N	
-N	H1,	4+2,
-X	525,	4+2,
-N	M5,	2+4+4,
-X	393,	2+4+4,
-N	
-N	H4,	4,
-X	700,	4,
-N	H3,	4,
-X	661,	4,
-N	H3,	4,
-X	661,	4,
-N	H1,	4,
-X	525,	4,
-N	
-N	//9
-N	H3,	4+4+4,
-X	661,	4+4+4,
-N	H3,	4,
-X	661,	4,
-N	
-N	H6,	4+4,
-X	882,	4+4,
-N	H5,	4,
-X	786,	4,
-N	H5,	4,
-X	786,	4,
-N	
-N	H3,	2,
-X	661,	2,
-N	H2,	2,
-X	589,	2,
-N	H1,	4+4,
-X	525,	4+4,
-N	P,	2,
-X	50000,	2,
-N	H1,	2,
-X	525,	2,
-N	
-N	//10
-N	H2,	4,
-X	589,	4,
-N	H1,	2,
-X	525,	2,
-N	H2,	2,
-X	589,	2,
-N	H2,	4,
-X	589,	4,
-N	H5,	4,
-X	786,	4,
-N	
-N	H3,	4+4+4,
-X	661,	4+4+4,
-N	H3,	4,
-X	661,	4,
-N	
-N	H6,	4+4,
-X	882,	4+4,
-N	H5,	4+4,
-X	786,	4+4,
-N	
-N	//11
-N	H3,	2,
-X	661,	2,
-N	H2,	2,
-X	589,	2,
-N	H1,	4+4,
-X	525,	4+4,
-N	P,	2,
-X	50000,	2,
-N	H1,	2,
-X	525,	2,
-N	
-N	H2,	4,
-X	589,	4,
-N	H1,	2,
-X	525,	2,
-N	H2,	2+4,
-X	589,	2+4,
-N	M7,	4,
-X	495,	4,
-N	
-N	M6,	4+4+4,
-X	441,	4+4+4,
-N	P,	4,
-X	50000,	4,
-N	
-N	0xFF	//ç»ˆæ­¢æ ‡å¿—ï¼Œé˜²æ­¢æ•°ç»„è¶Šç•Œä¹‹åä¹±éŸ³ï¼Œç”¨ä¸€ä¸ªæœ€å¤§å€¼æ¥åšä¸€ä¸ªç»ˆæ­¢æ ‡å¿—ï¼Œä¹Ÿå¯ä»¥è®¾åˆ«çš„å€¼
+N#endif 
+L 13 "..\Drivers\TKDriver\C\TKDriver.C" 2
+N#include "S_TOUCHKEYCFG.H"
+L 1 "..\Drivers\TKDriver\C\S_TOUCHKEYCFG.H" 1
+N//*************************************************************************************************
+N//Copyright (c) ÉîÛÚÊĞÈüÔªÎ¢µç×ÓÓĞÏŞ¹«Ë¾
+N//ÎÄ¼şÃû³Æ:  S_TouchKeyCFG.h
+N//×÷Õß: 
+N//Ä£¿é¹¦ÄÜ:  ´¥¿Ø¼üÅäÖÃÎÄ¼ş
+N//°æ±¾:  V0.2
+N//¸ü¸Ä¼ÇÂ¼:
+N//************************************************************************************************
+N#ifndef __S_TOUCHKEYCFG_H__
+N#define __S_TOUCHKEYCFG_H__
+N#define		    SOCAPI_SET_TOUCHKEY_TOTAL					  3
+N#define			SOCAPI_SET_TOUCHKEY_CHANNEL					  0x00000000
+N#define			SOCAPI_SET_TOUCHKEY_CHANNEL2			      0x00000000
+Nconst unsigned int   TKCFG[17] = {0,0,0,5,10,3000,200,100,2,1,0,4,0,1,65535,65535,20}; 
+Nconst unsigned char  TKChannelCfg[3][10]={
+N0x06,0x02,0x2e,0x04,0x08,0x03,0x0e,0x05,0x0f,0xff,
+N0x06,0x02,0x2e,0x04,0x08,0x03,0x11,0x05,0x0f,0xff,
+N0x06,0x02,0x2e,0x04,0x08,0x03,0x0f,0x05,0x0f,0xff,
 N};
-Nconst int wind_rise[]=
+N#endif
+L 14 "..\Drivers\TKDriver\C\TKDriver.C" 2
+N#include "sc32f1xxx.h"
+N
+N/***************************************¿âÀàĞÍÑ¡Ôñ***************************************************/
+N//#define USING_TKKey_T1		//Ö§³Ö´¥¿Ø°´¼üT1¿â
+N#define USING_SlideModule	//Ö§³Ö»¬ÂÖ»¬Ìõ¿â
+N
+N/***************************************************************************************************/
+N
+N//===============================================================================
+N//È«¾Ö±äÁ¿ÉùÃ÷£º¸ÃÇøÓò²»¿ÉĞŞ¸Ä
+Nuint8_t		TK_TouchKeyStatus;
+Nuint8_t		CurrentChannel[SOCAPI_SET_TOUCHKEY_TOTAL];
+Xuint8_t		CurrentChannel[3];
+N
+Nuint8_t   	RestAreaCnt[SOCAPI_SET_TOUCHKEY_TOTAL]; 
+Xuint8_t   	RestAreaCnt[3]; 
+Nuint8_t    	TouchCnt[SOCAPI_SET_TOUCHKEY_TOTAL];				
+Xuint8_t    	TouchCnt[3];				
+Nuint8_t    	NoTouchCnt[SOCAPI_SET_TOUCHKEY_TOTAL];
+Xuint8_t    	NoTouchCnt[3];
+Nuint8_t    	LowFingerDataCnt[SOCAPI_SET_TOUCHKEY_TOTAL];
+Xuint8_t    	LowFingerDataCnt[3];
+Nuint8_t   	FloatAreaCnt[SOCAPI_SET_TOUCHKEY_TOTAL];
+Xuint8_t   	FloatAreaCnt[3];
+Nint16_t     DifferAccum[SOCAPI_SET_TOUCHKEY_TOTAL]; 
+Xint16_t     DifferAccum[3]; 
+N
+N
+NTK_ParameterBuffer_StructDef SingleParameterBufferSet[SOCAPI_SET_TOUCHKEY_TOTAL] ;
+XTK_ParameterBuffer_StructDef SingleParameterBufferSet[3] ;
+NTK_ParameterBuffer_StructDef CombineParameterBufferSet[SOCAPI_SET_TOUCHKEY_TOTAL] ;
+XTK_ParameterBuffer_StructDef CombineParameterBufferSet[3] ;
+N
+N
+NTK_BaseLineUpdatePar_StructDef SingleChannelsBaseLineUpdatePar[SOCAPI_SET_TOUCHKEY_TOTAL] ;
+XTK_BaseLineUpdatePar_StructDef SingleChannelsBaseLineUpdatePar[3] ;
+N
+N
+Nuint8_t		ConfirmTouchCnt;
+Nint8_t		SetNoiseThreshold;
+Nuint8_t		MultipleDealTpye = 0; 
+N
+N//===============================================================================
+N//×Ô¶¨Òå±äÁ¿
+Nuint16_t 	UpdateBaseLNum; 	    // µ¥¼ü³¤°´¼ÆÊı
+Nuint16_t 	MultipleLNum;			// ¶à°´¼ü¸ÉÈÅ¼ÆÊı
+N
+N//===============================================================================
+N//Íâ²¿±äÁ¿½Ó¿Ú
+Nextern 	uint8_t		SingleCurrentChannelMax;	//µ±Ç°µ¥Í¨µÀµÄkeysensorµÄ¸öÊı
+Nextern  uint8_t	    UsingTKSlideModuleNumber;
+Nextern  uint8_t		bMultiple;	//¶à°´¼ü±êÖ¾	
+Nextern 	uint8_t		TK_GetIsNeedUpdateBaseline(void);
+N
+Nextern  uint32_t 	TK_SensorKeyFlag(void);
+Nextern  void 		TK_SetNeedUpdateBaseline(void);
+Nextern  void 		TK_MultipleDeal(uint8_t CycleCnt);
+Nextern  void 		TK_TouchKey_Service(void);
+N
+N
+N
+N/*******************************¿âº¯Êı»ù´¡ÉèÖÃ£¬Ò»°ã²»ĞèÒª¸ü¸Ä***************************************/
+N#define		SOCAPI_CFG_CYCLE_CNT					    32 		//È¡Öµ·¶Î§10-255£¬´¥¿Ø³õÊ¼»¯Êı¾İÂË³ö´ÎÊı£¬ÒÔ¼°ĞŞÕıÖµ³õÊ¼»¯ĞŞÕı´ÎÊı£¬Ä¬ÈÏ32£¬È¡ÖµÔ½´ó´¥¿Ø³õÊ¼»¯Ê±¼äÔ½³¤£¬´¥¿ØÊı¾İÔ½ÎÈ¶¨  
+N#define		SOCAPI_CFG_OVERLOW_MAX_COUNT			    10		//µÍ»ùÏß¸üĞÂËÙ¶ÈÉèÖÃ£¬´ú±í·¢ÉúµÍ»ùÏßºó£¬¶àÉÙÂÖ¸üĞÂÒ»´Î»ùÏß£¬¸üĞÂ²½½ønoise/2£¬ÖµÔ½Ğ¡»ùÏß¸üĞÂËÙ¶ÈÔ½¿ì
+N#define		SOCAPI_CFG_RESET_BASELINE_CNT			    10  	//µÍ»ùÏß¸üĞÂ¶àÉÙ´Îºó£¬Èç¹û»¹´¦ÓÚµÍ»ùÏß×´Ì¬£¬Ö±½ÓÇ¿ÖÆ¸üĞÂ»ùÏß£¬ÖµÔ½Ğ¡»ùÏß¸üĞÂËÙ¶ÈÔ½¿ì
+N																//SOCAPI_CFG_OVERLOW_MAX_COUNTºÍSOCAPI_CFG_RESET_BASELINE_CNTµÄÈ¡Öµ³Ë»ı²»ÄÜ´óÓÚ255
+N/**************************************************************************************************/
+N
+N/******************************************µ¯»É¿â¶ÀÓĞ***********************************************/
+N#define		SOCAPI_SET_CS_FUNCTION						1		//0:±íÊ¾²»½øĞĞCS²âÊÔ,1: ±íÊ¾½øĞĞCS²âÊÔ,Ä¬ÈÏ0
+N#define		SOCAPI_INHIBITION_ZONE					    8		//ÒÖÖÆÇø¼ä%£¬ÉèÖÃ·¶Î§5-10£¬Ä¬ÈÏ7,¼´£¨7*10£©%=70% £¬Á¬Ë®Ê±¼Ó´ó¸Ã²ÎÊı,¶Ô½²»úÉèÖÃĞ¡
+N#define		SOCAPI_MAX_KEY_MUTIPLE						300		//¶àÉÙ´Î¸ÉÈÅ¸üĞÂ»ùÏß£¬Ä¬ÈÏ300*5=1500
+N#define		SOCAPI_MAX_KEY_NUM_INVALID					3		//Ç¿ÖÆ¸üĞÂ»ùÏß°´¼üÏŞÖÆ¸öÊı£¬Ä¬ÈÏ3
+N/**************************************************************************************************/
+N
+N
+N/***************************************»¬¶¯Ä£¿éÉèÖÃÏî********************************************************/
+N#define      USING_TKSlideModule_Number 		 1	
+N
+N#ifdef	USING_SlideModule
+N
+NTKSlideModulePCB TKSlideModulePCBArray[USING_TKSlideModule_Number] = 
+XTKSlideModulePCB TKSlideModulePCBArray[1] = 
+N{
+N/***************************************»¬ÂÖ********************************************************/
+N	{
+N		Bar,			//(ĞèĞŞ¸Ä)		»¬¶¯¿éÀàĞÍ,Bar:Îª»¬Ìõ£¬Circle:Îª»¬ÂÖ
+N		{29, 30 ,31},	//(ĞèĞŞ¸Ä)		°´ÕÕ»¬¶¯Ë³Ğò£¬ÒÀ´Î½«Ê¹ÓÃµ½µÄ»¬Ìõ°´¼üÍ¨µÀ´æÈëÊı×é6->5->4->3»¬¶¯ÖµÖğ½¥±ä´ó
+N		3,			//(ĞèĞŞ¸Ä)		µ±Ç°»¬¶¯Ä£¿éÊ¹ÓÃµÄTKÍ¨µÀÊıÁ¿
+N		32,			//(ĞèĞŞ¸Ä)		»¬¶¯Êä³öµÄµµÎ»×î´ó¼¶Êı£¨´Ó1ËãÆğ£© 
+N		
+N		
+N		20,			//(¿ÉĞŞ¸Ä)		DDifferÖµ<SUB_DATA¸ÃDifferÖµÎŞĞ§£¬»áÉèÖÃÎª0£¬ÆÁ±Î¸ÉÈÅ£¨ĞŞ¸ÄÁéÃô¶È£©  ¸ÃÖµ½¨ÒéÄ¬ÈÏ
+N		100,		//(¿ÉĞŞ¸Ä)		DifferÖµ>LIB_DATA±íÊ¾ÓĞ¼ü£¨ĞŞ¸ÄÁéÃô¶È£©¸ÃÖµ½¨ÒéÉèÖÃÎª±ä»¯Á¿µÄËÄ·ÖÖ®Ò»µ½Èı·ÖÖ®Ò»
+N		
+N		
+N		{0},		//(ÎŞĞèĞŞ¸Ä)		´æ·ÅÄÚ²¿TKÍ¨µÀÅÅĞò¶¼µÄindex
+N		1,			//(ÎŞĞèĞŞ¸Ä)		É¨Ãè¶àÉÙÂÖÎŞ»¬Ìõ°´¼ü¼´¸üĞÂ»ùÏß£¬Ä¬ÈÏ10   ¿ÉĞŞ¸Ä
+N		0,			//(ÎŞĞèĞŞ¸Ä)		¼ÇÂ¼ÉÏÒ»´ÎÊä³öµÄÖµ
+N		0,			//(ÎŞĞèĞŞ¸Ä)		»¬¶¯Êä³öÖµ£¬Í¨¹ı¸ÃÖµ»ñÈ¡Êä³ö½á¹û
+N		0,			//(ÎŞĞèĞŞ¸Ä)		»ùÏß¸üĞÂ¼ÆÊı
+N		150,		//(ÎŞĞèĞŞ¸Ä)		¿É²ÉÓÃ150Ä¬ÈÏÖµ£¬ñîºÏ²ÎÊı·¶Î§(100~200)£¬²ÎÊı¹ıĞ¡»á³öÏÖ³öÖµÈ±Ê§,ÀıÈç»¬¶¯³öÖµOutValueÎª1->2->3->5->6->7,²ÎÊı¹ı´ó»á³öÏÖ³öÖµÖØµş,ÀıÈç»¬¶¯³öÖµOutValueÎª1->2->3->4->3->4->5->6->7
+N		0,			//(ÎŞĞèĞŞ¸Ä)		ñîºÏ²ÎÊı£¬DeBugÖµ,ÓÃÓÚµ÷ÊÔ£¬µ÷ÊÔÊ±Êä³ö¸ÃÖµ£¬»¬¶¯»¬¶¯Ä£¿éÈ¡Êä³öµÄ×îĞ¡Öµ£¬¸ù¾İ×îĞ¡Öµµ÷½ÚCouplingValueñîºÏ²ÎÊı
+N		0			//(ÎŞĞèĞŞ¸Ä)		»¬¶¯Ä£¿é´¥·¢¼ÆÊı±êÖ¾
+N
+N	}, 
+N
+N};
+N/***************************************************************************************************/
+N#endif
+N
+N#define	  	AppType			     			0
+N#define	  	IsDoubleKey			 			1
+N#define	  	AirSeparationDistance	 	    2
+N#define   	CONFIRMTOUCHCNT        	        3
+N#define   	INIT_AUTO_UPDATE_TIME	 	    4
+N#define   	SET_KEY_CONTI_TIME     	        5  
+N#define   	SET_SYNC_UPDATE 		 		6
+N#define   	SET_UPDATE_SPEED 		 		7	
+N#define   	AUTO_UPDATE_TIME	     	    8
+N#define	  	FilteredKValue		 			9
+N#define	  	SET_ANTIJAM		     			10
+N#define	  	BAUD		             		11
+N#define	  	DwellTime		         		12
+N#define   	SaveTime					    13
+N#define   	NOISE                  	        16
+N
+N
+N#define   	SET_TOUCH_FREQ		 			0
+N#define	  	SET_RESOLUTION_FACTOR		 	1
+N#define   	SET_RESOLUTION			 		2
+N#define   	SET_GAIN_CFG				 	3
+N#define   	SCANTIME				 		4
+N#define   	SET_ICHA_FACTOR	 		    	5
+N#define   	SET_ICHA	 		    		6
+N#define		FINGER_THRESHOLD_H				8
+N#define		FINGER_THRESHOLD_L				9
+N
+N//#define   	SET_TOUCH_FREQ		 			0
+N//#define	  	SET_RESOLUTION		 			1
+N//#define   	SET_GAIN_CFG			 		2
+N//#define   	SCANTIME				 		3
+N//#define   	SET_ICHA				 		4
+N//#define   	FINGER_THRESHOLD_H	 		    6
+N//#define   	FINGER_THRESHOLD_L	 		    7
+N
+N
+N//**********************************************************************************	
+N// 								ºê¶¨Òå½Ó¿Úµ÷ÓÃ²¿·Ö								  //
+N//**********************************************************************************
+Nuint8_t		CFG_OVERLOW_MAX_COUNT = SOCAPI_CFG_OVERLOW_MAX_COUNT;
+Xuint8_t		CFG_OVERLOW_MAX_COUNT = 10;
+Nuint8_t		CFG_RESET_BASELINE_CNT = SOCAPI_CFG_RESET_BASELINE_CNT;	
+Xuint8_t		CFG_RESET_BASELINE_CNT = 10;	
+Nuint8_t		CFG_CYCLE_CNT = SOCAPI_CFG_CYCLE_CNT;
+Xuint8_t		CFG_CYCLE_CNT = 32;
+N
+N//**********************************************************************************	
+N// 								´¥¿Ø²ÎÊı½âÎöº¯Êı								  //
+N//**********************************************************************************
+N
+N/****************************************************************************
+N*º¯ÊıÃû³Æ£ºuint16_t TK_SetOneKeyPushResetTime(void) 
+N*º¯Êı¹¦ÄÜ£º°´¼ü×î³¤µÄÊä³öÊ±¼ä
+N*Èë¿Ú²ÎÊı£ºvoid
+N*³ö¿Ú²ÎÊı£ºuint16_t SOCAPI_SET_KEY_CONTI_TIME
+N*±¸×¢	 £ºÕâ¸ö·µ»ØÖµµÄÉèÖÃ£¬ ÊÇ¸ù¾İÓĞ¶à³¤Ê±¼äÆô¶¯TouchKeyRestart£¨£©Ò»´Î
+NÀıÈç10ms Æô¶¯Ò»´Î£¬ ÄÇSOCAPI_SET_KEY_CONTI_TIME*10ms£¬³¬¹ıÊ±¼äºó´Ë°´¼üÎŞĞ§¡£
+N*****************************************************************************/
+Nuint16_t TK_SetOneKeyPushResetTime(void)   
+N{	  
+N	return  TKCFG[SET_KEY_CONTI_TIME];
+X	return  TKCFG[5];
+N}
+N
+N/****************************************************************************
+N*º¯ÊıÃû³Æ£ºuint16_t  TK_GetBaselineUpdateThreshold(void)
+N*º¯Êı¹¦ÄÜ£º¸üĞÂËÙ¶È 
+N*Èë¿Ú²ÎÊı£ºvoid
+N*³ö¿Ú²ÎÊı£ºuint16_t
+N*±¸×¢	 £º
+N*****************************************************************************/
+Nuint16_t TK_GetBaselineUpdateThreshold(void)
+N{
+N	return TKCFG[SET_UPDATE_SPEED]; 
+X	return TKCFG[7]; 
+N}
+N
+N/****************************************************************************
+N*º¯ÊıÃû³Æ£ºuint8_t TK_GetInitAutoUpdateTime(void)
+N*º¯Êı¹¦ÄÜ£º³õÊ¼»¯×Ô¶¯Ğ£×¼´ÎÊı
+N*Èë¿Ú²ÎÊı£ºvoid
+N*³ö¿Ú²ÎÊı£ºuint8_t
+N*±¸×¢	 £º
+N*****************************************************************************/
+Nuint8_t TK_GetInitAutoUpdateTime(void)
+N{
+N	return  TKCFG[INIT_AUTO_UPDATE_TIME];
+X	return  TKCFG[4];
+N}
+N
+N/****************************************************************************
+N*º¯ÊıÃû³Æ£ºuint8_t TK_IsDoubleKeyOrSlideKey(void)
+N*º¯Êı¹¦ÄÜ£º¼ì²âÊÇ·ñÊÇµ¯»É»¬Ìõ»òÕßË«¼ü
+N*Èë¿Ú²ÎÊı£ºvoid
+N*³ö¿Ú²ÎÊı£ºuint8_t 
+N*±¸×¢	 £º
+N*****************************************************************************/
+Nuint8_t TK_IsDoubleKeyOrSlideKey(void)
+N{
+N    return TKCFG[IsDoubleKey];
+X    return TKCFG[1];
+N}
+N
+N/****************************************************************************
+N*º¯ÊıÃû³Æ£ºuint8_t TK_GetCsFunction(void)
+N*º¯Êı¹¦ÄÜ£º½øĞĞCS ²âÊÔ
+N*Èë¿Ú²ÎÊı£ºvoid
+N*³ö¿Ú²ÎÊı£ºuint8_t SOCAPI_SET_CS_FUNCTION
+N*±¸×¢	 £º
+N*****************************************************************************/
+Nuint8_t TK_GetCsFunction(void)
+N{
+N	return SOCAPI_SET_CS_FUNCTION; 
+X	return 1; 
+N}
+N
+N/****************************************************************************
+N*º¯ÊıÃû³Æ£ºuint8_t TK_GetUpConfirmCnt(void)
+N*º¯Êı¹¦ÄÜ£º¼ì²â°´¼üµ¯Æğ´ÎÊı
+N*Èë¿Ú²ÎÊı£ºvoid
+N*³ö¿Ú²ÎÊı£º·µ»Ø°´¼üµ¯ÆğÈ·ÈÏ´ÎÊı 
+N*±¸×¢	 £º
+N*****************************************************************************/
+Nuint8_t TK_GetUpConfirmCnt(void)
+N{
+N	return ConfirmTouchCnt>>1;
+N}
+N
+N/****************************************************************************
+N*º¯ÊıÃû³Æ£ºuint8_t TK_GetTKYzCnt(void)
+N*º¯Êı¹¦ÄÜ£º»ñÈ¡°´¼üÒÖÖÆÈ·ÈÏ´ÎÊı
+N*Èë¿Ú²ÎÊı£ºvoid
+N*³ö¿Ú²ÎÊı£º·µ»ØÒÖÖÆ´ÎÊı 
+N*±¸×¢	 £º
+N*****************************************************************************/
+Nuint8_t TK_GetTKYzCnt(void)
+N{
+N	return (ConfirmTouchCnt/3);
+N}
+N
+N/****************************************************************************
+N*º¯ÊıÃû³Æ£ºuint16_t  TK_GetCurrFingerValue(uint8_t i)
+N*º¯Êı¹¦ÄÜ£º»ñÈ¡µ±Ç°µÄfinger Öµ
+N*Èë¿Ú²ÎÊı£ºuint8_t
+N*³ö¿Ú²ÎÊı£ºuint16_t 
+N*±¸×¢	 £º
+N*****************************************************************************/
+Nuint16_t TK_GetCurrFingerValue(uint8_t i)
+N{ 
+N	return	TKChannelCfg[i][FINGER_THRESHOLD_H]*256+TKChannelCfg[i][FINGER_THRESHOLD_L] ;
+X	return	TKChannelCfg[i][8]*256+TKChannelCfg[i][9] ;
+N}
+N
+N/****************************************************************************
+N*º¯ÊıÃû³Æ£ºuint8_t TK_GetScanTimeValue(uint8_t i)
+N*º¯Êı¹¦ÄÜ£º»ñÈ¡µ±Ç°Í¨µÀµÄÉ¨ÃèÊ±¼ä
+N*Èë¿Ú²ÎÊı£ºuint8_t
+N*³ö¿Ú²ÎÊı£ºuint8_t 
+N*±¸×¢	 £º
+N*****************************************************************************/
+Nuint8_t TK_GetScanTimeValue(uint8_t i)
+N{ 
+N	return TKChannelCfg[i][SCANTIME];
+X	return TKChannelCfg[i][4];
+N}
+N
+N/****************************************************************************
+N*º¯ÊıÃû³Æ£ºuint8_t TK_GetBaseLineAdjustValue(uint8_t i)
+N*º¯Êı¹¦ÄÜ£º»ñÈ¡µ±Ç°Í¨µÀµÄ»ùÏßµ÷Õû
+Nj
+N*Èë¿Ú²ÎÊı£ºuint8_t
+N*³ö¿Ú²ÎÊı£ºuint8_t 
+N*±¸×¢	 £º
+N*****************************************************************************/
+Nuint8_t TK_GetBaseLineAdjustValue(uint8_t i)
 N{	
-N		//å‰å¥
-N		L7,25,M1,25,M2,25,M3,25,L3,50,M5,25,M3,25,M3,50,P,150, L7,25,M1,25,M2,25,M3,25,L2,50,M5,25,M3,25,M2,25,M3,25,M1,25,M2,25,L7,25,M1,25,L5,25,P,25, L7,25,M1,25,M2,25,M3,25,L3,50,M5,25,M3,75,P,150,L7,25,M1,25,M2,25,M3,25,L2,50,M5,25,M3,25,M2,25,M3,25,M1,25,M2,25,P,20,
-X		248,25,262,25,294,25,330,25,165,50,393,25,330,25,330,50,50000,150, 248,25,262,25,294,25,330,25,147,50,393,25,330,25,294,25,330,25,262,25,294,25,248,25,262,25,196,25,50000,25, 248,25,262,25,294,25,330,25,165,50,393,25,330,75,50000,150,248,25,262,25,294,25,330,25,147,50,393,25,330,25,294,25,330,25,262,25,294,25,50000,20,
-N		//è¿™ä¸€è·¯ä¸Šèµ°èµ°åœåœ é¡ºç€å°‘å¹´æ¼‚æµçš„ç—•è¿¹
-N		M2,50,M2,50,M1,25,M2,50,M2,50,M1,25,M2,50,M3,50,M5,50,M3,50, M2,50,M2,50,M1,25,M2,50,M2,50,M1,25,M2,25,M3,25,M2,25,M1,25,L6,100,P,10,
-X		294,50,294,50,262,25,294,50,294,50,262,25,294,50,330,50,393,50,330,50, 294,50,294,50,262,25,294,50,294,50,262,25,294,25,330,25,294,25,262,25,221,100,50000,10,
-N		//è¿ˆå‡ºè½¦ç«™çš„å‰ä¸€åˆ» ç«Ÿæœ‰äº›çŠ¹è±«
-N		M2,50,M2,50,M1,25,M2,50,M2,50,M1,25,M2,50,M3,50,M5,50,M3,50, M2,50,M2,50,M3,25,M2,50,M1,50,M2,100,P,50,
-X		294,50,294,50,262,25,294,50,294,50,262,25,294,50,330,50,393,50,330,50, 294,50,294,50,330,25,294,50,262,50,294,100,50000,50,
-N		//ä¸ä»…ç¬‘ç€è¿™è¿‘ä¹¡æƒ…æ€¯ ä»æ— æ³•é¿å…
-N		M2,50,M2,50,M1,25,M2,50,M2,50,M1,25,M2,50,M3,50,M5,50,M3,50, M2,50,M2,50,M3,25,M2,50,M1,50,L6,100,P,10,
-X		294,50,294,50,262,25,294,50,294,50,262,25,294,50,330,50,393,50,330,50, 294,50,294,50,330,25,294,50,262,50,221,100,50000,10,
-N		//è€Œé•¿é‡çš„å¤© ä¾æ—§é‚£ä¹ˆæš– é£å¹èµ·äº†ä»å‰
-N		M3,25,M2,25,M1,25,M2,25,M1,100, M3,25,M2,25,M1,25,M2,25,M1,50,M1,50, M5,25,M3,25,M2,25,M1,25,M2,25,M1,100,M1,150,P,30,
-X		330,25,294,25,262,25,294,25,262,100, 330,25,294,25,262,25,294,25,262,50,262,50, 393,25,330,25,294,25,262,25,294,25,262,100,262,150,50000,30,
-N		//ä»å‰åˆè¯†è¿™ä¸–é—´ ä¸‡èˆ¬ç•™æ‹ çœ‹ç€å¤©è¾¹ä¼¼åœ¨çœ¼å‰ ä¹Ÿç”˜æ„¿èµ´æ±¤è¹ˆç«å»èµ°å®ƒä¸€é
-N		M1,50,M2,50,M3,50,M1,50,M6,50,M5,25,M6,25,M6,50,M6,50, M1,25,M7,50,M6,25,M7,25,M7,100,P,5, M7,50,M6,25,M7,25,M7,50,M3,50,H1,25,H2,25,H1,25,M7,25,M6,50,M5,50, M6,50,M5,25,M6,25,M6,25,M5,25,M6,25,M5,25,M6,50,M5,25,M2,25,M2,25,M5,50,M5,50,M3,100,M3,100,P,25,
-X		262,50,294,50,330,50,262,50,441,50,393,25,441,25,441,50,441,50, 262,25,495,50,441,25,495,25,495,100,50000,5, 495,50,441,25,495,25,495,50,330,50,525,25,589,25,525,25,495,25,441,50,393,50, 441,50,393,25,441,25,441,25,393,25,441,25,393,25,441,50,393,25,294,25,294,25,393,50,393,50,330,100,330,100,50000,25,
-N		//å¦‚ä»Šèµ°è¿‡è¿™ä¸–é—´ ä¸‡èˆ¬ç•™æ‹ ç¿»è¿‡å²æœˆä¸åŒä¾§è„¸ æªä¸åŠé˜²é—¯å…¥ä½ çš„ç¬‘é¢œ
-N		M1,50,M2,50,M3,50,M1,50,M6,50,M5,25,M6,25,M6,50,M6,50, M1,25,M7,50,M6,25,M7,25,M7,100,P,5, M7,50,M6,25,M7,25,M7,50,M3,50,H1,25,H2,25,H1,25,M7,25,M6,50,M5,50, M6,50,H3,25,H3,25,H3,50,M5,50,M6,50,H3,25,H3,25,H3,25,M5,50,M6,25,M6,100,M6,100,M6,100,P,25,
-X		262,50,294,50,330,50,262,50,441,50,393,25,441,25,441,50,441,50, 262,25,495,50,441,25,495,25,495,100,50000,5, 495,50,441,25,495,25,495,50,330,50,525,25,589,25,525,25,495,25,441,50,393,50, 441,50,661,25,661,25,661,50,393,50,441,50,661,25,661,25,661,25,393,50,441,25,441,100,441,100,441,100,50000,25,
-N		//æˆ‘æ›¾éš¾è‡ªæ‹”äºä¸–ç•Œä¹‹å¤§ ä¹Ÿæ²‰æººäºå…¶ä¸­æ¢¦è¯
-N		H1,50,H2,50,H3,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H2,25,H3,25,H3,50, H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,25,H3,50,H3,50,
-X		525,50,589,50,661,50,882,25,786,25,786,50,882,25,786,25,786,50,882,25,786,25,786,50,589,25,661,25,661,50, 882,25,786,25,786,50,882,25,786,25,786,50,882,25,786,25,786,25,661,50,661,50,
-N		//ä¸å¾—çœŸå‡ ä¸åšæŒ£æ‰ ä¸æƒ§ç¬‘è¯
-N		H2,50,H1,25,M6,25,M6,25,H1,50, M6,25,H2,25,H1,25,M6,50,M6,25,H1,50,H1,50, H3,100,H3,25,H4,25,H3,50,H3,25,H2,50,H2,50,P,25,
-X		589,50,525,25,441,25,441,25,525,50, 441,25,589,25,525,25,441,50,441,25,525,50,525,50, 661,100,661,25,700,25,661,50,661,25,589,50,589,50,50000,25,
-N		//æˆ‘æ›¾å°†é’æ˜¥ç¿»æ¶Œæˆå¥¹ ä¹Ÿæ›¾æŒ‡å°–å¼¹å‡ºç››å¤ å¿ƒä¹‹æ‰€åŠ¨ä¸”å°±éšç¼˜å»å§
-N		H1,50,H2,50,H3,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H2,50, H3,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H3,50,H3,50, H2,50,H1,25,M6,25,M6,25,H3,50,H3,50, H2,50,H1,25,M6,25,M6,25,H1,50,H1,50,H1,100,H1,100,P,10,
-X		525,50,589,50,661,50,882,25,786,25,786,50,882,25,786,25,786,50,882,25,786,25,786,50,589,50, 661,50,882,25,786,25,786,50,882,25,786,25,786,50,882,25,786,25,786,50,661,50,661,50, 589,50,525,25,441,25,441,25,661,50,661,50, 589,50,525,25,441,25,441,25,525,50,525,50,525,100,525,100,50000,10,
-N		//çŸ­çŸ­çš„è·¯èµ°èµ°åœåœ  ä¹Ÿæœ‰äº†å‡ åˆ†çš„è·ç¦»
-N		M2,50,M2,50,M1,25,M2,50,M2,50,M1,25,M2,50,M3,50,M5,50,M3,50, M2,50,M2,50,M1,25,M2,50,M2,50,M1,25,M2,25,M3,25,M2,25,M1,25,L6,100,P,10,
-X		294,50,294,50,262,25,294,50,294,50,262,25,294,50,330,50,393,50,330,50, 294,50,294,50,262,25,294,50,294,50,262,25,294,25,330,25,294,25,262,25,221,100,50000,10,
-N		//ä¸çŸ¥æŠšæ‘¸çš„æ˜¯æ•…äº‹è¿˜æ˜¯æ®µå¿ƒæƒ…
-N		M2,50,M2,50,M1,25,M2,50,M2,50,M1,25,M2,50,M3,50,M5,50,M3,50, M2,50,M2,50,M3,25,M2,50,M1,50,M2,100,P,50,
-X		294,50,294,50,262,25,294,50,294,50,262,25,294,50,330,50,393,50,330,50, 294,50,294,50,330,25,294,50,262,50,294,100,50000,50,
-N		//ä¹Ÿè®¸æœŸå¾…çš„ä¸è¿‡æ˜¯ä¸æ—¶é—´ä¸ºæ•Œ
-N		M2,50,M2,50,M1,25,M2,50,M2,50,M1,25,M2,50,M3,50,M5,50,M3,50, M2,50,M2,50,M3,25,M2,50,M1,50,L6,100,P,10,
-X		294,50,294,50,262,25,294,50,294,50,262,25,294,50,330,50,393,50,330,50, 294,50,294,50,330,25,294,50,262,50,221,100,50000,10,
-N		//å†æ¬¡è§åˆ°ä½  å¾®å‡‰æ™¨å…‰é‡Œ ç¬‘çš„å¾ˆç”œèœœ
-N		M3,25,M2,25,M1,25,M2,25,M1,100, M3,25,M2,25,M1,25,M2,25,M1,50,M1,50, M5,25,M3,25,M2,25,M1,25,M2,25,M1,100,M1,150,P,30,
-X		330,25,294,25,262,25,294,25,262,100, 330,25,294,25,262,25,294,25,262,50,262,50, 393,25,330,25,294,25,262,25,294,25,262,100,262,150,50000,30,
-N		//ä»å‰åˆè¯†è¿™ä¸–é—´ ä¸‡èˆ¬ç•™æ‹ çœ‹ç€å¤©è¾¹ä¼¼åœ¨çœ¼å‰ ä¹Ÿç”˜æ„¿èµ´æ±¤è¹ˆç«å»èµ°å®ƒä¸€é
-N		M1,50,M2,50,M3,50,M1,50,M6,50,M5,25,M6,25,M6,50,M6,50, M1,25,M7,50,M6,25,M7,25,M7,100,P,5, M7,50,M6,25,M7,25,M7,50,M3,50,H1,25,H2,25,H1,25,M7,25,M6,50,M5,50, M6,50,M5,25,M6,25,M6,25,M5,25,M6,25,M5,25,M6,50,M5,25,M2,25,M2,25,M5,50,M5,50,M3,100,M3,100,P,25,
-X		262,50,294,50,330,50,262,50,441,50,393,25,441,25,441,50,441,50, 262,25,495,50,441,25,495,25,495,100,50000,5, 495,50,441,25,495,25,495,50,330,50,525,25,589,25,525,25,495,25,441,50,393,50, 441,50,393,25,441,25,441,25,393,25,441,25,393,25,441,50,393,25,294,25,294,25,393,50,393,50,330,100,330,100,50000,25,
-N		//å¦‚ä»Šèµ°è¿‡è¿™ä¸–é—´ ä¸‡èˆ¬ç•™æ‹ ç¿»è¿‡å²æœˆä¸åŒä¾§è„¸ æªä¸åŠé˜²é—¯å…¥ä½ çš„ç¬‘é¢œ
-N		M1,50,M2,50,M3,50,M1,50,M6,50,M5,25,M6,25,M6,50,M6,50, M1,25,M7,50,M6,25,M7,25,M7,100,P,5, M7,50,M6,25,M7,25,M7,50,M3,50,H1,25,H2,25,H1,25,M7,25,M6,50,M5,50, M6,50,H3,25,H3,25,H3,50,M5,50,M6,50,H3,25,H3,25,H3,25,M5,50,M6,25,M6,100,M6,100,M6,100,P,25,
-X		262,50,294,50,330,50,262,50,441,50,393,25,441,25,441,50,441,50, 262,25,495,50,441,25,495,25,495,100,50000,5, 495,50,441,25,495,25,495,50,330,50,525,25,589,25,525,25,495,25,441,50,393,50, 441,50,661,25,661,25,661,50,393,50,441,50,661,25,661,25,661,25,393,50,441,25,441,100,441,100,441,100,50000,25,
-N		//æˆ‘æ›¾éš¾è‡ªæ‹”äºä¸–ç•Œä¹‹å¤§ ä¹Ÿæ²‰æººäºå…¶ä¸­æ¢¦è¯
-N		H1,50,H2,50,H3,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H2,25,H3,25,H3,50, H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,25,H3,50,H3,50,
-X		525,50,589,50,661,50,882,25,786,25,786,50,882,25,786,25,786,50,882,25,786,25,786,50,589,25,661,25,661,50, 882,25,786,25,786,50,882,25,786,25,786,50,882,25,786,25,786,25,661,50,661,50,
-N		//ä¸å¾—çœŸå‡ ä¸åšæŒ£æ‰ ä¸æƒ§ç¬‘è¯
-N		H2,50,H1,25,M6,25,M6,25,H1,50, M6,25,H2,25,H1,25,M6,50,M6,25,H1,50,H1,50, H3,100,H3,25,H4,25,H3,50,H3,25,H2,50,H2,50,P,25,
-X		589,50,525,25,441,25,441,25,525,50, 441,25,589,25,525,25,441,50,441,25,525,50,525,50, 661,100,661,25,700,25,661,50,661,25,589,50,589,50,50000,25,
-N		//æˆ‘æ›¾å°†é’æ˜¥ç¿»æ¶Œæˆå¥¹ ä¹Ÿæ›¾æŒ‡å°–å¼¹å‡ºç››å¤ å¿ƒä¹‹æ‰€åŠ¨ä¸”å°±éšç¼˜å»å§
-N		H1,50,H2,50,H3,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H2,50, H3,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H3,50,H3,50, H2,50,H1,25,M6,25,M6,25,H3,50,H3,50, H2,50,H1,25,M6,25,M6,25,H1,50,H1,50,H1,100,H1,100,P,10,
-X		525,50,589,50,661,50,882,25,786,25,786,50,882,25,786,25,786,50,882,25,786,25,786,50,589,50, 661,50,882,25,786,25,786,50,882,25,786,25,786,50,882,25,786,25,786,50,661,50,661,50, 589,50,525,25,441,25,441,25,661,50,661,50, 589,50,525,25,441,25,441,25,525,50,525,50,525,100,525,100,50000,10,
-N		//é€†ç€å…‰è¡Œèµ°ä»»é£å¹é›¨æ‰“å§
-N		M6,25,H3,50,H3,50,H2,50,H1,25,M6,25,M6,25,H3,50,H2,50,H1,25,M6,25,M6,25,H1,50,H1,50,H1,50,H1,100,P,25,
-X		441,25,661,50,661,50,589,50,525,25,441,25,441,25,661,50,589,50,525,25,441,25,441,25,525,50,525,50,525,50,525,100,50000,25,
-N		//æ™šé£å¹èµ·ä½ é¬“é—´çš„ç™½å‘ æŠšå¹³å›å¿†ç•™ä¸‹çš„ç–¤
-N		H1,50,H2,50,H2,25,H3,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H2,25, H3,25,H3,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,25,H3,50,H3,50,P,5,
-X		525,50,589,50,589,25,661,50,882,25,786,25,786,50,882,25,786,25,786,50,882,25,786,25,786,50,589,25, 661,25,661,50,882,25,786,25,786,50,882,25,786,25,786,50,882,25,786,25,786,25,661,50,661,50,50000,5,
-N		//ä½ çš„çœ¼ä¸­æ˜æš—äº¤æ‚ ä¸€ç¬‘ç”ŸèŠ± æš®è‰²é®ä½ä½ è¹’è·šçš„æ­¥ä¼
-N		H2,50,H1,25,M6,25,M6,25,H1,50,M6,25,H2,25,H1,25,M6,50,M6,50, H1,50,H1,50,H3,100,H3,25,H4,25,H3,50,H3,25,H2,50,H2,50,H1,100,H2,100,H3,100,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H2,50,
-X		589,50,525,25,441,25,441,25,525,50,441,25,589,25,525,25,441,50,441,50, 525,50,525,50,661,100,661,25,700,25,661,50,661,25,589,50,589,50,525,100,589,100,661,100,882,25,786,25,786,50,882,25,786,25,786,50,882,25,786,25,786,50,589,50,
-N		//èµ°è¿›åºŠå¤´è—èµ·çš„ç”» ç”»ä¸­çš„ä½ (ä½ç€å¤´è¯´è¯)
-N		H3,50,H6,25,H5,25,H5,50,H6,25,H5,25,H5,50,H6,25,H5,25,H3,100,H3,50,H2,50,H1,25,M6,25,M6,25,H3,50,H3,50,H2,50,H1,25,M6,25,M6,25,H1,100,H1,50,P,5,
-X		661,50,882,25,786,25,786,50,882,25,786,25,786,50,882,25,786,25,661,100,661,50,589,50,525,25,441,25,441,25,661,50,661,50,589,50,525,25,441,25,441,25,525,100,525,50,50000,5,
-N		//æˆ‘ä» äº† ä»¥çˆ±ä¹‹åä½ è¿˜æ„¿æ„å—ï¼ˆè¡”æ¥å¤´æœ‰é—®é¢˜ï¼‰
-N		H1,50,H2,50,H1,50,H1,100,M6,25,H3,50,H3,50,H2,50,H1,25,H6,25,H6,25,H3,50,H3,50,H2,50,H1,25,H6,25,H6,25,H1,50,H1,50,H1,100,P,5,0xFF
-X		525,50,589,50,525,50,525,100,441,25,661,50,661,50,589,50,525,25,882,25,882,25,661,50,661,50,589,50,525,25,882,25,882,25,525,50,525,50,525,100,50000,5,0xFF
-N};
-N
-Nconst int16_t solitary_brave[]=
-N{
-N		M6,50,M7,50,H1,50,H2,50,M7,50,H1,50,H1,100,P,10,	//çˆ±ä½ å­¤èº«èµ°æš—å··
-X		441,50,495,50,525,50,589,50,495,50,525,50,525,100,50000,10,	
-N		H1,50,M7,50,H1,50,H2,50,M7,50,H1,50,H1,100,P,10, 	//çˆ±ä½ ä¸è·ªçš„æ¨¡æ ·
-X		525,50,495,50,525,50,589,50,495,50,525,50,525,100,50000,10, 	
-N		H1,50,H2,50,H3,50,H2,50,H3,50,H2,50,H3,100,H3,50,H3,50,H2,50,H3,100,H5,100,H3,100,P,10, //çˆ±ä½ å¯¹å³™è¿‡ç»æœ›ä¸è‚¯å“­ä¸€åœº
-X		525,50,589,50,661,50,589,50,661,50,589,50,661,100,661,50,661,50,589,50,661,100,786,100,661,100,50000,10, 
-N		0xFF
-W "..\Buzz\Src\Buzzer.c" 263 46 integer conversion resulted in a change of sign
-W "..\Buzz\Src\Buzzer.c" 264 46 integer conversion resulted in a change of sign
-W "..\Buzz\Src\Buzzer.c" 265 85 integer conversion resulted in a change of sign
-N};
-N
-Nvoid PWM_SetHz(uint16_t Hz)
-N{
-N	//TIM_SetCounter(TIM2, 32768 - Hz);
-N    TIM_SetAutoreload(TIM2, 100000/(1.0*Hz));
-X    TIM_SetAutoreload(((TIM_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000180UL))), 100000/(1.0*Hz));
-N	//TIM_SetAutoreload(TIM2, 32768 - Hz);
+N     return SingleParameterBufferSet[i].BaseLineAdjusttmp; 
 N}
-N 
-Nvoid test_Buzz()
-N{
-N	TIM_Cmd(TIM2, ENABLE);
-X	TIM_Cmd(((TIM_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000180UL))), ENABLE);
-N	PWM_SetHz(H1);
-X	PWM_SetHz(525);
-N	Delay_ms(500);
-N	PWM_SetHz(H2);
-X	PWM_SetHz(589);
-N	Delay_ms(500);
-N	PWM_SetHz(H3);
-X	PWM_SetHz(661);
-N	Delay_ms(500);
-N	PWM_SetHz(H4);
-X	PWM_SetHz(700);
-N	Delay_ms(500);
-N	PWM_SetHz(H5);
-X	PWM_SetHz(786);
-N	Delay_ms(500);
-N	PWM_SetHz(H6);
-X	PWM_SetHz(882);
-N	Delay_ms(500);
-N	PWM_SetHz(H7);
-X	PWM_SetHz(990);
-N	Delay_ms(700);
-N	TIM_Cmd(TIM2, DISABLE);
-X	TIM_Cmd(((TIM_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000180UL))), DISABLE);
+N
+N/****************************************************************************
+N*º¯ÊıÃû³Æ£ºuint16_t TK_GetTKYzThreshold(uint8_t i)
+N*º¯Êı¹¦ÄÜ£º»ñÈ¡°´¼üÒÖÖÆÇø¼ä
+N*Èë¿Ú²ÎÊı£ºuint8_t i
+N*³ö¿Ú²ÎÊı£º·µ»ØÒÖÖÆÇø¼ä
+N*±¸×¢	 £º
+N*****************************************************************************/
+Nuint16_t TK_GetTKYzThreshold(uint8_t i)
+N{	
+N	uint16_t SetFingerThresholdtmp; 
+N	
+N	SetFingerThresholdtmp = TK_GetCurrFingerValue(i); 
+N    SetFingerThresholdtmp = SetFingerThresholdtmp*SOCAPI_INHIBITION_ZONE/10;
+X    SetFingerThresholdtmp = SetFingerThresholdtmp*8/10;
+N
+N	return SetFingerThresholdtmp;
 N}
-N/**
-N * @brief æ’­æ”¾éŸ³ä¹ 0 å¤©ç©ºä¹‹åŸ  
-N * 
-N */
-Nstatic uint16_t MusicSelect=0,TimeSelect=0;
-Nvoid Buzzer_Play(uint8_t var)
+N
+N/****************************************************************************
+N*º¯ÊıÃû³Æ£ºvoid TK_SingleCurrentSensorChoose(void)
+N*º¯Êı¹¦ÄÜ£ºµ±Ç°µ¥Í¨µÀÑ¡Ôñ
+N*Èë¿Ú²ÎÊı£ºvoid
+N*³ö¿Ú²ÎÊı£ºvoid
+N*±¸×¢	 £º
+N*****************************************************************************/
+Nvoid TK_SingleCurrentSensorChoose(void)
 N{
-N	MusicSelect = 0;
-N	if (var == 0)
+N	uint8_t i = 0,j = 0,k = 0;
+N	uint8_t Ctk_Channel_mark = 0;
+N	uint32_t CurrentSensorKey ; 		 
+N	
+N	CurrentSensorKey = SOCAPI_SET_TOUCHKEY_CHANNEL; 
+X	CurrentSensorKey = 0x00000000; 
+N		
+N	for(i=0;i<32;i++)
 N	{
-N		while (Music[MusicSelect] != 0xFF)
+N		if((0x01L << i) & CurrentSensorKey)
 N		{
-N			TIM_Cmd(TIM2, ENABLE);
-X			TIM_Cmd(((TIM_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000180UL))), ENABLE);
-N			PWM_SetHz(Music[MusicSelect]);
-N
-N			TimeSelect = Music[++MusicSelect];
-N			Delay_ms(Speed0 * TimeSelect);
-X			Delay_ms(500/4 * TimeSelect);
-N			MusicSelect++;
-N
-N			Delay_ms(10);
-N		}
-N		if (Music[MusicSelect] == 0xFF)
-N		{
-N			MusicSelect = 0;
-N			TIM_Cmd(TIM2, DISABLE);
-X			TIM_Cmd(((TIM_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000180UL))), DISABLE);
-N		}
-N	}else if(var == 1)
+N			CurrentChannel[Ctk_Channel_mark] = i;						//Ñ¡Ôñ´¥Ãşµ±Ç°µÄÍ¨µÀ
+N			Ctk_Channel_mark++;
+N			if(Ctk_Channel_mark >= SOCAPI_SET_TOUCHKEY_TOTAL)
+X			if(Ctk_Channel_mark >= 3)
+N				break;
+N		}		
+N	}
+N	
+N#ifdef USING_SlideModule
+N	for(k = 0; k < UsingTKSlideModuleNumber; k ++)
 N	{
-N		while (wind_rise[MusicSelect] != 0xFF)
+N		for(i = 0;i<TKSlideModulePCBArray[k].UsingTKChannelNumber;i++)						//ÔÚCurrentChannel[]ÖĞÈ¡³ö»¬ÌõTKÍ¨µÀÅÅÁĞĞòºÅ 
 N		{
-N			TIM_Cmd(TIM2, ENABLE);
-X			TIM_Cmd(((TIM_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000180UL))), ENABLE);
-N			PWM_SetHz(wind_rise[MusicSelect]);
-N
-N			TimeSelect = wind_rise[++MusicSelect];
-N			Delay_ms(Speed1 * TimeSelect);//èµ·é£äº†æ…¢ä¸€ç‚¹
-X			Delay_ms(7 * TimeSelect);
-N			MusicSelect++;
-N
-N			Delay_ms(10);
+N			for(j=0;j<Ctk_Channel_mark;j++)
+N			{
+N				if(TKSlideModulePCBArray[k].TKChannel[i] == CurrentChannel[j])	//È¡ĞòºÅ
+N				{
+N					TKSlideModulePCBArray[k].TKOrderChannel[i]=j;	
+N				}
+N			}	
 N		}
-N		if (wind_rise[MusicSelect] == 0xFF)
-N		{
-N			MusicSelect = 0;
-N			TIM_Cmd(TIM2, DISABLE);
-X			TIM_Cmd(((TIM_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000180UL))), DISABLE);
-N		}
-N	}else if(var == 2)
-N    {
-N        while (solitary_brave[MusicSelect] != 0xFF)
-N		{
-N			TIM_Cmd(TIM2, ENABLE);
-X			TIM_Cmd(((TIM_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000180UL))), ENABLE);
-N			PWM_SetHz(solitary_brave[MusicSelect]);
-N
-N			TimeSelect = solitary_brave[++MusicSelect];
-N			Delay_ms(Speed2 * TimeSelect);
-X			Delay_ms(5 * TimeSelect);
-N			MusicSelect++;
-N			
-N			Delay_ms(10);
-N		}
-N		if (solitary_brave[MusicSelect] == 0xFF)
-N		{
-N			MusicSelect = 0;
-N			TIM_Cmd(TIM2, DISABLE);
-X			TIM_Cmd(((TIM_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000180UL))), DISABLE);
-N		}
-N    }
+N	}
+N#endif
+N	
+N	SingleCurrentChannelMax = Ctk_Channel_mark;							//µ±Ç°Ñ¡ÔñµÄ°´¼üÊı 
 N}
-N 
-N/**
-N * @brief è°ƒèŠ‚éŸ³é‡
-N * 
-N * @param Volume 1-50æœ‰æ•ˆ 50ä»¥ä¸Šå¬ä¸å‡ºæ¥
-N */
-Nvoid Buzzer_SetVolume(uint8_t Volume)
+N
+N/****************************************************************************
+N*º¯ÊıÃû³Æ£ºuint8_t  TK_GetCfgMsg(uint8_t i,uint8_t j)
+N*º¯Êı¹¦ÄÜ£º»ñÈ¡Touch KEY ÅäÖÃĞÅÏ¢
+N*Èë¿Ú²ÎÊı£ºvoid
+N*³ö¿Ú²ÎÊı£º 
+N*±¸×¢	 £º
+N*****************************************************************************/
+Nuint8_t  TK_GetCfgMsg(uint8_t i,uint8_t j)
 N{
-N	TIM_PWMSetDuty(TIM2, TIM_PWMChannel_PWMA,Volume);
-X	TIM_PWMSetDuty(((TIM_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000180UL))), TIM_PWMChannel_PWMA,Volume);
+N	switch(j)
+N	{ 
+N		case 0:  return TKChannelCfg[i][SET_TOUCH_FREQ]; 
+X		case 0:  return TKChannelCfg[i][0]; 
+N		case 1:  return TKChannelCfg[i][SET_RESOLUTION];
+X		case 1:  return TKChannelCfg[i][2];
+N		case 2:  return TKChannelCfg[i][SET_GAIN_CFG];
+X		case 2:  return TKChannelCfg[i][3];
+N		case 3:  return TK_GetBaseLineAdjustValue(i);
+N		case 4:  return TKCFG[SET_ANTIJAM];
+X		case 4:  return TKCFG[10];
+N		case 5:  return TKChannelCfg[i][SET_RESOLUTION_FACTOR];
+X		case 5:  return TKChannelCfg[i][1];
+N		case 6:  return TKChannelCfg[i][SET_ICHA_FACTOR];
+X		case 6:  return TKChannelCfg[i][5];
+N		
+N		default:return 0; 	 	
+N	}
 N}
 N
+N/****************************************************************************
+N*º¯ÊıÃû³Æ£ºvoid TK_TouchKeyCFGInit(void)
+N*º¯Êı¹¦ÄÜ£º³õÊ¼»¯TK¼Ä´æÆ÷
+N*Èë¿Ú²ÎÊı£ºvoid
+N*³ö¿Ú²ÎÊı£ºvoid
+N*±¸×¢	 £º
+N*****************************************************************************/
+Nvoid TK_TouchKeyCFGInit(void)
+N{
+N	uint8_t i;
+N#ifdef USING_SlideModule
+N	uint8_t	k;
+N#endif	
+N	
+N	UsingTKSlideModuleNumber = USING_TKSlideModule_Number;
+X	UsingTKSlideModuleNumber = 1;
+N	ConfirmTouchCnt = TKCFG[CONFIRMTOUCHCNT];
+X	ConfirmTouchCnt = TKCFG[3];
+N	SetNoiseThreshold = TKCFG[NOISE];
+X	SetNoiseThreshold = TKCFG[16];
+N	TK_SingleCurrentSensorChoose(); 
+N	for(i=0;i< SingleCurrentChannelMax;i++)
+N	{
+N		SingleParameterBufferSet[i].BaseLineAdjusttmp = TKChannelCfg[i][SET_ICHA];;	
+X		SingleParameterBufferSet[i].BaseLineAdjusttmp = TKChannelCfg[i][6];;	
+N	} 
+N	UpdateBaseLNum = 0; 
+N	
+N	
+N#ifdef USING_SlideModule
+N	for(k = 0; k < UsingTKSlideModuleNumber; k ++)
+N	{
+N		TKSlideModulePCBArray[k].UpdateBaseLineNumber = 0;
+N	}
+N#endif
+N	
+N}
 N
+N/****************************************************************************
+N*º¯ÊıÃû³Æ£ºuint32_t TK_TouchKeyScan(void)
+N*º¯Êı¹¦ÄÜ£º¼ì²â°´¼ü½Ó¿Ú
+N*Èë¿Ú²ÎÊı£ºvoid
+N*³ö¿Ú²ÎÊı£º°´¼üÍ¨µÀ£¬ ·µ»ØµÄÊÇÒ»¸öuint32_t , Í¨µÀÊı4¸ö×Ö½Ú0x00000000
+N*±¸×¢	 £º1,  µ÷ÓÃ´¥¿Ø¿â¼ì²âº¯ÊıSensorKeyFlag()
+N		   2,  ·ÖÎöµÃ³ö31¸öÍ¨µÀ£¬ÄÄ¸öÍ¨µÀÓĞ°´ÏÂ£¬°´ÏÂbit Î»ÉèÖÃÎª1£¬·ñÔòÎª0
+N		   3,  ¼ì²âÊÇ·ñĞèÒªÁ¢¼´¸üĞÂbaseline:  ´óÓÚMAX_KEY_RESET_BASELINE ¸ö°´¼ü°´ÏÂÊ±Á¢¼´¸üĞÂbaseline
+N		   4,  Ë«¼ü»òÕßµ¥¼ü°´ÏÂÊ±£¬ Ê±¼ä´óÓÚSetOneKeyPushResetTime()½á¹ûÊ±¸üĞÂbaseline 
+N*****************************************************************************/
+Nuint32_t TK_TouchKeyScan(void)
+N{
+N#ifdef	USING_SlideModule
+N	uint8_t   k;
+N#endif
+N	uint8_t   t;
+N    uint8_t   MultipleCnt = 0;//°´¼ü¼ÆÊı
+N	uint32_t  Keyvalue ; 
+N	uint32_t  KeyData = 0; 
+N	
+N	if(TK_GetIsNeedUpdateBaseline() == 0)				//¼ì²âÊÇ·ñĞèÒª¸üĞÂbaseline 
+N	{
+N		Keyvalue = TK_SensorKeyFlag();					//SensorÅĞ¶Ï, ÕâÀïÈç¹ûbMultiple = 1 ±íÊ¾ÖĞ¼äÓĞ¸ÉÈÅ	 //·ÖÎö°´¼ü£¬µÃ³ö±ê×¼µÄÍ¨µÀbit Î» 
+N		
 N
+N#if (defined USING_TKKey_T1)		
+X#if (0L)		
+S		for(t=0;t< SingleCurrentChannelMax;t++)
+S		{
+S			if((0x01L << t) & Keyvalue)
+S			{
+S				KeyData |= ((uint32_t)0x01 << (CurrentChannel[t]));              
+S				MultipleCnt++;							
+S			}
+S		}                
+S		
+S		if(MultipleCnt >= 2) 	 									//½øÈë¶à°´¼ü´¦Àí
+S		{			
+S			bMultiple = 1;			
+S			if(MultipleCnt >= SOCAPI_MAX_KEY_NUM_INVALID)
+S			{
+S				TK_SetNeedUpdateBaseline(); 							// Á¢¼´¸üĞÂbaseline ,ÀıÈçÑÇ¿ËÁ¦°å¸ÇÉÏÈ¥
+S			}
+S			else
+S			{					
+S				if(TK_IsDoubleKeyOrSlideKey())
+S				{
+S					bMultiple = 0;
+S				} 				 
+S			}			
+S		}			
+S
+S		if(bMultiple == 0)							//½øÈë°´¼üÅĞ¶Ï
+S		{		
+S			if(KeyData != 0x0)					    //µ¥¸ö°´¼ü´ïµ½¶à³¤Ê±¼ä¾Íupdate baseline ,ËÉÊÖ¼ì²â
+S			{			
+S				UpdateBaseLNum++; 
+S			}
+S			else	
+S			{
+S				UpdateBaseLNum = 0; 	
+S			} 
+S		}	
+S		else
+S		{   
+S		    //¿¼ÂÇ»ùÏß¸üĞÂ		
+S			MultipleLNum++; 
+S			KeyData = 0x00;
+S		}
+N#endif
+N		
+N#ifdef	USING_SlideModule
+N	
+N		for(k = 0; k < UsingTKSlideModuleNumber; k ++)
+N		{
+N			if(TKSlideModulePCBArray[k].OutValue != 0x00)					        //µ¥¸ö°´¼ü´ïµ½¶à³¤Ê±¼ä¾Íupdate baseline ,ËÉÊÖ¼ì²â
+N			{	
+N				if(TKSlideModulePCBArray[k].OutValue == TKSlideModulePCBArray[k].LastOutValue)
+N				{		
+N				   TKSlideModulePCBArray[k].UpdateBaseLineNumber++; 
+N				}
+N				else
+N				{
+N				   TKSlideModulePCBArray[k].LastOutValue = TKSlideModulePCBArray[k].OutValue;
+N				   TKSlideModulePCBArray[k].UpdateBaseLineNumber = 0; 
+N				}
+N			}
+N			else	
+N			{
+N				TKSlideModulePCBArray[k].UpdateBaseLineNumber = 0; 	
+N			}
+N
+N			if(TKSlideModulePCBArray[k].UpdateBaseLineNumber >= TK_SetOneKeyPushResetTime())	  //°´¼ü³¬³ö×î³¤Êä³öÊ±¼ä¸üĞÂ»ùÏß
+N			{
+N				TK_SetNeedUpdateBaseline(); 
+N				TKSlideModulePCBArray[k].UpdateBaseLineNumber = 0;
+N			}
+N		}
+N#endif
+N				
+N
+N#if (defined USING_TKKey_T1)
+X#if (0L)
+S		if(UpdateBaseLNum >= TK_SetOneKeyPushResetTime())	  //°´¼ü³¬³ö×î³¤Êä³öÊ±¼ä¸üĞÂ»ùÏß
+S		{
+S 			TK_SetNeedUpdateBaseline(); 
+S			UpdateBaseLNum = 0;
+S		}
+S				
+S		if(MultipleLNum > SOCAPI_MAX_KEY_MUTIPLE)		  //¸ÉÈÅ¼ÆÊı´óÓÚ×î´ó¼ÆÊı¸üĞÂ»ùÏß
+S 		{
+S			TK_SetNeedUpdateBaseline(); 
+S			MultipleDealTpye = 1; 
+S			MultipleLNum = 0;
+S		} 
+N#endif
+N		
+N	}			
+N	else
+N	{
+N		TK_MultipleDeal(TKCFG[AUTO_UPDATE_TIME]);			//»ùÏß¸´Î»´¦Àí
+X		TK_MultipleDeal(TKCFG[8]);			
+N	}  
+N	
+N	return KeyData;
+N		
+W "..\Drivers\TKDriver\C\TKDriver.C" 417 12 variable "t"  was declared but never referenced
+W "..\Drivers\TKDriver\C\TKDriver.C" 418 15 variable "MultipleCnt"  was declared but never referenced
+W "..\Drivers\TKDriver\C\TKDriver.C" 419 12 variable "Keyvalue"  was set but never used
+N}
+N
+N/****************************************************************************
+N*º¯ÊıÃû³Æ£ºvoid TK_IRQHandler(void) 
+N*º¯Êı¹¦ÄÜ£º´¥ÃşÖĞ¶Ï·şÎñº¯Êı
+N*Èë¿Ú²ÎÊı£ºvoid
+N*³ö¿Ú²ÎÊı£ºvoid
+N*±¸×¢	 £º
+N*****************************************************************************/
+Nvoid TK_IRQHandler(void)
+N{
+N	TK_TouchKey_Service();
+N}	

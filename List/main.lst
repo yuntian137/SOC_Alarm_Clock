@@ -14935,6 +14935,9 @@ N
 N
 N
 N
+N
+N
+N
 L 20 "..\User\main.c" 2
 N#include "HeadFiles\SysFunVarDefine.h"
 L 1 "..\User\HeadFiles\SysFunVarDefine.h" 1
@@ -15121,7 +15124,16 @@ N    while(1)
 N    {
 N        /*<UserCodeStart>*//*<SinOne-Tag><14>*/
 N        /***User program***/
-N        
+N        GPIO_ResetBits(GPIOC,GPIO_Pin_4);//LED1
+X        GPIO_ResetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000200UL))),GPIO_Pin_4);
+N        GPIO_ResetBits(GPIOC,GPIO_Pin_10);//LED3
+X        GPIO_ResetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000200UL))),GPIO_Pin_10);
+N        GPIO_ResetBits(GPIOC,GPIO_Pin_11);//LED4
+X        GPIO_ResetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000200UL))),GPIO_Pin_11);
+N        GPIO_ResetBits(GPIOA,GPIO_Pin_7);//LED5
+X        GPIO_ResetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000000UL))),GPIO_Pin_7);
+N        GPIO_ResetBits(GPIOA,GPIO_Pin_8);//LED6
+X        GPIO_ResetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000000UL))),GPIO_Pin_8);
 N        switch(Task_state)
 N        {
 N            case 0:		//init
@@ -15131,10 +15143,10 @@ N
 N            break;
 N            case 2:		//Buzz SET
 N            Delay_ms(1000);
-N            GPIO_ResetBits(GPIOC,GPIO_Pin_5);
+N            GPIO_ResetBits(GPIOC,GPIO_Pin_5);//LED2
 X            GPIO_ResetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000200UL))),GPIO_Pin_5);
 N            
-N            //Buzzer_Play(1);
+N            //Buzzer_Play(0);
 N            //test_Buzz();
 N            Delay_ms(200);
 N            GPIO_SetBits(GPIOC,GPIO_Pin_5);

@@ -11,6 +11,7 @@
         "scdriver_list.h": "c",
         "stdint.h": "c",
         "system_sc32f1xxx.h": "c",
-        "sc32f1xxx_tim.h": "c"
+        "sc32f1xxx_tim.h": "c",
+        "TKDriver.C": "cpp"
     }
 }
