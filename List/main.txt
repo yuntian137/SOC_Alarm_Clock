@@ -5,304 +5,398 @@
                           AREA ||i.DataProcessing||, CODE, READONLY, ALIGN=2
 
                   DataProcessing PROC
-;;;29     
-;;;30     void DataProcessing(uint32_t value)
-000000  b510              PUSH     {r4,lr}
-;;;31     {
-000002  4604              MOV      r4,r0
-;;;32         if (TKSlideModulePCBArray[0].OutValue != 0) // 判断是否被按下 
-000004  4817              LDR      r0,|L1.100|
-000006  8d80              LDRH     r0,[r0,#0x2c]  ; TKSlideModulePCBArray
-000008  2800              CMP      r0,#0
-00000a  d00d              BEQ      |L1.40|
-;;;33     {
-;;;34         GPIO_SetBits(GPIOC, GPIO_Pin_5);
-00000c  2120              MOVS     r1,#0x20
-00000e  4816              LDR      r0,|L1.104|
-000010  f7fffffe          BL       GPIO_SetBits
-;;;35         GPIO_SetBits(GPIOC, GPIO_Pin_4);
-000014  2110              MOVS     r1,#0x10
-000016  4814              LDR      r0,|L1.104|
-000018  f7fffffe          BL       GPIO_SetBits
-;;;36         GPIO_SetBits(GPIOC, GPIO_Pin_10);
-00001c  2101              MOVS     r1,#1
-00001e  0289              LSLS     r1,r1,#10
-000020  4811              LDR      r0,|L1.104|
-000022  f7fffffe          BL       GPIO_SetBits
-000026  e01c              B        |L1.98|
+;;;32     uint32_t TK_exKeyValueFlag;
+;;;33     void DataProcessing(uint32_t value)
+000000  490a              LDR      r1,|L1.44|
+;;;34     {
+;;;35         switch (TK_exKeyValueFlag)
+000002  6809              LDR      r1,[r1,#0]  ; TK_exKeyValueFlag
+000004  2201              MOVS     r2,#1
+000006  0452              LSLS     r2,r2,#17
+000008  1a89              SUBS     r1,r1,r2
+00000a  d005              BEQ      |L1.24|
+00000c  1a89              SUBS     r1,r1,r2
+00000e  d107              BNE      |L1.32|
+;;;36         {
+;;;37         case 0x00040000:
+;;;38             exKeyValue = 18;// 模式/确认
+000010  2112              MOVS     r1,#0x12
+000012  4a07              LDR      r2,|L1.48|
+000014  7011              STRB     r1,[r2,#0]
+;;;39             break;
+000016  e007              B        |L1.40|
+                  |L1.24|
+;;;40         case 0x00020000:
+;;;41             exKeyValue = 17;// 返回
+000018  2111              MOVS     r1,#0x11
+00001a  4a05              LDR      r2,|L1.48|
+00001c  7011              STRB     r1,[r2,#0]
+;;;42             break;
+00001e  e003              B        |L1.40|
+                  |L1.32|
+;;;43         default:
+;;;44             exKeyValue = 0xff;
+000020  21ff              MOVS     r1,#0xff
+000022  4a03              LDR      r2,|L1.48|
+000024  7011              STRB     r1,[r2,#0]
+;;;45             break;
+000026  bf00              NOP      
                   |L1.40|
-;;;37     }
-;;;38     else if(value != 0)
-000028  2c00              CMP      r4,#0
-00002a  d00d              BEQ      |L1.72|
-;;;39     {
-;;;40         GPIO_SetBits(GPIOC, GPIO_Pin_5);
-00002c  2120              MOVS     r1,#0x20
-00002e  480e              LDR      r0,|L1.104|
-000030  f7fffffe          BL       GPIO_SetBits
-;;;41         GPIO_SetBits(GPIOC, GPIO_Pin_4);
-000034  2110              MOVS     r1,#0x10
-000036  480c              LDR      r0,|L1.104|
-000038  f7fffffe          BL       GPIO_SetBits
-;;;42         GPIO_SetBits(GPIOC, GPIO_Pin_10);
-00003c  2101              MOVS     r1,#1
-00003e  0289              LSLS     r1,r1,#10
-000040  4809              LDR      r0,|L1.104|
-000042  f7fffffe          BL       GPIO_SetBits
-000046  e00c              B        |L1.98|
-                  |L1.72|
-;;;43     }else
-;;;44     {
-;;;45         GPIO_ResetBits(GPIOC, GPIO_Pin_5);
-000048  2120              MOVS     r1,#0x20
-00004a  4807              LDR      r0,|L1.104|
-00004c  f7fffffe          BL       GPIO_ResetBits
-;;;46         GPIO_ResetBits(GPIOC, GPIO_Pin_4);
-000050  2110              MOVS     r1,#0x10
-000052  4805              LDR      r0,|L1.104|
-000054  f7fffffe          BL       GPIO_ResetBits
-;;;47         GPIO_ResetBits(GPIOC, GPIO_Pin_10);
-000058  2101              MOVS     r1,#1
-00005a  0289              LSLS     r1,r1,#10
-00005c  4802              LDR      r0,|L1.104|
-00005e  f7fffffe          BL       GPIO_ResetBits
-                  |L1.98|
-;;;48     }
-;;;49     }
-000062  bd10              POP      {r4,pc}
-;;;50     /**
+000028  bf00              NOP                            ;39
+;;;46         }
+;;;47     }
+00002a  4770              BX       lr
+;;;48     uint8_t first_Press;
                           ENDP
 
-                  |L1.100|
-                          DCD      TKSlideModulePCBArray
-                  |L1.104|
-                          DCD      0x40011200
+                  |L1.44|
+                          DCD      TK_exKeyValueFlag
+                  |L1.48|
+                          DCD      exKeyValue
 
                           AREA ||i.Delay_ms||, CODE, READONLY, ALIGN=1
 
                   Delay_ms PROC
-;;;126    
-;;;127    void Delay_ms(uint16_t xms)
+;;;153    
+;;;154    void Delay_ms(uint16_t xms)
 000000  b570              PUSH     {r4-r6,lr}
-;;;128    {
+;;;155    {
 000002  4604              MOV      r4,r0
-;;;129        int i;
-;;;130        for (i = 0; i < xms; i++)
+;;;156        int i;
+;;;157        for (i = 0; i < xms; i++)
 000004  2500              MOVS     r5,#0
 000006  e004              B        |L2.18|
                   |L2.8|
-;;;131        {
-;;;132            Delay_us(1000);
+;;;158        {
+;;;159            Delay_us(1000);
 000008  207d              MOVS     r0,#0x7d
 00000a  00c0              LSLS     r0,r0,#3
 00000c  f7fffffe          BL       Delay_us
-000010  1c6d              ADDS     r5,r5,#1              ;130
+000010  1c6d              ADDS     r5,r5,#1              ;157
                   |L2.18|
-000012  42a5              CMP      r5,r4                 ;130
+000012  42a5              CMP      r5,r4                 ;157
 000014  dbf8              BLT      |L2.8|
-;;;133        }
-;;;134    }
+;;;160        }
+;;;161    }
 000016  bd70              POP      {r4-r6,pc}
-;;;135    
+;;;162    
                           ENDP
 
 
                           AREA ||i.Delay_us||, CODE, READONLY, ALIGN=2
 
                   Delay_us PROC
-;;;118    
-;;;119    void Delay_us(uint16_t xus)
+;;;145    
+;;;146    void Delay_us(uint16_t xus)
 000000  b510              PUSH     {r4,lr}
-;;;120    {
+;;;147    {
 000002  4604              MOV      r4,r0
-;;;121        TIM_Cmd(TIM1,ENABLE); 
+;;;148        TIM_Cmd(TIM1,ENABLE); 
 000004  2101              MOVS     r1,#1
 000006  4808              LDR      r0,|L3.40|
 000008  f7fffffe          BL       TIM_Cmd
-;;;122        while(TIM1->TIM_CNT < xus);
+;;;149        while(TIM1->TIM_CNT < xus);
 00000c  bf00              NOP      
                   |L3.14|
 00000e  4806              LDR      r0,|L3.40|
 000010  6840              LDR      r0,[r0,#4]
 000012  42a0              CMP      r0,r4
 000014  d3fb              BCC      |L3.14|
-;;;123        TIM1->TIM_CNT = 0;
+;;;150        TIM1->TIM_CNT = 0;
 000016  2000              MOVS     r0,#0
 000018  4903              LDR      r1,|L3.40|
 00001a  6048              STR      r0,[r1,#4]
-;;;124        TIM_Cmd(TIM1,DISABLE); 
+;;;151        TIM_Cmd(TIM1,DISABLE); 
 00001c  2100              MOVS     r1,#0
 00001e  4802              LDR      r0,|L3.40|
 000020  f7fffffe          BL       TIM_Cmd
-;;;125    }
+;;;152    }
 000024  bd10              POP      {r4,pc}
-;;;126    
+;;;153    
                           ENDP
 
 000026  0000              DCW      0x0000
                   |L3.40|
                           DCD      0x40020140
 
+                          AREA ||i.UpdateDisplay||, CODE, READONLY, ALIGN=2
+
+                  UpdateDisplay PROC
+;;;48     uint8_t first_Press;
+;;;49     void UpdateDisplay(uint8_t KeyValue)
+000000  b510              PUSH     {r4,lr}
+;;;50     {
+000002  4604              MOV      r4,r0
+;;;51         if (exKeyValue != 0XFF) // 松手前只出一次键
+000004  4816              LDR      r0,|L4.96|
+000006  7800              LDRB     r0,[r0,#0]  ; exKeyValue
+000008  28ff              CMP      r0,#0xff
+00000a  d023              BEQ      |L4.84|
+;;;52         {
+;;;53             gTkIsValid = 1;
+00000c  2001              MOVS     r0,#1
+00000e  4915              LDR      r1,|L4.100|
+000010  7008              STRB     r0,[r1,#0]
+;;;54             KeyValue = exKeyValue;
+000012  4813              LDR      r0,|L4.96|
+000014  7804              LDRB     r4,[r0,#0]  ; exKeyValue
+;;;55             if (first_Press == 0)
+000016  4814              LDR      r0,|L4.104|
+000018  7800              LDRB     r0,[r0,#0]  ; first_Press
+00001a  2800              CMP      r0,#0
+00001c  d11f              BNE      |L4.94|
+;;;56             {
+;;;57                 if (KeyValue == 17)
+00001e  2c11              CMP      r4,#0x11
+000020  d109              BNE      |L4.54|
+;;;58                 {
+;;;59                     GPIO_TogglePins(GPIOC, GPIO_Pin_4);  // LED 灯翻转
+000022  2110              MOVS     r1,#0x10
+000024  4811              LDR      r0,|L4.108|
+000026  f7fffffe          BL       GPIO_TogglePins
+;;;60                     GPIO_TogglePins(GPIOC, GPIO_Pin_10); // LED 灯翻转
+00002a  2101              MOVS     r1,#1
+00002c  0289              LSLS     r1,r1,#10
+00002e  480f              LDR      r0,|L4.108|
+000030  f7fffffe          BL       GPIO_TogglePins
+000034  e00a              B        |L4.76|
+                  |L4.54|
+;;;61                 }
+;;;62                 else if (KeyValue == 18)
+000036  2c12              CMP      r4,#0x12
+000038  d108              BNE      |L4.76|
+;;;63                 {
+;;;64                     GPIO_TogglePins(GPIOC, GPIO_Pin_5);  // LED 灯翻转
+00003a  2120              MOVS     r1,#0x20
+00003c  480b              LDR      r0,|L4.108|
+00003e  f7fffffe          BL       GPIO_TogglePins
+;;;65                     GPIO_TogglePins(GPIOC, GPIO_Pin_11); // LED 灯翻转
+000042  2101              MOVS     r1,#1
+000044  02c9              LSLS     r1,r1,#11
+000046  4809              LDR      r0,|L4.108|
+000048  f7fffffe          BL       GPIO_TogglePins
+                  |L4.76|
+;;;66                 }
+;;;67                 first_Press = 1;
+00004c  2001              MOVS     r0,#1
+00004e  4906              LDR      r1,|L4.104|
+000050  7008              STRB     r0,[r1,#0]
+000052  e004              B        |L4.94|
+                  |L4.84|
+;;;68             }
+;;;69         }
+;;;70         else
+;;;71         {
+;;;72             gTkIsValid = 0;
+000054  2000              MOVS     r0,#0
+000056  4903              LDR      r1,|L4.100|
+000058  7008              STRB     r0,[r1,#0]
+;;;73             first_Press = 0;
+00005a  4903              LDR      r1,|L4.104|
+00005c  7008              STRB     r0,[r1,#0]
+                  |L4.94|
+;;;74         }
+;;;75     }
+00005e  bd10              POP      {r4,pc}
+;;;76     /**
+                          ENDP
+
+                  |L4.96|
+                          DCD      exKeyValue
+                  |L4.100|
+                          DCD      gTkIsValid
+                  |L4.104|
+                          DCD      first_Press
+                  |L4.108|
+                          DCD      0x40011200
+
                           AREA ||i.main||, CODE, READONLY, ALIGN=2
 
                   main PROC
-;;;56     uint32_t TK_exKeyValueFlag;
-;;;57     int main(void)
+;;;80      */
+;;;81     int main(void)
 000000  f7fffffe          BL       IcResourceInit
-;;;58     {
-;;;59     /*<Generated by EasyCodeCube begin>*/
-;;;60     /*<UserCodeStart>*//*<SinOne-Tag><36>*/
-;;;61     IcResourceInit();
-;;;62     TIM_Cmd(TIM2, DISABLE);
+;;;82     {
+;;;83     /*<Generated by EasyCodeCube begin>*/
+;;;84     /*<UserCodeStart>*//*<SinOne-Tag><36>*/
+;;;85     IcResourceInit();
+;;;86     TIM_Cmd(TIM2, DISABLE);
 000004  2100              MOVS     r1,#0
-000006  482a              LDR      r0,|L4.176|
+000006  4831              LDR      r0,|L5.204|
 000008  f7fffffe          BL       TIM_Cmd
-;;;63     Buzzer_SetVolume(50);
+;;;87     Buzzer_SetVolume(50);
 00000c  2032              MOVS     r0,#0x32
 00000e  f7fffffe          BL       Buzzer_SetVolume
-;;;64     TK_Init();                    //重要步骤1：TK的初始化函数
+;;;88     TK_Init();                    //重要步骤1：TK的初始化函数
 000012  f7fffffe          BL       TK_Init
-;;;65     /*<UserCodeEnd>*//*<SinOne-Tag><36>*/
-;;;66     
-;;;67     /*<UserCodeStart>*//*<SinOne-Tag><4>*/
-;;;68     /*****MainLoop*****/
-;;;69     while(1)
-000016  e04a              B        |L4.174|
-                  |L4.24|
-;;;70     {
-;;;71         /*<UserCodeStart>*//*<SinOne-Tag><14>*/
-;;;72         /***User program***/
-;;;73         GPIO_ResetBits(GPIOC,GPIO_Pin_4);//LED1
-000018  2110              MOVS     r1,#0x10
-00001a  4826              LDR      r0,|L4.180|
-00001c  f7fffffe          BL       GPIO_ResetBits
-;;;74         GPIO_ResetBits(GPIOC,GPIO_Pin_10);//LED3
-000020  2101              MOVS     r1,#1
-000022  0289              LSLS     r1,r1,#10
-000024  4823              LDR      r0,|L4.180|
-000026  f7fffffe          BL       GPIO_ResetBits
-;;;75         GPIO_ResetBits(GPIOC,GPIO_Pin_11);//LED4
-00002a  2101              MOVS     r1,#1
-00002c  02c9              LSLS     r1,r1,#11
-00002e  4821              LDR      r0,|L4.180|
-000030  f7fffffe          BL       GPIO_ResetBits
-;;;76         GPIO_ResetBits(GPIOA,GPIO_Pin_7);//LED5
-000034  2180              MOVS     r1,#0x80
-000036  4820              LDR      r0,|L4.184|
+;;;89     /*<UserCodeEnd>*//*<SinOne-Tag><36>*/
+;;;90     
+;;;91     /*<UserCodeStart>*//*<SinOne-Tag><4>*/
+;;;92     /*****MainLoop*****/
+;;;93     while(1)
+000016  e057              B        |L5.200|
+                  |L5.24|
+;;;94     {
+;;;95         /*<UserCodeStart>*//*<SinOne-Tag><14>*/
+;;;96         /***User program***/
+;;;97     
+;;;98         switch(Task_state)
+000018  482d              LDR      r0,|L5.208|
+00001a  7800              LDRB     r0,[r0,#0]  ; Task_state
+00001c  0003              MOVS     r3,r0
+00001e  f7fffffe          BL       __ARM_common_switch8
+000022  0504              DCB      0x05,0x04
+000024  1f405051          DCB      0x1f,0x40,0x50,0x51
+000028  5200              DCB      0x52,0x00
+;;;99         {
+;;;100            case 0:		//init
+;;;101                GPIO_ResetBits(GPIOC,GPIO_Pin_4);//LED1
+00002a  2110              MOVS     r1,#0x10
+00002c  4829              LDR      r0,|L5.212|
+00002e  f7fffffe          BL       GPIO_ResetBits
+;;;102        GPIO_ResetBits(GPIOC,GPIO_Pin_10);//LED3
+000032  2101              MOVS     r1,#1
+000034  0289              LSLS     r1,r1,#10
+000036  4827              LDR      r0,|L5.212|
 000038  f7fffffe          BL       GPIO_ResetBits
-;;;77         GPIO_ResetBits(GPIOA,GPIO_Pin_8);//LED6
-00003c  21ff              MOVS     r1,#0xff
-00003e  3101              ADDS     r1,#1
-000040  481d              LDR      r0,|L4.184|
+;;;103        GPIO_ResetBits(GPIOC,GPIO_Pin_11);//LED4
+00003c  2101              MOVS     r1,#1
+00003e  02c9              LSLS     r1,r1,#11
+000040  4824              LDR      r0,|L5.212|
 000042  f7fffffe          BL       GPIO_ResetBits
-;;;78         switch(Task_state)
-000046  481d              LDR      r0,|L4.188|
-000048  7800              LDRB     r0,[r0,#0]  ; Task_state
-00004a  0003              MOVS     r3,r0
-00004c  f7fffffe          BL       __ARM_common_switch8
-000050  0504051c          DCB      0x05,0x04,0x05,0x1c
-000054  2c2d2e00          DCB      0x2c,0x2d,0x2e,0x00
-;;;79         {
-;;;80             case 0:		//init
-;;;81             break;
-000058  e028              B        |L4.172|
-;;;82             case 1:		//TK task
-;;;83             //WDT->WDT_CON |= WDT_CON_CLRWDT;  //清watchdog
-;;;84             
-;;;85             //重要步骤2：触摸键扫描一轮标志，是否调用TouchKeyScan()一定要根据此标志位置起�?	       
-;;;86             if(TK_TouchKeyStatus&0x80)
-00005a  4819              LDR      r0,|L4.192|
-00005c  7800              LDRB     r0,[r0,#0]  ; TK_TouchKeyStatus
-00005e  2180              MOVS     r1,#0x80
-000060  4008              ANDS     r0,r0,r1
-000062  2800              CMP      r0,#0
-000064  d00f              BEQ      |L4.134|
-;;;87             {	   													 //重要步骤3：清除标志位，需要外部清�?   	              
-;;;88             TK_TouchKeyStatus &= 0x7f; 
-000066  4816              LDR      r0,|L4.192|
-000068  7800              LDRB     r0,[r0,#0]  ; TK_TouchKeyStatus
-00006a  0640              LSLS     r0,r0,#25
-00006c  0e40              LSRS     r0,r0,#25
-00006e  4914              LDR      r1,|L4.192|
-000070  7008              STRB     r0,[r1,#0]
-;;;89                 //重要步骤4：分析按键数据，并返回结果出�?                    
-;;;90                 TK_exKeyValueFlag = TK_TouchKeyScan();  
-000072  f7fffffe          BL       TK_TouchKeyScan
-000076  4913              LDR      r1,|L4.196|
-000078  6008              STR      r0,[r1,#0]  ; TK_exKeyValueFlag
-;;;91                 DataProcessing(TK_exKeyValueFlag);	       //按键数据处理函数 
-00007a  4608              MOV      r0,r1
-00007c  6800              LDR      r0,[r0,#0]  ; TK_exKeyValueFlag
-00007e  f7fffffe          BL       DataProcessing
-;;;92                 TK_Restart();	         //启动下一轮转�?            
-000082  f7fffffe          BL       TK_Restart
-                  |L4.134|
-;;;93             }
-;;;94                 break;
-000086  e011              B        |L4.172|
-;;;95                 case 2:		//Buzz SET
-;;;96                 Delay_ms(1000);
-000088  207d              MOVS     r0,#0x7d
-00008a  00c0              LSLS     r0,r0,#3
-00008c  f7fffffe          BL       Delay_ms
-;;;97                 GPIO_ResetBits(GPIOC,GPIO_Pin_5);//LED2
-000090  2120              MOVS     r1,#0x20
-000092  4808              LDR      r0,|L4.180|
-000094  f7fffffe          BL       GPIO_ResetBits
-;;;98                 //Buzzer_Play(0);
-;;;99                 //test_Buzz();
-;;;100                Delay_ms(200);
-000098  20c8              MOVS     r0,#0xc8
-00009a  f7fffffe          BL       Delay_ms
-;;;101                GPIO_SetBits(GPIOC,GPIO_Pin_5);
-00009e  2120              MOVS     r1,#0x20
-0000a0  4804              LDR      r0,|L4.180|
-0000a2  f7fffffe          BL       GPIO_SetBits
-;;;102                break;
-0000a6  e001              B        |L4.172|
-;;;103                case 3:		//RGB SET
-;;;104                break;
-0000a8  e000              B        |L4.172|
-;;;105                case 4:		//ADC get
-;;;106                break;
-0000aa  bf00              NOP      
-                  |L4.172|
-0000ac  bf00              NOP                            ;81
-                  |L4.174|
-0000ae  e7b3              B        |L4.24|
-;;;107            }
-;;;108            
-;;;109            
-;;;110            /*<UserCodeEnd>*//*<SinOne-Tag><14>*/
-;;;111            /*<UserCodeStart>*//*<SinOne-Tag><77>*/
-;;;112            /*<UserCodeEnd>*//*<SinOne-Tag><77>*/
-;;;113            /*<Begin-Inserted by EasyCodeCube for Condition>*/
-;;;114        }
-;;;115        /*<UserCodeEnd>*//*<SinOne-Tag><4>*/
-;;;116        /*<Generated by EasyCodeCube end>*/
-;;;117    }
+;;;104        GPIO_ResetBits(GPIOA, GPIO_Pin_7); // LED5
+000046  2180              MOVS     r1,#0x80
+000048  4823              LDR      r0,|L5.216|
+00004a  f7fffffe          BL       GPIO_ResetBits
+;;;105        GPIO_ResetBits(GPIOA, GPIO_Pin_8); // LED6
+00004e  21ff              MOVS     r1,#0xff
+000050  3101              ADDS     r1,#1
+000052  4821              LDR      r0,|L5.216|
+000054  f7fffffe          BL       GPIO_ResetBits
+;;;106        Task_state = 1;
+000058  2001              MOVS     r0,#1
+00005a  491d              LDR      r1,|L5.208|
+00005c  7008              STRB     r0,[r1,#0]
+;;;107        break;
+00005e  e032              B        |L5.198|
+;;;108            case 1: // TK task
+;;;109                WDT->WDT_CON |= WDT_CON_CLRWDT;  //清watchdog
+000060  481e              LDR      r0,|L5.220|
+000062  6bc0              LDR      r0,[r0,#0x3c]
+000064  2101              MOVS     r1,#1
+000066  4308              ORRS     r0,r0,r1
+000068  491c              LDR      r1,|L5.220|
+00006a  63c8              STR      r0,[r1,#0x3c]
+;;;110    
+;;;111                // 重要步骤2：触摸键扫描一轮标志，是否调用TouchKeyScan()一定要根据此标志位置起�?
+;;;112                if (TK_TouchKeyStatus & 0x80)
+00006c  481c              LDR      r0,|L5.224|
+00006e  7800              LDRB     r0,[r0,#0]  ; TK_TouchKeyStatus
+000070  2180              MOVS     r1,#0x80
+000072  4008              ANDS     r0,r0,r1
+000074  2800              CMP      r0,#0
+000076  d013              BEQ      |L5.160|
+;;;113                { // 重要步骤3：清除标志位，需要外部清零
+;;;114                    TK_TouchKeyStatus &= 0x7f;
+000078  4819              LDR      r0,|L5.224|
+00007a  7800              LDRB     r0,[r0,#0]  ; TK_TouchKeyStatus
+00007c  0640              LSLS     r0,r0,#25
+00007e  0e40              LSRS     r0,r0,#25
+000080  4917              LDR      r1,|L5.224|
+000082  7008              STRB     r0,[r1,#0]
+;;;115                    // 重要步骤4：分析按键数据，并返回结果出来
+;;;116                    TK_exKeyValueFlag = TK_TouchKeyScan();
+000084  f7fffffe          BL       TK_TouchKeyScan
+000088  4916              LDR      r1,|L5.228|
+00008a  6008              STR      r0,[r1,#0]  ; TK_exKeyValueFlag
+;;;117                    DataProcessing(TK_exKeyValueFlag); // 按键数据处理函数
+00008c  4608              MOV      r0,r1
+00008e  6800              LDR      r0,[r0,#0]  ; TK_exKeyValueFlag
+000090  f7fffffe          BL       DataProcessing
 ;;;118    
+;;;119                    UpdateDisplay(exKeyValue);
+000094  4814              LDR      r0,|L5.232|
+000096  7800              LDRB     r0,[r0,#0]  ; exKeyValue
+000098  f7fffffe          BL       UpdateDisplay
+;;;120                    TK_Restart(); // 启动下一轮转换
+00009c  f7fffffe          BL       TK_Restart
+                  |L5.160|
+;;;121                }
+;;;122                break;
+0000a0  e011              B        |L5.198|
+;;;123            case 2: // Buzz SET
+;;;124                Delay_ms(1000);
+0000a2  207d              MOVS     r0,#0x7d
+0000a4  00c0              LSLS     r0,r0,#3
+0000a6  f7fffffe          BL       Delay_ms
+;;;125                GPIO_ResetBits(GPIOC, GPIO_Pin_5); // LED2
+0000aa  2120              MOVS     r1,#0x20
+0000ac  4809              LDR      r0,|L5.212|
+0000ae  f7fffffe          BL       GPIO_ResetBits
+;;;126                // Buzzer_Play(0);
+;;;127                // test_Buzz();
+;;;128                Delay_ms(200);
+0000b2  20c8              MOVS     r0,#0xc8
+0000b4  f7fffffe          BL       Delay_ms
+;;;129                GPIO_SetBits(GPIOC, GPIO_Pin_5);
+0000b8  2120              MOVS     r1,#0x20
+0000ba  4806              LDR      r0,|L5.212|
+0000bc  f7fffffe          BL       GPIO_SetBits
+;;;130                break;
+0000c0  e001              B        |L5.198|
+;;;131            case 3: // RGB SET
+;;;132                break;
+0000c2  e000              B        |L5.198|
+;;;133            case 4: // ADC get
+;;;134                break;
+0000c4  bf00              NOP      
+                  |L5.198|
+0000c6  bf00              NOP                            ;107
+                  |L5.200|
+0000c8  e7a6              B        |L5.24|
+;;;135            }
+;;;136    
+;;;137            /*<UserCodeEnd>*//*<SinOne-Tag><14>*/
+;;;138            /*<UserCodeStart>*//*<SinOne-Tag><77>*/
+;;;139            /*<UserCodeEnd>*//*<SinOne-Tag><77>*/
+;;;140            /*<Begin-Inserted by EasyCodeCube for Condition>*/
+;;;141        }
+;;;142        /*<UserCodeEnd>*//*<SinOne-Tag><4>*/
+;;;143        /*<Generated by EasyCodeCube end>*/
+;;;144    }
+;;;145    
                           ENDP
 
-                  |L4.176|
+0000ca  0000              DCW      0x0000
+                  |L5.204|
                           DCD      0x40020180
-                  |L4.180|
-                          DCD      0x40011200
-                  |L4.184|
-                          DCD      0x40011000
-                  |L4.188|
+                  |L5.208|
                           DCD      Task_state
-                  |L4.192|
+                  |L5.212|
+                          DCD      0x40011200
+                  |L5.216|
+                          DCD      0x40011000
+                  |L5.220|
+                          DCD      0x40000300
+                  |L5.224|
                           DCD      TK_TouchKeyStatus
-                  |L4.196|
+                  |L5.228|
                           DCD      TK_exKeyValueFlag
+                  |L5.232|
+                          DCD      exKeyValue
 
                           AREA ||.data||, DATA, ALIGN=2
 
+                  exKeyValue
+000000  00                DCB      0x00
+                  gTkIsValid
+000001  00                DCB      0x00
                   Task_state
-000000  00000000          DCB      0x00,0x00,0x00,0x00
+000002  0000              DCB      0x00,0x00
                   TK_exKeyValueFlag
                           DCD      0x00000000
+                  first_Press
+000008  00                DCB      0x00
 
                           AREA ||i.__ARM_common_switch8||, COMGROUP=__ARM_common_switch8, CODE, READONLY, ALIGN=1
 
@@ -313,16 +407,16 @@
 000006  7825              LDRB     r5,[r4,#0]
 000008  1c64              ADDS     r4,r4,#1
 00000a  42ab              CMP      r3,r5
-00000c  d304              BCC      |L34.24|
-                  |L34.14|
+00000c  d304              BCC      |L40.24|
+                  |L40.14|
 00000e  5d63              LDRB     r3,[r4,r5]
 000010  005b              LSLS     r3,r3,#1
 000012  18e3              ADDS     r3,r4,r3
 000014  bc30              POP      {r4,r5}
 000016  4718              BX       r3
-                  |L34.24|
+                  |L40.24|
 000018  461d              MOV      r5,r3
-00001a  e7f8              B        |L34.14|
+00001a  e7f8              B        |L40.14|
                           ENDP
 
 
@@ -331,9 +425,9 @@
 #line 1 "..\\User\\main.c"
 	AREA ||.rev16_text||, CODE
 	THUMB
-	EXPORT |__asm___6_main_c_c8663108____REV16|
+	EXPORT |__asm___6_main_c_04ffa752____REV16|
 #line 463 "..\\CMSIS\\cmsis_armcc.h"
-|__asm___6_main_c_c8663108____REV16| PROC
+|__asm___6_main_c_04ffa752____REV16| PROC
 #line 464
 
  rev16 r0, r0
@@ -341,9 +435,9 @@
 	ENDP
 	AREA ||.revsh_text||, CODE
 	THUMB
-	EXPORT |__asm___6_main_c_c8663108____REVSH|
+	EXPORT |__asm___6_main_c_04ffa752____REVSH|
 #line 478
-|__asm___6_main_c_c8663108____REVSH| PROC
+|__asm___6_main_c_04ffa752____REVSH| PROC
 #line 479
 
  revsh r0, r0
