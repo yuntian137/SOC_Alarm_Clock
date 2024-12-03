@@ -222,7 +222,7 @@
 ;;;85     IcResourceInit();
 ;;;86     TIM_Cmd(TIM2, DISABLE);
 000004  2100              MOVS     r1,#0
-000006  4831              LDR      r0,|L5.204|
+000006  4832              LDR      r0,|L5.208|
 000008  f7fffffe          BL       TIM_Cmd
 ;;;87     Buzzer_SetVolume(50);
 00000c  2032              MOVS     r0,#0x32
@@ -234,126 +234,128 @@
 ;;;91     /*<UserCodeStart>*//*<SinOne-Tag><4>*/
 ;;;92     /*****MainLoop*****/
 ;;;93     while(1)
-000016  e057              B        |L5.200|
+000016  e05a              B        |L5.206|
                   |L5.24|
 ;;;94     {
 ;;;95         /*<UserCodeStart>*//*<SinOne-Tag><14>*/
 ;;;96         /***User program***/
 ;;;97     
 ;;;98         switch(Task_state)
-000018  482d              LDR      r0,|L5.208|
+000018  482e              LDR      r0,|L5.212|
 00001a  7800              LDRB     r0,[r0,#0]  ; Task_state
 00001c  0003              MOVS     r3,r0
 00001e  f7fffffe          BL       __ARM_common_switch8
 000022  0504              DCB      0x05,0x04
-000024  1f405051          DCB      0x1f,0x40,0x50,0x51
-000028  5200              DCB      0x52,0x00
+000024  1f405354          DCB      0x1f,0x40,0x53,0x54
+000028  5500              DCB      0x55,0x00
 ;;;99         {
-;;;100            case 0:		//init
-;;;101                GPIO_ResetBits(GPIOC,GPIO_Pin_4);//LED1
+;;;100        case 0:                                 // init
+;;;101            GPIO_ResetBits(GPIOC, GPIO_Pin_4);  // LED1
 00002a  2110              MOVS     r1,#0x10
-00002c  4829              LDR      r0,|L5.212|
+00002c  482a              LDR      r0,|L5.216|
 00002e  f7fffffe          BL       GPIO_ResetBits
-;;;102        GPIO_ResetBits(GPIOC,GPIO_Pin_10);//LED3
+;;;102            GPIO_ResetBits(GPIOC, GPIO_Pin_10); // LED3
 000032  2101              MOVS     r1,#1
 000034  0289              LSLS     r1,r1,#10
-000036  4827              LDR      r0,|L5.212|
+000036  4828              LDR      r0,|L5.216|
 000038  f7fffffe          BL       GPIO_ResetBits
-;;;103        GPIO_ResetBits(GPIOC,GPIO_Pin_11);//LED4
+;;;103            GPIO_ResetBits(GPIOC, GPIO_Pin_11); // LED4
 00003c  2101              MOVS     r1,#1
 00003e  02c9              LSLS     r1,r1,#11
-000040  4824              LDR      r0,|L5.212|
+000040  4825              LDR      r0,|L5.216|
 000042  f7fffffe          BL       GPIO_ResetBits
-;;;104        GPIO_ResetBits(GPIOA, GPIO_Pin_7); // LED5
+;;;104            GPIO_ResetBits(GPIOA, GPIO_Pin_7);  // LED5
 000046  2180              MOVS     r1,#0x80
-000048  4823              LDR      r0,|L5.216|
+000048  4824              LDR      r0,|L5.220|
 00004a  f7fffffe          BL       GPIO_ResetBits
-;;;105        GPIO_ResetBits(GPIOA, GPIO_Pin_8); // LED6
+;;;105            GPIO_ResetBits(GPIOA, GPIO_Pin_8);  // LED6
 00004e  21ff              MOVS     r1,#0xff
 000050  3101              ADDS     r1,#1
-000052  4821              LDR      r0,|L5.216|
+000052  4822              LDR      r0,|L5.220|
 000054  f7fffffe          BL       GPIO_ResetBits
-;;;106        Task_state = 1;
+;;;106            Task_state = 1;
 000058  2001              MOVS     r0,#1
-00005a  491d              LDR      r1,|L5.208|
+00005a  491e              LDR      r1,|L5.212|
 00005c  7008              STRB     r0,[r1,#0]
-;;;107        break;
-00005e  e032              B        |L5.198|
-;;;108            case 1: // TK task
-;;;109                WDT->WDT_CON |= WDT_CON_CLRWDT;  //清watchdog
-000060  481e              LDR      r0,|L5.220|
+;;;107            break;
+00005e  e035              B        |L5.204|
+;;;108        case 1:                             // TK task
+;;;109            WDT->WDT_CON |= WDT_CON_CLRWDT; // 清watchdog
+000060  481f              LDR      r0,|L5.224|
 000062  6bc0              LDR      r0,[r0,#0x3c]
 000064  2101              MOVS     r1,#1
 000066  4308              ORRS     r0,r0,r1
-000068  491c              LDR      r1,|L5.220|
+000068  491d              LDR      r1,|L5.224|
 00006a  63c8              STR      r0,[r1,#0x3c]
 ;;;110    
-;;;111                // 重要步骤2：触摸键扫描一轮标志，是否调用TouchKeyScan()一定要根据此标志位置起�?
-;;;112                if (TK_TouchKeyStatus & 0x80)
-00006c  481c              LDR      r0,|L5.224|
+;;;111            // 重要步骤2：触摸键扫描一轮标志，是否调用TouchKeyScan()一定要根据此标志位置起�?
+;;;112            if (TK_TouchKeyStatus & 0x80)
+00006c  481d              LDR      r0,|L5.228|
 00006e  7800              LDRB     r0,[r0,#0]  ; TK_TouchKeyStatus
 000070  2180              MOVS     r1,#0x80
 000072  4008              ANDS     r0,r0,r1
 000074  2800              CMP      r0,#0
 000076  d013              BEQ      |L5.160|
-;;;113                { // 重要步骤3：清除标志位，需要外部清零
-;;;114                    TK_TouchKeyStatus &= 0x7f;
-000078  4819              LDR      r0,|L5.224|
+;;;113            { // 重要步骤3：清除标志位，需要外部清零
+;;;114                TK_TouchKeyStatus &= 0x7f;
+000078  481a              LDR      r0,|L5.228|
 00007a  7800              LDRB     r0,[r0,#0]  ; TK_TouchKeyStatus
 00007c  0640              LSLS     r0,r0,#25
 00007e  0e40              LSRS     r0,r0,#25
-000080  4917              LDR      r1,|L5.224|
+000080  4918              LDR      r1,|L5.228|
 000082  7008              STRB     r0,[r1,#0]
-;;;115                    // 重要步骤4：分析按键数据，并返回结果出来
-;;;116                    TK_exKeyValueFlag = TK_TouchKeyScan();
+;;;115                // 重要步骤4：分析按键数据，并返回结果出来
+;;;116                TK_exKeyValueFlag = TK_TouchKeyScan();
 000084  f7fffffe          BL       TK_TouchKeyScan
-000088  4916              LDR      r1,|L5.228|
+000088  4917              LDR      r1,|L5.232|
 00008a  6008              STR      r0,[r1,#0]  ; TK_exKeyValueFlag
-;;;117                    DataProcessing(TK_exKeyValueFlag); // 按键数据处理函数
+;;;117                DataProcessing(TK_exKeyValueFlag); // 按键数据处理函数
 00008c  4608              MOV      r0,r1
 00008e  6800              LDR      r0,[r0,#0]  ; TK_exKeyValueFlag
 000090  f7fffffe          BL       DataProcessing
 ;;;118    
-;;;119                    UpdateDisplay(exKeyValue);
-000094  4814              LDR      r0,|L5.232|
+;;;119                UpdateDisplay(exKeyValue);
+000094  4815              LDR      r0,|L5.236|
 000096  7800              LDRB     r0,[r0,#0]  ; exKeyValue
 000098  f7fffffe          BL       UpdateDisplay
-;;;120                    TK_Restart(); // 启动下一轮转换
+;;;120                TK_Restart(); // 启动下一轮转换
 00009c  f7fffffe          BL       TK_Restart
                   |L5.160|
-;;;121                }
-;;;122                break;
-0000a0  e011              B        |L5.198|
-;;;123            case 2: // Buzz SET
-;;;124                Delay_ms(1000);
+;;;121            }
+;;;122            break;
+0000a0  e014              B        |L5.204|
+;;;123        case 2: // Buzz SET
+;;;124            Delay_ms(1000);
 0000a2  207d              MOVS     r0,#0x7d
 0000a4  00c0              LSLS     r0,r0,#3
 0000a6  f7fffffe          BL       Delay_ms
-;;;125                GPIO_ResetBits(GPIOC, GPIO_Pin_5); // LED2
+;;;125            GPIO_ResetBits(GPIOC, GPIO_Pin_5); // LED2
 0000aa  2120              MOVS     r1,#0x20
-0000ac  4809              LDR      r0,|L5.212|
+0000ac  480a              LDR      r0,|L5.216|
 0000ae  f7fffffe          BL       GPIO_ResetBits
-;;;126                // Buzzer_Play(0);
-;;;127                // test_Buzz();
-;;;128                Delay_ms(200);
-0000b2  20c8              MOVS     r0,#0xc8
-0000b4  f7fffffe          BL       Delay_ms
-;;;129                GPIO_SetBits(GPIOC, GPIO_Pin_5);
-0000b8  2120              MOVS     r1,#0x20
-0000ba  4806              LDR      r0,|L5.212|
-0000bc  f7fffffe          BL       GPIO_SetBits
-;;;130                break;
-0000c0  e001              B        |L5.198|
-;;;131            case 3: // RGB SET
-;;;132                break;
-0000c2  e000              B        |L5.198|
-;;;133            case 4: // ADC get
-;;;134                break;
-0000c4  bf00              NOP      
-                  |L5.198|
-0000c6  bf00              NOP                            ;107
-                  |L5.200|
-0000c8  e7a6              B        |L5.24|
+;;;126            Buzzer_Play(0);
+0000b2  2000              MOVS     r0,#0
+0000b4  f7fffffe          BL       Buzzer_Play
+;;;127            // test_Buzz();
+;;;128            Delay_ms(200);
+0000b8  20c8              MOVS     r0,#0xc8
+0000ba  f7fffffe          BL       Delay_ms
+;;;129            GPIO_SetBits(GPIOC, GPIO_Pin_5);
+0000be  2120              MOVS     r1,#0x20
+0000c0  4805              LDR      r0,|L5.216|
+0000c2  f7fffffe          BL       GPIO_SetBits
+;;;130            break;
+0000c6  e001              B        |L5.204|
+;;;131        case 3: // RGB SET
+;;;132            break;
+0000c8  e000              B        |L5.204|
+;;;133        case 4: // ADC get
+;;;134            break;
+0000ca  bf00              NOP      
+                  |L5.204|
+0000cc  bf00              NOP                            ;107
+                  |L5.206|
+0000ce  e7a3              B        |L5.24|
 ;;;135            }
 ;;;136    
 ;;;137            /*<UserCodeEnd>*//*<SinOne-Tag><14>*/
@@ -367,22 +369,21 @@
 ;;;145    
                           ENDP
 
-0000ca  0000              DCW      0x0000
-                  |L5.204|
-                          DCD      0x40020180
                   |L5.208|
-                          DCD      Task_state
+                          DCD      0x40020180
                   |L5.212|
-                          DCD      0x40011200
+                          DCD      Task_state
                   |L5.216|
-                          DCD      0x40011000
+                          DCD      0x40011200
                   |L5.220|
-                          DCD      0x40000300
+                          DCD      0x40011000
                   |L5.224|
-                          DCD      TK_TouchKeyStatus
+                          DCD      0x40000300
                   |L5.228|
-                          DCD      TK_exKeyValueFlag
+                          DCD      TK_TouchKeyStatus
                   |L5.232|
+                          DCD      TK_exKeyValueFlag
+                  |L5.236|
                           DCD      exKeyValue
 
                           AREA ||.data||, DATA, ALIGN=2

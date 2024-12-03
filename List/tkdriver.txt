@@ -980,10 +980,11 @@
                   MultipleLNum
 000046  0000              DCB      0x00,0x00
                   TKSlideModulePCBArray
-000048  011d1e1f          DCB      0x01,0x1d,0x1e,0x1f
-                          %        12
-000058  0003              DCB      0x00,0x03
-00005a  0020              DCW      0x0020
+000048  010b0c0d          DCB      0x01,0x0b,0x0c,0x0d
+00004c  0e0f1000          DCB      0x0e,0x0f,0x10,0x00
+                          %        8
+000058  0006              DCB      0x00,0x06
+00005a  0040              DCW      0x0040
 00005c  00140064          DCW      0x0014,0x0064
 000060  00000000          DCB      0x00,0x00,0x00,0x00
                           %        12

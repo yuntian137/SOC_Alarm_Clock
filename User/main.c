@@ -97,41 +97,41 @@ while(1)
 
     switch(Task_state)
     {
-        case 0:		//init
-            GPIO_ResetBits(GPIOC,GPIO_Pin_4);//LED1
-    GPIO_ResetBits(GPIOC,GPIO_Pin_10);//LED3
-    GPIO_ResetBits(GPIOC,GPIO_Pin_11);//LED4
-    GPIO_ResetBits(GPIOA, GPIO_Pin_7); // LED5
-    GPIO_ResetBits(GPIOA, GPIO_Pin_8); // LED6
-    Task_state = 1;
-    break;
-        case 1: // TK task
-            WDT->WDT_CON |= WDT_CON_CLRWDT;  //清watchdog
+    case 0:                                 // init
+        GPIO_ResetBits(GPIOC, GPIO_Pin_4);  // LED1
+        GPIO_ResetBits(GPIOC, GPIO_Pin_10); // LED3
+        GPIO_ResetBits(GPIOC, GPIO_Pin_11); // LED4
+        GPIO_ResetBits(GPIOA, GPIO_Pin_7);  // LED5
+        GPIO_ResetBits(GPIOA, GPIO_Pin_8);  // LED6
+        Task_state = 1;
+        break;
+    case 1:                             // TK task
+        WDT->WDT_CON |= WDT_CON_CLRWDT; // 清watchdog
 
-            // 重要步骤2：触摸键扫描一轮标志，是否调用TouchKeyScan()一定要根据此标志位置起�?
-            if (TK_TouchKeyStatus & 0x80)
-            { // 重要步骤3：清除标志位，需要外部清零
-                TK_TouchKeyStatus &= 0x7f;
-                // 重要步骤4：分析按键数据，并返回结果出来
-                TK_exKeyValueFlag = TK_TouchKeyScan();
-                DataProcessing(TK_exKeyValueFlag); // 按键数据处理函数
+        // 重要步骤2：触摸键扫描一轮标志，是否调用TouchKeyScan()一定要根据此标志位置起�?
+        if (TK_TouchKeyStatus & 0x80)
+        { // 重要步骤3：清除标志位，需要外部清零
+            TK_TouchKeyStatus &= 0x7f;
+            // 重要步骤4：分析按键数据，并返回结果出来
+            TK_exKeyValueFlag = TK_TouchKeyScan();
+            DataProcessing(TK_exKeyValueFlag); // 按键数据处理函数
 
-                UpdateDisplay(exKeyValue);
-                TK_Restart(); // 启动下一轮转换
-            }
-            break;
-        case 2: // Buzz SET
-            Delay_ms(1000);
-            GPIO_ResetBits(GPIOC, GPIO_Pin_5); // LED2
-            // Buzzer_Play(0);
-            // test_Buzz();
-            Delay_ms(200);
-            GPIO_SetBits(GPIOC, GPIO_Pin_5);
-            break;
-        case 3: // RGB SET
-            break;
-        case 4: // ADC get
-            break;
+            UpdateDisplay(exKeyValue);
+            TK_Restart(); // 启动下一轮转换
+        }
+        break;
+    case 2: // Buzz SET
+        Delay_ms(1000);
+        GPIO_ResetBits(GPIOC, GPIO_Pin_5); // LED2
+        Buzzer_Play(0);
+        // test_Buzz();
+        Delay_ms(200);
+        GPIO_SetBits(GPIOC, GPIO_Pin_5);
+        break;
+    case 3: // RGB SET
+        break;
+    case 4: // ADC get
+        break;
         }
 
         /*<UserCodeEnd>*//*<SinOne-Tag><14>*/

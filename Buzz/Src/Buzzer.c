@@ -273,6 +273,10 @@ void PWM_SetHz(uint16_t Hz)
 	//TIM_SetAutoreload(TIM2, 32768 - Hz);
 }
  
+/**
+ * @brief 测试音调
+ * 
+ */
 void test_Buzz()
 {
 	TIM_Cmd(TIM2, ENABLE);
@@ -293,7 +297,7 @@ void test_Buzz()
 	TIM_Cmd(TIM2, DISABLE);
 }
 /**
- * @brief 播放音乐 0 天空之城  
+ * @brief 播放音乐 0 天空之城  1 起风了 2 孤勇者
  * 
  */
 static uint16_t MusicSelect=0,TimeSelect=0;

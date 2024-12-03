@@ -7481,6 +7481,10 @@ X    TIM_SetAutoreload(((TIM_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000180UL
 N	//TIM_SetAutoreload(TIM2, 32768 - Hz);
 N}
 N 
+N/**
+N * @brief 测试音调
+N * 
+N */
 Nvoid test_Buzz()
 N{
 N	TIM_Cmd(TIM2, ENABLE);
@@ -7510,7 +7514,7 @@ N	TIM_Cmd(TIM2, DISABLE);
 X	TIM_Cmd(((TIM_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000180UL))), DISABLE);
 N}
 N/**
-N * @brief 播放音乐 0 天空之城  
+N * @brief 播放音乐 0 天空之城  1 起风了 2 孤勇者
 N * 
 N */
 Nstatic uint16_t MusicSelect=0,TimeSelect=0;
