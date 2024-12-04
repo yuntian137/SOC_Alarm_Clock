@@ -23,7 +23,7 @@ typedef struct {
 } AlarmSettings;
 
 void saveAlarmSettings(void);
-void loadAlarmSettings(void);
+AlarmSettings loadAlarmSettings(void);
 void setAlarm(uint8_t hour, uint8_t minute, uint8_t enabled);
 
 #endif // ADC_IAP_H

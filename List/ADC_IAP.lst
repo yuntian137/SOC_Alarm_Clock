@@ -14811,7 +14811,7 @@ N    uint8_t enabled;  // 是否启用闹钟
 N} AlarmSettings;
 N
 Nvoid saveAlarmSettings(void);
-Nvoid loadAlarmSettings(void);
+NAlarmSettings loadAlarmSettings(void);
 Nvoid setAlarm(uint8_t hour, uint8_t minute, uint8_t enabled);
 N
 N#endif // ADC_IAP_H
@@ -14905,12 +14905,13 @@ N    IAP_Lock();//上锁IAP操作，并且复位IAP操作寄存器
 N}
 N
 N// 读取闹钟设置
-Nvoid loadAlarmSettings(void) {
+NAlarmSettings loadAlarmSettings(void) {
 N    AlarmSettings settings;
 N    readFlash(FLASH_USER_ADDR, (uint8_t*)&settings, sizeof(settings));
 X    readFlash(0x801FE00, (uint8_t*)&settings, sizeof(settings));
 N
 N    setAlarm(settings.hour, settings.minute, settings.enabled);
+N    return settings;
 N}
 N
 N// 设置闹钟

@@ -32,7 +32,73 @@ uint16_t ADC_value1;
 uint16_t ADC_value2;
 ADC_ChannelTypedef Channel;
 float Voltage;
+AlarmSettings LED;
+uint8_t exKeyValue = 0;
+uint8_t gTkIsValid = 0;
+uint8_t Task_state = 0;
+uint32_t TK_exKeyValueFlag;
+void DataProcessing(uint32_t value)
+{
+    switch (TK_exKeyValueFlag)
+    {
+    case 0x00040000:
+        exKeyValue = 18;// 模式/确认
+        break;
+    case 0x00020000:
+        exKeyValue = 17;// 返回
+        break;
+    default:
+        exKeyValue = 0xff;
+        break;
+    }
+}
+uint8_t first_Press;
+uint8_t cnt;
+void UpdateDisplay(uint8_t KeyValue)
+{
+    if (exKeyValue != 0XFF) // 松手前只出一次键
+    {
+        gTkIsValid = 1;
+        KeyValue = exKeyValue;
+        if (first_Press == 0)
+        {
+            if (KeyValue == 17)
+            {
+                cnt++;
+            }else if(KeyValue == 18)
+            {
+                cnt = 0;
+            }
+            
+            first_Press = 1;
+        }
+    }
+    else
+    {
+        gTkIsValid = 0;
+        first_Press = 0;
+    }
+}
+void test_TK_LED()
+{
+    // 先关灯
+    GPIO_SetBits(GPIOC, GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_10 | GPIO_Pin_11); // 先关闭所有 LED
+    GPIO_SetBits(GPIOA, GPIO_Pin_7 | GPIO_Pin_8);                             // 先关闭所有 LED
 
+    // 根据 cnt 的值点亮相应数量的 LED
+    if (cnt >= 1)
+        GPIO_ResetBits(GPIOC, GPIO_Pin_4); // LED1
+    if (cnt >= 2)
+        GPIO_ResetBits(GPIOC, GPIO_Pin_5); // LED2
+    if (cnt >= 3)
+        GPIO_ResetBits(GPIOC, GPIO_Pin_10); // LED3
+    if (cnt >= 4)
+        GPIO_ResetBits(GPIOC, GPIO_Pin_11); // LED4
+    if (cnt >= 5)
+        GPIO_ResetBits(GPIOA, GPIO_Pin_7); // LED5
+    if (cnt >= 6)
+        GPIO_ResetBits(GPIOA, GPIO_Pin_8); // LED6
+}
 /**
  * @brief This function implements main function.
  * @note
@@ -47,7 +113,7 @@ int main(void)
     Buzzer_SetVolume(50);
     TK_Init();                    //重要步骤1：TK的初始化函数
     /*读取掉电保存设置*/
-    loadAlarmSettings();
+    LED = loadAlarmSettings();
     /*<UserCodeEnd>*//*<SinOne-Tag><36>*/
     
     /*<UserCodeStart>*//*<SinOne-Tag><4>*/
@@ -60,15 +126,33 @@ int main(void)
         switch(Task_state)
         {
             case 0:                                 // init
-            GPIO_ResetBits(GPIOC, GPIO_Pin_4);  // LED1
-            GPIO_ResetBits(GPIOC, GPIO_Pin_10); // LED3
-            GPIO_ResetBits(GPIOC, GPIO_Pin_11); // LED4
-            GPIO_ResetBits(GPIOA, GPIO_Pin_7);  // LED5
-            GPIO_ResetBits(GPIOA, GPIO_Pin_8);  // LED6
-            Task_state = 3;
+            GPIO_SetBits(GPIOC, GPIO_Pin_4);  // LED1
+            GPIO_SetBits(GPIOC, GPIO_Pin_5);  // LED2       
+            GPIO_SetBits(GPIOC, GPIO_Pin_10); // LED3
+            GPIO_SetBits(GPIOC, GPIO_Pin_11); // LED4
+            GPIO_SetBits(GPIOA, GPIO_Pin_7);  // LED5
+            GPIO_SetBits(GPIOA, GPIO_Pin_8);  // LED6
+            Task_state = 1;
             break;
             case 1:                             // TK task
-            break;
+                WDT->WDT_CON |= WDT_CON_CLRWDT; // 清watchdog
+
+                // 重要步骤2：触摸键扫描一轮标志，是否调用TouchKeyScan()一定要根据此标志位置起�?
+                if (TK_TouchKeyStatus & 0x80)
+                { // 重要步骤3：清除标志位，需要外部清零
+                    TK_TouchKeyStatus &= 0x7f;
+                    // 重要步骤4：分析按键数据，并返回结果出来
+                    TK_exKeyValueFlag = TK_TouchKeyScan();
+                    DataProcessing(TK_exKeyValueFlag); // 按键数据处理函数
+
+                    UpdateDisplay(exKeyValue);
+                    TK_Restart(); // 启动下一轮转换
+                }
+                test_TK_LED();//测试点灯
+
+
+                checkPowerLoss();
+                break;
             case 2: // Buzz SET
             break;
             case 3: // ADC SET
@@ -76,7 +160,9 @@ int main(void)
             // ADC_value2 = readADC(ADC_Channel_13);
             // Voltage = adcToVoltage(ADC_value2);
             // Channel = ADC_GetChannel(ADC);
-            checkPowerLoss();
+
+            
+
             
             break;
             case 4: // ADC get

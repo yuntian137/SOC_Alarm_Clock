@@ -115,13 +115,13 @@
 
                   loadAlarmSettings PROC
 ;;;79     // 读取闹钟设置
-;;;80     void loadAlarmSettings(void) {
+;;;80     AlarmSettings loadAlarmSettings(void) {
 000000  b508              PUSH     {r3,lr}
 ;;;81         AlarmSettings settings;
 ;;;82         readFlash(FLASH_USER_ADDR, (uint8_t*)&settings, sizeof(settings));
 000002  2203              MOVS     r2,#3
 000004  4669              MOV      r1,sp
-000006  4805              LDR      r0,|L5.28|
+000006  4808              LDR      r0,|L5.40|
 000008  f7fffffe          BL       readFlash
 ;;;83     
 ;;;84         setAlarm(settings.hour, settings.minute, settings.enabled);
@@ -130,13 +130,20 @@
 000010  7859              LDRB     r1,[r3,#1]
 000012  7818              LDRB     r0,[r3,#0]
 000014  f7fffffe          BL       setAlarm
-;;;85     }
-000018  bd08              POP      {r3,pc}
-;;;86     
+;;;85         return settings;
+000018  466b              MOV      r3,sp
+00001a  8819              LDRH     r1,[r3,#0]
+00001c  4608              MOV      r0,r1
+00001e  7899              LDRB     r1,[r3,#2]
+000020  0409              LSLS     r1,r1,#16
+000022  4308              ORRS     r0,r0,r1
+;;;86     }
+000024  bd08              POP      {r3,pc}
+;;;87     
                           ENDP
 
-00001a  0000              DCW      0x0000
-                  |L5.28|
+000026  0000              DCW      0x0000
+                  |L5.40|
                           DCD      0x0801fe00
 
                           AREA ||i.readADC||, CODE, READONLY, ALIGN=2
@@ -246,12 +253,12 @@
                           AREA ||i.setAlarm||, CODE, READONLY, ALIGN=1
 
                   setAlarm PROC
-;;;87     // 设置闹钟
-;;;88     void setAlarm(uint8_t hour, uint8_t minute, uint8_t enabled) {
+;;;88     // 设置闹钟
+;;;89     void setAlarm(uint8_t hour, uint8_t minute, uint8_t enabled) {
 000000  4770              BX       lr
-;;;89         // 实现闹钟设置逻辑
-;;;90         
-;;;91     }
+;;;90         // 实现闹钟设置逻辑
+;;;91         
+;;;92     }
                           ENDP
 
 

@@ -77,11 +77,12 @@ void saveAlarmSettings(void) {
 }
 
 // 读取闹钟设置
-void loadAlarmSettings(void) {
+AlarmSettings loadAlarmSettings(void) {
     AlarmSettings settings;
     readFlash(FLASH_USER_ADDR, (uint8_t*)&settings, sizeof(settings));
 
     setAlarm(settings.hour, settings.minute, settings.enabled);
+    return settings;
 }
 
 // 设置闹钟
