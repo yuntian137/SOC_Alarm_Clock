@@ -1,5 +1,18 @@
 {
     "files.associations": {
-        "TKDriver.C": "cpp"
+        "TKDriver.C": "cpp",
+        "sc_init.h": "c",
+        "sc32_conf.h": "c",
+        "sc32f1xxx_option.h": "c",
+        "sc32f1xxx_uart.h": "c",
+        "adc_iap.h": "c",
+        "stdint.h": "c",
+        "sc32f1xxx_adc.h": "c",
+        "sc32f1xxx_rcc.h": "c",
+        "sc32.h": "c",
+        "sysfunvardefine.h": "c",
+        "sc_it.h": "c",
+        "scdriver_list.h": "c",
+        "sc32f1xxx_iap.h": "c"
     }
 }
