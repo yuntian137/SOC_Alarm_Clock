@@ -36,6 +36,7 @@
 ..\output\sysfunvardefine.o: ..\User\SC_it.h
 ..\output\sysfunvardefine.o: ..\User\..\Drivers\SCDriver_list.h
 ..\output\sysfunvardefine.o: ..\User\..\Drivers\.\TKDriver\C\TKDriver.h
+..\output\sysfunvardefine.o: ..\User\..\Drivers\..\Apps\IAP_Program.H
 ..\output\sysfunvardefine.o: ..\User\HeadFiles\SysFunVarDefine.h
 ..\output\sysfunvardefine.o: ..\User\HeadFiles\CustomType.h
 ..\output\sysfunvardefine.o: ..\User\HeadFiles\UserExport.h

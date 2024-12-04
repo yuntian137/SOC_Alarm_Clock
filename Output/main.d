@@ -36,6 +36,7 @@
 ..\output\main.o: ..\User\SC_it.h
 ..\output\main.o: ..\User\..\Drivers\SCDriver_list.h
 ..\output\main.o: ..\User\..\Drivers\.\TKDriver\C\TKDriver.h
+..\output\main.o: ..\User\..\Drivers\..\Apps\IAP_Program.H
 ..\output\main.o: ..\User\HeadFiles\SysFunVarDefine.h
 ..\output\main.o: ..\User\HeadFiles\CustomType.h
 ..\output\main.o: ..\User\HeadFiles\UserExport.h
@@ -44,3 +45,4 @@
 ..\output\main.o: ..\Buzz\Inc\Buzzer.h
 ..\output\main.o: ..\User\HeadFiles\Delay.h
 ..\output\main.o: ..\Drivers\TKDriver\C\sc32f10xx_TK_ParameterAnalysis.h
+..\output\main.o: ..\ADC_IAP\Inc\adc_iap.h

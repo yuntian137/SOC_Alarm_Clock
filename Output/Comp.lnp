@@ -7,6 +7,8 @@
 "..\output\compctrldefine.o"
 "..\output\callbackfunction.o"
 "..\output\delay.o"
+"..\output\iap_program.o"
+"..\output\sc32f1xxx_iap.o"
 "..\output\sc32f1xxx_tim.o"
 "..\output\sc32f1xxx_adc.o"
 "..\output\sc32f1xxx_pwm.o"
@@ -18,6 +20,7 @@
 "..\output\buzzer.o"
 "..\output\tkdriver.o"
 "..\Drivers\TKDriver\C\sc32f10xx_HighSensitive_lib_T1Slider_V0.3.lib"
+"..\output\adc_iap.o"
 --library_type=microlib --strict --scatter "..\Output\Comp.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

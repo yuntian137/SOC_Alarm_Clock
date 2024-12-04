@@ -36,6 +36,7 @@
 ..\output\compctrldefine.o: ..\User\SC_it.h
 ..\output\compctrldefine.o: ..\User\..\Drivers\SCDriver_list.h
 ..\output\compctrldefine.o: ..\User\..\Drivers\.\TKDriver\C\TKDriver.h
+..\output\compctrldefine.o: ..\User\..\Drivers\..\Apps\IAP_Program.H
 ..\output\compctrldefine.o: ..\User\HeadFiles\SysFunVarDefine.h
 ..\output\compctrldefine.o: ..\User\HeadFiles\CustomType.h
 ..\output\compctrldefine.o: ..\User\HeadFiles\UserExport.h

@@ -2,10 +2,10 @@
 #define ADC_IAP_H
 
 #include <stdint.h>
-
+#include "sc32f1xxx_adc.h"
 // ADC相关函数
 void initADC(void);
-uint16_t readADC(uint8_t channel);
+uint16_t readADC(ADC_ChannelTypedef channel);
 float adcToVoltage(uint16_t adcValue);
 void checkPowerLoss(void);
 

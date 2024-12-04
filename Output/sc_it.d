@@ -41,3 +41,4 @@
 ..\output\sc_it.o: ..\User\HeadFiles\CompCtrlDefine.h
 ..\output\sc_it.o: ..\Drivers\SCDriver_List.h
 ..\output\sc_it.o: ..\Drivers\.\TKDriver\C\TKDriver.h
+..\output\sc_it.o: ..\Drivers\..\Apps\IAP_Program.H

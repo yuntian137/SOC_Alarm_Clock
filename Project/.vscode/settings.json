@@ -13,6 +13,7 @@
         "sysfunvardefine.h": "c",
         "sc_it.h": "c",
         "scdriver_list.h": "c",
-        "sc32f1xxx_iap.h": "c"
+        "sc32f1xxx_iap.h": "c",
+        "IAP_Program.C": "cpp"
     }
 }

@@ -1,50 +1,50 @@
 #include "IAP_Program.h"
 
-#define FLASH_USER_ADDR  0x801FE00//¶¨ÒåIAP²Ù×÷Ä¿±êµØÖ·
+#define FLASH_USER_ADDR  0x801FE00//å®šä¹‰IAPæ“ä½œç›®æ ‡åœ°å€
 
-static volatile uint8_t IAP_Flag = 0;//×Ô¶¨Òå±êÖ¾Î»
+static volatile uint8_t IAP_Flag = 0;//è‡ªå®šä¹‰æ ‡å¿—ä½
 void IAP_Program(void)
 {
-  uint32_t ReadWord = 0;//¶¨Òå±äÁ¿´æ·Åµ¥×Ö¶ÁÊı¾İ
-  uint16_t ReadHalfWord = 0;//¶¨Òå±äÁ¿´æ·Åµ¥°ë×Ö¶ÁÊı¾İ
-  uint8_t ReadByte = 0;//¶¨Òå±äÁ¿´æ·Åµ¥×Ö½Ú¶ÁÊı¾İ
-  uint32_t Array_WriteWord[3] = {0x11223344, 0x22334455, 0x33445566}, Array_ReadWord[3];//¶¨Òå¶Á¡¢Ğ´×ÖÊı×é
-  uint16_t Array_WriteHalfWord[5] = {0x1111, 0x2222, 0x3333, 0x4444, 0x5555}, Array_ReadHalfWord[5];//¶¨Òå¶Á¡¢Ğ´°ë×ÖÊı×é
-  uint8_t Array_WriteByte[5] = {0x99, 0x88, 0x77, 0x66, 0x55}, Array_ReadByte[5];//¶¨Òå¶Á¡¢Ğ´×Ö½ÚÊı×é
-  uint8_t Flag_ReadWord = 0, Flag_ReadHalfWord = 0, Flag_ReadByte = 0;//¶¨Òå±äÁ¿´æ·Å×Ö¡¢°ë×Ö¡¢×Ö½ÚÅúÁ¿¶Á¶Áµ½Êı¾İµÄ¸öÊı
+  uint32_t ReadWord = 0;//å®šä¹‰å˜é‡å­˜æ”¾å•å­—è¯»æ•°æ®
+  uint16_t ReadHalfWord = 0;//å®šä¹‰å˜é‡å­˜æ”¾å•åŠå­—è¯»æ•°æ®
+  uint8_t ReadByte = 0;//å®šä¹‰å˜é‡å­˜æ”¾å•å­—èŠ‚è¯»æ•°æ®
+  uint32_t Array_WriteWord[3] = {0x11223344, 0x22334455, 0x33445566}, Array_ReadWord[3];//å®šä¹‰è¯»ã€å†™å­—æ•°ç»„
+  uint16_t Array_WriteHalfWord[5] = {0x1111, 0x2222, 0x3333, 0x4444, 0x5555}, Array_ReadHalfWord[5];//å®šä¹‰è¯»ã€å†™åŠå­—æ•°ç»„
+  uint8_t Array_WriteByte[5] = {0x99, 0x88, 0x77, 0x66, 0x55}, Array_ReadByte[5];//å®šä¹‰è¯»ã€å†™å­—èŠ‚æ•°ç»„
+  uint8_t Flag_ReadWord = 0, Flag_ReadHalfWord = 0, Flag_ReadByte = 0;//å®šä¹‰å˜é‡å­˜æ”¾å­—ã€åŠå­—ã€å­—èŠ‚æ‰¹é‡è¯»è¯»åˆ°æ•°æ®çš„ä¸ªæ•°
 
-  IAP_Unlock();//½âËøIAP²Ù×÷
-  IAP_EraseSector((FLASH_USER_ADDR - FLASH_BASE) / 512);//²Á³ıµØÖ·ËùÔÚÉÈÇø£¬Ã¿¸öÉÈÇø´óĞ¡Îª512Byte
-  IAP_WriteCmd(ENABLE);//¿ªÆôĞ´Ê¹ÄÜ
+  IAP_Unlock();//è§£é”IAPæ“ä½œ
+  IAP_EraseSector((FLASH_USER_ADDR - FLASH_BASE) / 512);//æ“¦é™¤åœ°å€æ‰€åœ¨æ‰‡åŒºï¼Œæ¯ä¸ªæ‰‡åŒºå¤§å°ä¸º512Byte
+  IAP_WriteCmd(ENABLE);//å¼€å¯å†™ä½¿èƒ½
 
-  /* µ¥¸öÊı¾İÒÀ´ÎĞ´Èë(×¢ÒâµØÖ·¶ÔÆë) */
-  IAP_ProgramWord(FLASH_USER_ADDR, 0x12345678);//×ÖĞ´Èë£¬Ä¿±êµØÖ·FLASH_USER_ADDR
-  IAP_ProgramHalfWord(FLASH_USER_ADDR + 4, 0x6666);//°ë×ÖĞ´Èë£¬Ä¿±êµØÖ·£¨FLASH_USER_ADDR+4£©
-  IAP_ProgramByte(FLASH_USER_ADDR + 6, 0x99);//×Ö½ÚĞ´Èë£¬Ä¿±êµØÖ·£¨(FLASH_USER_ADDR+4)+2£©
+  /* å•ä¸ªæ•°æ®ä¾æ¬¡å†™å…¥(æ³¨æ„åœ°å€å¯¹é½) */
+  IAP_ProgramWord(FLASH_USER_ADDR, 0x12345678);//å­—å†™å…¥ï¼Œç›®æ ‡åœ°å€FLASH_USER_ADDR
+  IAP_ProgramHalfWord(FLASH_USER_ADDR + 4, 0x6666);//åŠå­—å†™å…¥ï¼Œç›®æ ‡åœ°å€ï¼ˆFLASH_USER_ADDR+4ï¼‰
+  IAP_ProgramByte(FLASH_USER_ADDR + 6, 0x99);//å­—èŠ‚å†™å…¥ï¼Œç›®æ ‡åœ°å€ï¼ˆ(FLASH_USER_ADDR+4)+2ï¼‰
 
-  /* ÅúÁ¿Êı¾İĞ´Èë */
-//Ğ´ÈëµØÖ·ÇëÎğÖØºÏ£¡Ğ´ÈëÊı¾İÇëÎğ³¬³öÉÈÇø·¶Î§£¡
-  IAP_ProgramWordArray(FLASH_USER_ADDR + 20, Array_WriteWord, 3);//ÅúÁ¿×ÖĞ´Èë
-  IAP_ProgramHalfWordArray(FLASH_USER_ADDR + 40, Array_WriteHalfWord, 5);//ÅúÁ¿°ë×ÖĞ´Èë
-  IAP_ProgramByteArray(FLASH_USER_ADDR + 60, Array_WriteByte, 5);//ÅúÁ¿×Ö½ÚĞ´Èë
+  /* æ‰¹é‡æ•°æ®å†™å…¥ */
+//å†™å…¥åœ°å€è¯·å‹¿é‡åˆï¼å†™å…¥æ•°æ®è¯·å‹¿è¶…å‡ºæ‰‡åŒºèŒƒå›´ï¼
+  IAP_ProgramWordArray(FLASH_USER_ADDR + 20, Array_WriteWord, 3);//æ‰¹é‡å­—å†™å…¥
+  IAP_ProgramHalfWordArray(FLASH_USER_ADDR + 40, Array_WriteHalfWord, 5);//æ‰¹é‡åŠå­—å†™å…¥
+  IAP_ProgramByteArray(FLASH_USER_ADDR + 60, Array_WriteByte, 5);//æ‰¹é‡å­—èŠ‚å†™å…¥
 
-  IAP_Lock();//ÉÏËøIAP²Ù×÷£¬²¢ÇÒ¸´Î»IAP²Ù×÷¼Ä´æÆ÷
+  IAP_Lock();//ä¸Šé”IAPæ“ä½œï¼Œå¹¶ä¸”å¤ä½IAPæ“ä½œå¯„å­˜å™¨
 
-  /* µ¥¸öÊı¾İÒÀ´Î¶ÁÈ¡ */
-  ReadWord = IAP_ReadWord(FLASH_USER_ADDR);//×Ö¶Á£¬Ä¿±êµØÖ·£¨0x803FE00£©
-  ReadHalfWord = IAP_ReadHalfWord(FLASH_USER_ADDR + 4);//°ë×Ö¶Á£¬Ä¿±êµØÖ·£¨0x803FE00+4=0x803FE04£©
-  ReadByte = IAP_ReadByte(FLASH_USER_ADDR + 6);//×Ö½Ú¶Á£¬Ä¿±êµØÖ·£¨0x803FE04+2=0x803FE06£©
+  /* å•ä¸ªæ•°æ®ä¾æ¬¡è¯»å– */
+  ReadWord = IAP_ReadWord(FLASH_USER_ADDR);//å­—è¯»ï¼Œç›®æ ‡åœ°å€ï¼ˆ0x803FE00ï¼‰
+  ReadHalfWord = IAP_ReadHalfWord(FLASH_USER_ADDR + 4);//åŠå­—è¯»ï¼Œç›®æ ‡åœ°å€ï¼ˆ0x803FE00+4=0x803FE04ï¼‰
+  ReadByte = IAP_ReadByte(FLASH_USER_ADDR + 6);//å­—èŠ‚è¯»ï¼Œç›®æ ‡åœ°å€ï¼ˆ0x803FE04+2=0x803FE06ï¼‰
 
-  /* ÅúÁ¿Êı¾İ¶ÁÈ¡ */
-  Flag_ReadWord = IAP_ReadWordArray(FLASH_USER_ADDR + 20, Array_ReadWord, 3);//ÅúÁ¿×Ö¶Á£¬·µ»ØÖµÎª¶ÁÈ¡³É¹¦Êı¾İ´óĞ¡
-  Flag_ReadHalfWord = IAP_ReadHalfWordArray(FLASH_USER_ADDR + 40, Array_ReadHalfWord, 5);//ÅúÁ¿°ë×Ö¶Á£¬·µ»ØÖµÎª¶ÁÈ¡³É¹¦Êı¾İ´óĞ¡
-  Flag_ReadByte = IAP_ReadByteArray(FLASH_USER_ADDR + 60, Array_ReadByte, 5);//ÅúÁ¿×Ö½Ú¶Á£¬·µ»ØÖµÎª¶ÁÈ¡³É¹¦Êı¾İ´óĞ¡
+  /* æ‰¹é‡æ•°æ®è¯»å– */
+  Flag_ReadWord = IAP_ReadWordArray(FLASH_USER_ADDR + 20, Array_ReadWord, 3);//æ‰¹é‡å­—è¯»ï¼Œè¿”å›å€¼ä¸ºè¯»å–æˆåŠŸæ•°æ®å¤§å°
+  Flag_ReadHalfWord = IAP_ReadHalfWordArray(FLASH_USER_ADDR + 40, Array_ReadHalfWord, 5);//æ‰¹é‡åŠå­—è¯»ï¼Œè¿”å›å€¼ä¸ºè¯»å–æˆåŠŸæ•°æ®å¤§å°
+  Flag_ReadByte = IAP_ReadByteArray(FLASH_USER_ADDR + 60, Array_ReadByte, 5);//æ‰¹é‡å­—èŠ‚è¯»ï¼Œè¿”å›å€¼ä¸ºè¯»å–æˆåŠŸæ•°æ®å¤§å°
 
-  if(ReadWord == 0x12345678 && ReadHalfWord == 0x6666 && ReadByte == 0x99)//µ¥¸öÊı¾İ¶ÁĞ´ÅĞ¶Ï
+  if(ReadWord == 0x12345678 && ReadHalfWord == 0x6666 && ReadByte == 0x99)//å•ä¸ªæ•°æ®è¯»å†™åˆ¤æ–­
   {
-    if(Flag_ReadWord == 3 && Flag_ReadHalfWord == 5 && Flag_ReadByte == 5)//ÅúÁ¿Ğ´Èë³É¹¦¸öÊıÅĞ¶Ï
+    if(Flag_ReadWord == 3 && Flag_ReadHalfWord == 5 && Flag_ReadByte == 5)//æ‰¹é‡å†™å…¥æˆåŠŸä¸ªæ•°åˆ¤æ–­
     {
-      IAP_Flag = 1;//IAP¶ÁĞ´²Ù×÷Íê³É±êÖ¾
+      IAP_Flag = 1;//IAPè¯»å†™æ“ä½œå®Œæˆæ ‡å¿—
     }
   }
 }
