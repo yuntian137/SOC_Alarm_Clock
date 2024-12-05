@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "TKDriver.C": "cpp"
+        "TKDriver.C": "cpp",
+        "IAP_Program.C": "cpp"
     }
 }
