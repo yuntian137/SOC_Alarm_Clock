@@ -42,3 +42,4 @@
 ..\output\sc_it.o: ..\Drivers\SCDriver_List.h
 ..\output\sc_it.o: ..\Drivers\.\TKDriver\C\TKDriver.h
 ..\output\sc_it.o: ..\Drivers\..\Apps\IAP_Program.H
+..\output\sc_it.o: ..\ADC_IAP\Inc\adc_iap.h

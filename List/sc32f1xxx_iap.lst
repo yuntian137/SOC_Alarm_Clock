@@ -6825,6 +6825,7 @@ N    IAP->IAP_CON = tmpreg;
 X    ((IAP_TypeDef *) (((0x40000000UL)) +(0x000003C0UL)))->IAP_CON = tmpreg;
 N    IAP->IAP_CON |= ( 0x02 << IAP_CON_CMD_Pos );
 X    ((IAP_TypeDef *) (((0x40000000UL)) +(0x000003C0UL)))->IAP_CON |= ( 0x02 << (0U) );
+N    //IAP->IAP_CON = 0x22;
 N}
 N
 N#if defined(SC32f11xx) ||  defined(SC32f12xx) || defined(SC32f15xx)
@@ -6932,9 +6933,9 @@ S{
 S    assert_param ( IS_IAP_ADDRESS ( Address ) );
 S
 S    uint32_t Addr_Temp = Address & 0xFFFFFFFC;
-S    /*¶ÁÈë¶ÔÆëµØÖ·µÄÊý¾Ý*/
+S    /*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 S    uint32_t Data_Temp = * ( __IO uint32_t* ) Addr_Temp;
-S    /*²åÈë´ýÐ´ÈëÊý¾Ý*/
+S    /*ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 S    switch ( Address & 0x00000003 )
 S    {
 S    case 0:
@@ -6962,7 +6963,7 @@ S
 S
 S    }
 S
-S    /*Ð´ÈëÈëÊý¾Ý*/
+S    /*Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 S    for ( int i = 2; i > 0 ; i-- )
 S    {
 S        * ( __IO uint32_t* ) Addr_Temp = Data_Temp;
@@ -6988,9 +6989,9 @@ S{
 S    assert_param ( IS_IAP_ADDRESS ( Address ) );
 S
 S    uint32_t Addr_Temp = Address & 0xFFFFFFFC;
-S    /*¶ÁÈë¶ÔÆëµØÖ·µÄÊý¾Ý*/
+S    /*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 S    uint32_t Data_Temp = * ( __IO uint32_t* ) Addr_Temp;
-S    /*²åÈë´ýÐ´ÈëÊý¾Ý*/
+S    /*ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 S    switch ( Address & 0x00000003 )
 S    {
 S    case 0:
@@ -7000,7 +7001,7 @@ S        break;
 S    }
 S    case 1:
 S    {
-S        return FALSE;  //µØÖ·²»¶ÔÆë£¬´íÎó
+S        return FALSE;  //ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ë£¬ï¿½ï¿½ï¿½ï¿½
 S    }
 S    case 2:
 S    {
@@ -7009,11 +7010,11 @@ S        break;
 S    }
 S    case 3:
 S    {
-S        return FALSE;  //µØÖ·²»¶ÔÆë£¬´íÎó
+S        return FALSE;  //ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ë£¬ï¿½ï¿½ï¿½ï¿½
 S    }
 S    }
 S
-S    /*Ð´ÈëÈëÊý¾Ý*/
+S    /*Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 S    for ( int i = 2; i > 0 ; i-- )
 S    {
 S        * ( __IO uint32_t* ) Addr_Temp = Data_Temp;

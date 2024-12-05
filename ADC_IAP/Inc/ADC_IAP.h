@@ -7,7 +7,7 @@
 void initADC(void);
 uint16_t readADC(ADC_ChannelTypedef channel);
 float adcToVoltage(uint16_t adcValue);
-void checkPowerLoss(void);
+void checkPowerLoss(uint8_t cnt );
 
 // IAP相关函数
 void initIAP(void);
@@ -20,9 +20,10 @@ typedef struct {
     uint8_t hour;
     uint8_t minute;
     uint8_t enabled;  // 是否启用闹钟
+    
 } AlarmSettings;
 
-void saveAlarmSettings(void);
+void saveAlarmSettings(uint8_t cnt);
 AlarmSettings loadAlarmSettings(void);
 void setAlarm(uint8_t hour, uint8_t minute, uint8_t enabled);
 

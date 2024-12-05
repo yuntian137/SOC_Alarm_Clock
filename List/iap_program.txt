@@ -5,180 +5,188 @@
                           AREA ||i.IAP_Program||, CODE, READONLY, ALIGN=2
 
                   IAP_Program PROC
-;;;5      static volatile uint8_t IAP_Flag = 0;//自定义标志位
-;;;6      void IAP_Program(void)
+;;;6      uint8_t a = 0;
+;;;7      uint8_t IAP_Program(void)
 000000  b5f0              PUSH     {r4-r7,lr}
-;;;7      {
+;;;8      {
 000002  b093              SUB      sp,sp,#0x4c
-;;;8        uint32_t ReadWord = 0;//定义变量存放单字读数据
+;;;9        uint32_t ReadWord = 0;//定义变量存放单字读数据
 000004  2400              MOVS     r4,#0
-;;;9        uint16_t ReadHalfWord = 0;//定义变量存放单半字读数据
+;;;10       uint16_t ReadHalfWord = 0;//定义变量存放单半字读数据
 000006  2500              MOVS     r5,#0
-;;;10       uint8_t ReadByte = 0;//定义变量存放单字节读数据
+;;;11       uint8_t ReadByte = 0;//定义变量存放单字节读数据
 000008  2600              MOVS     r6,#0
-;;;11       uint32_t Array_WriteWord[3] = {0x11223344, 0x22334455, 0x33445566}, Array_ReadWord[3];//定义读、写字数组
-00000a  483c              LDR      r0,|L1.252|
-00000c  6842              LDR      r2,[r0,#4]  ; <Data1>
-00000e  6801              LDR      r1,[r0,#0]  ; <Data1>
-000010  6880              LDR      r0,[r0,#8]  ; <Data1>
+;;;12       uint32_t Array_WriteWord[3] = {0x11223344, 0x22334455, 0x33445566}, Array_ReadWord[3];//定义读、写字数组
+00000a  493e              LDR      r1,|L1.260|
+00000c  684a              LDR      r2,[r1,#4]  ; <Data1>
+00000e  6808              LDR      r0,[r1,#0]  ; <Data1>
+000010  6889              LDR      r1,[r1,#8]  ; <Data1>
 000012  9211              STR      r2,[sp,#0x44]
-000014  9110              STR      r1,[sp,#0x40]
-000016  9012              STR      r0,[sp,#0x48]
-;;;12       uint16_t Array_WriteHalfWord[5] = {0x1111, 0x2222, 0x3333, 0x4444, 0x5555}, Array_ReadHalfWord[5];//定义读、写半字数组
-000018  4a38              LDR      r2,|L1.252|
+000014  9112              STR      r1,[sp,#0x48]
+000016  9010              STR      r0,[sp,#0x40]
+;;;13       uint16_t Array_WriteHalfWord[5] = {0x1111, 0x2222, 0x3333, 0x4444, 0x5555}, Array_ReadHalfWord[5];//定义读、写半字数组
+000018  4a3a              LDR      r2,|L1.260|
 00001a  320c              ADDS     r2,r2,#0xc
-00001c  6811              LDR      r1,[r2,#0]  ; <Data2>
-00001e  6850              LDR      r0,[r2,#4]  ; <Data2>
-000020  6892              LDR      r2,[r2,#8]  ; <Data2>
-000022  920c              STR      r2,[sp,#0x30]
-000024  910a              STR      r1,[sp,#0x28]
-000026  900b              STR      r0,[sp,#0x2c]
-;;;13       uint8_t Array_WriteByte[5] = {0x99, 0x88, 0x77, 0x66, 0x55}, Array_ReadByte[5];//定义读、写字节数组
-000028  a135              ADR      r1,|L1.256|
-00002a  c903              LDM      r1,{r0,r1}
-00002c  9106              STR      r1,[sp,#0x18]
-00002e  9005              STR      r0,[sp,#0x14]
-;;;14       uint8_t Flag_ReadWord = 0, Flag_ReadHalfWord = 0, Flag_ReadByte = 0;//定义变量存放字、半字、字节批量读读到数据的个数
-000030  2700              MOVS     r7,#0
-000032  2000              MOVS     r0,#0
-000034  9002              STR      r0,[sp,#8]
-000036  9001              STR      r0,[sp,#4]
-;;;15     
-;;;16       IAP_Unlock();//解锁IAP操作
-000038  f7fffffe          BL       IAP_Unlock
-;;;17       IAP_EraseSector((FLASH_USER_ADDR - FLASH_BASE) / 512);//擦除地址所在扇区，每个扇区大小为512Byte
-00003c  20ff              MOVS     r0,#0xff
-00003e  f7fffffe          BL       IAP_EraseSector
-;;;18       IAP_WriteCmd(ENABLE);//开启写使能
-000042  2001              MOVS     r0,#1
-000044  f7fffffe          BL       IAP_WriteCmd
-;;;19     
-;;;20       /* 单个数据依次写入(注意地址对齐) */
-;;;21       IAP_ProgramWord(FLASH_USER_ADDR, 0x12345678);//字写入，目标地址FLASH_USER_ADDR
-000048  492f              LDR      r1,|L1.264|
-00004a  4830              LDR      r0,|L1.268|
-00004c  f7fffffe          BL       IAP_ProgramWord
-;;;22       IAP_ProgramHalfWord(FLASH_USER_ADDR + 4, 0x6666);//半字写入，目标地址（FLASH_USER_ADDR+4）
-000050  492f              LDR      r1,|L1.272|
-000052  482e              LDR      r0,|L1.268|
-000054  1d00              ADDS     r0,r0,#4
-000056  f7fffffe          BL       IAP_ProgramHalfWord
-;;;23       IAP_ProgramByte(FLASH_USER_ADDR + 6, 0x99);//字节写入，目标地址（(FLASH_USER_ADDR+4)+2）
-00005a  2199              MOVS     r1,#0x99
-00005c  482b              LDR      r0,|L1.268|
-00005e  1d80              ADDS     r0,r0,#6
-000060  f7fffffe          BL       IAP_ProgramByte
-;;;24     
-;;;25       /* 批量数据写入 */
-;;;26     //写入地址请勿重合！写入数据请勿超出扇区范围！
-;;;27       IAP_ProgramWordArray(FLASH_USER_ADDR + 20, Array_WriteWord, 3);//批量字写入
-000064  2203              MOVS     r2,#3
-000066  a910              ADD      r1,sp,#0x40
-000068  4828              LDR      r0,|L1.268|
-00006a  3014              ADDS     r0,r0,#0x14
-00006c  f7fffffe          BL       IAP_ProgramWordArray
-;;;28       IAP_ProgramHalfWordArray(FLASH_USER_ADDR + 40, Array_WriteHalfWord, 5);//批量半字写入
-000070  2205              MOVS     r2,#5
-000072  a90a              ADD      r1,sp,#0x28
-000074  4825              LDR      r0,|L1.268|
-000076  3028              ADDS     r0,r0,#0x28
-000078  f7fffffe          BL       IAP_ProgramHalfWordArray
-;;;29       IAP_ProgramByteArray(FLASH_USER_ADDR + 60, Array_WriteByte, 5);//批量字节写入
-00007c  2205              MOVS     r2,#5
-00007e  a905              ADD      r1,sp,#0x14
-000080  4822              LDR      r0,|L1.268|
-000082  303c              ADDS     r0,r0,#0x3c
-000084  f7fffffe          BL       IAP_ProgramByteArray
-;;;30     
-;;;31       IAP_Lock();//上锁IAP操作，并且复位IAP操作寄存器
-000088  f7fffffe          BL       IAP_Lock
-;;;32     
-;;;33       /* 单个数据依次读取 */
-;;;34       ReadWord = IAP_ReadWord(FLASH_USER_ADDR);//字读，目标地址（0x803FE00）
-00008c  481f              LDR      r0,|L1.268|
-00008e  f7fffffe          BL       IAP_ReadWord
-000092  4604              MOV      r4,r0
-;;;35       ReadHalfWord = IAP_ReadHalfWord(FLASH_USER_ADDR + 4);//半字读，目标地址（0x803FE00+4=0x803FE04）
-000094  481d              LDR      r0,|L1.268|
-000096  1d00              ADDS     r0,r0,#4
-000098  f7fffffe          BL       IAP_ReadHalfWord
-00009c  4605              MOV      r5,r0
-;;;36       ReadByte = IAP_ReadByte(FLASH_USER_ADDR + 6);//字节读，目标地址（0x803FE04+2=0x803FE06）
-00009e  481b              LDR      r0,|L1.268|
-0000a0  1d80              ADDS     r0,r0,#6
-0000a2  f7fffffe          BL       IAP_ReadByte
-0000a6  4606              MOV      r6,r0
-;;;37     
-;;;38       /* 批量数据读取 */
-;;;39       Flag_ReadWord = IAP_ReadWordArray(FLASH_USER_ADDR + 20, Array_ReadWord, 3);//批量字读，返回值为读取成功数据大小
-0000a8  2203              MOVS     r2,#3
-0000aa  a90d              ADD      r1,sp,#0x34
-0000ac  4817              LDR      r0,|L1.268|
-0000ae  3014              ADDS     r0,r0,#0x14
-0000b0  f7fffffe          BL       IAP_ReadWordArray
-0000b4  4607              MOV      r7,r0
-;;;40       Flag_ReadHalfWord = IAP_ReadHalfWordArray(FLASH_USER_ADDR + 40, Array_ReadHalfWord, 5);//批量半字读，返回值为读取成功数据大小
-0000b6  2205              MOVS     r2,#5
-0000b8  a907              ADD      r1,sp,#0x1c
-0000ba  4814              LDR      r0,|L1.268|
-0000bc  3028              ADDS     r0,r0,#0x28
-0000be  f7fffffe          BL       IAP_ReadHalfWordArray
-0000c2  9002              STR      r0,[sp,#8]
-;;;41       Flag_ReadByte = IAP_ReadByteArray(FLASH_USER_ADDR + 60, Array_ReadByte, 5);//批量字节读，返回值为读取成功数据大小
-0000c4  2205              MOVS     r2,#5
-0000c6  a903              ADD      r1,sp,#0xc
-0000c8  4810              LDR      r0,|L1.268|
-0000ca  303c              ADDS     r0,r0,#0x3c
-0000cc  f7fffffe          BL       IAP_ReadByteArray
-0000d0  9001              STR      r0,[sp,#4]
-;;;42     
-;;;43       if(ReadWord == 0x12345678 && ReadHalfWord == 0x6666 && ReadByte == 0x99)//单个数据读写判断
-0000d2  480d              LDR      r0,|L1.264|
-0000d4  4284              CMP      r4,r0
-0000d6  d10f              BNE      |L1.248|
-0000d8  480d              LDR      r0,|L1.272|
-0000da  4285              CMP      r5,r0
-0000dc  d10c              BNE      |L1.248|
-0000de  2e99              CMP      r6,#0x99
-0000e0  d10a              BNE      |L1.248|
-;;;44       {
-;;;45         if(Flag_ReadWord == 3 && Flag_ReadHalfWord == 5 && Flag_ReadByte == 5)//批量写入成功个数判断
-0000e2  2f03              CMP      r7,#3
-0000e4  d108              BNE      |L1.248|
-0000e6  9802              LDR      r0,[sp,#8]
-0000e8  2805              CMP      r0,#5
-0000ea  d105              BNE      |L1.248|
-0000ec  9801              LDR      r0,[sp,#4]
-0000ee  2805              CMP      r0,#5
-0000f0  d102              BNE      |L1.248|
-;;;46         {
-;;;47           IAP_Flag = 1;//IAP读写操作完成标志
-0000f2  2001              MOVS     r0,#1
-0000f4  4907              LDR      r1,|L1.276|
-0000f6  7008              STRB     r0,[r1,#0]
-                  |L1.248|
-;;;48         }
-;;;49       }
-;;;50     }
-0000f8  b013              ADD      sp,sp,#0x4c
-0000fa  bdf0              POP      {r4-r7,pc}
-;;;51     
+00001c  ca07              LDM      r2,{r0-r2}
+00001e  ab0a              ADD      r3,sp,#0x28
+000020  c307              STM      r3!,{r0-r2}
+;;;14       uint8_t Array_WriteByte[5] = {0x99, 0x88, 0x77, 0x66, 0x55}, Array_ReadByte[5];//定义读、写字节数组
+000022  a139              ADR      r1,|L1.264|
+000024  c903              LDM      r1,{r0,r1}
+000026  9106              STR      r1,[sp,#0x18]
+000028  9005              STR      r0,[sp,#0x14]
+;;;15       uint8_t Flag_ReadWord = 0, Flag_ReadHalfWord = 0, Flag_ReadByte = 0;//定义变量存放字、半字、字节批量读读到数据的个数
+00002a  2700              MOVS     r7,#0
+00002c  2000              MOVS     r0,#0
+00002e  9002              STR      r0,[sp,#8]
+000030  9001              STR      r0,[sp,#4]
+;;;16     
+;;;17       a = IAP_Unlock();//解锁IAP操作
+000032  f7fffffe          BL       IAP_Unlock
+000036  4936              LDR      r1,|L1.272|
+000038  7008              STRB     r0,[r1,#0]
+;;;18       IAP_EraseSector((FLASH_USER_ADDR - FLASH_BASE) / 512);//擦除地址所在扇区，每个扇区大小为512Byte
+00003a  20ff              MOVS     r0,#0xff
+00003c  f7fffffe          BL       IAP_EraseSector
+;;;19       IAP_WriteCmd(ENABLE);//开启写使能
+000040  2001              MOVS     r0,#1
+000042  f7fffffe          BL       IAP_WriteCmd
+;;;20     
+;;;21       /* 单个数据依次写入(注意地址对齐) */
+;;;22       IAP_ProgramWord(FLASH_USER_ADDR, 0x12345678);//字写入，目标地址FLASH_USER_ADDR
+000046  4933              LDR      r1,|L1.276|
+000048  4833              LDR      r0,|L1.280|
+00004a  f7fffffe          BL       IAP_ProgramWord
+;;;23       IAP_ProgramHalfWord(FLASH_USER_ADDR + 4, 0x6666);//半字写入，目标地址（FLASH_USER_ADDR+4）
+00004e  4933              LDR      r1,|L1.284|
+000050  4831              LDR      r0,|L1.280|
+000052  1d00              ADDS     r0,r0,#4
+000054  f7fffffe          BL       IAP_ProgramHalfWord
+;;;24       IAP_ProgramByte(FLASH_USER_ADDR + 6, 0x99);//字节写入，目标地址（(FLASH_USER_ADDR+4)+2）
+000058  2199              MOVS     r1,#0x99
+00005a  482f              LDR      r0,|L1.280|
+00005c  1d80              ADDS     r0,r0,#6
+00005e  f7fffffe          BL       IAP_ProgramByte
+;;;25     
+;;;26       /* 批量数据写入 */
+;;;27     //写入地址请勿重合！写入数据请勿超出扇区范围！
+;;;28       IAP_ProgramWordArray(FLASH_USER_ADDR + 20, Array_WriteWord, 3);//批量字写入
+000062  2203              MOVS     r2,#3
+000064  a910              ADD      r1,sp,#0x40
+000066  482c              LDR      r0,|L1.280|
+000068  3014              ADDS     r0,r0,#0x14
+00006a  f7fffffe          BL       IAP_ProgramWordArray
+;;;29       IAP_ProgramHalfWordArray(FLASH_USER_ADDR + 40, Array_WriteHalfWord, 5);//批量半字写入
+00006e  2205              MOVS     r2,#5
+000070  a90a              ADD      r1,sp,#0x28
+000072  4829              LDR      r0,|L1.280|
+000074  3028              ADDS     r0,r0,#0x28
+000076  f7fffffe          BL       IAP_ProgramHalfWordArray
+;;;30       IAP_ProgramByteArray(FLASH_USER_ADDR + 60, Array_WriteByte, 5);//批量字节写入
+00007a  2205              MOVS     r2,#5
+00007c  a905              ADD      r1,sp,#0x14
+00007e  4826              LDR      r0,|L1.280|
+000080  303c              ADDS     r0,r0,#0x3c
+000082  f7fffffe          BL       IAP_ProgramByteArray
+;;;31     
+;;;32       IAP_Lock();//上锁IAP操作，并且复位IAP操作寄存器
+000086  f7fffffe          BL       IAP_Lock
+;;;33     
+;;;34       /* 单个数据依次读取 */
+;;;35       ReadWord = IAP_ReadWord(FLASH_USER_ADDR);//字读，目标地址（0x803FE00）
+00008a  4823              LDR      r0,|L1.280|
+00008c  f7fffffe          BL       IAP_ReadWord
+000090  4604              MOV      r4,r0
+;;;36       ReadHalfWord = IAP_ReadHalfWord(FLASH_USER_ADDR + 4);//半字读，目标地址（0x803FE00+4=0x803FE04）
+000092  4821              LDR      r0,|L1.280|
+000094  1d00              ADDS     r0,r0,#4
+000096  f7fffffe          BL       IAP_ReadHalfWord
+00009a  4605              MOV      r5,r0
+;;;37       ReadByte = IAP_ReadByte(FLASH_USER_ADDR + 6);//字节读，目标地址（0x803FE04+2=0x803FE06）
+00009c  481e              LDR      r0,|L1.280|
+00009e  1d80              ADDS     r0,r0,#6
+0000a0  f7fffffe          BL       IAP_ReadByte
+0000a4  4606              MOV      r6,r0
+;;;38     
+;;;39       /* 批量数据读取 */
+;;;40       Flag_ReadWord = IAP_ReadWordArray(FLASH_USER_ADDR + 20, Array_ReadWord, 3);//批量字读，返回值为读取成功数据大小
+0000a6  2203              MOVS     r2,#3
+0000a8  a90d              ADD      r1,sp,#0x34
+0000aa  481b              LDR      r0,|L1.280|
+0000ac  3014              ADDS     r0,r0,#0x14
+0000ae  f7fffffe          BL       IAP_ReadWordArray
+0000b2  4607              MOV      r7,r0
+;;;41       Flag_ReadHalfWord = IAP_ReadHalfWordArray(FLASH_USER_ADDR + 40, Array_ReadHalfWord, 5);//批量半字读，返回值为读取成功数据大小
+0000b4  2205              MOVS     r2,#5
+0000b6  a907              ADD      r1,sp,#0x1c
+0000b8  4817              LDR      r0,|L1.280|
+0000ba  3028              ADDS     r0,r0,#0x28
+0000bc  f7fffffe          BL       IAP_ReadHalfWordArray
+0000c0  9002              STR      r0,[sp,#8]
+;;;42       Flag_ReadByte = IAP_ReadByteArray(FLASH_USER_ADDR + 60, Array_ReadByte, 5);//批量字节读，返回值为读取成功数据大小
+0000c2  2205              MOVS     r2,#5
+0000c4  a903              ADD      r1,sp,#0xc
+0000c6  4814              LDR      r0,|L1.280|
+0000c8  303c              ADDS     r0,r0,#0x3c
+0000ca  f7fffffe          BL       IAP_ReadByteArray
+0000ce  9001              STR      r0,[sp,#4]
+;;;43     
+;;;44       if(ReadWord == 0x12345678 && ReadHalfWord == 0x6666 && ReadByte == 0x99)//单个数据读写判断
+0000d0  4810              LDR      r0,|L1.276|
+0000d2  4284              CMP      r4,r0
+0000d4  d113              BNE      |L1.254|
+0000d6  4811              LDR      r0,|L1.284|
+0000d8  4285              CMP      r5,r0
+0000da  d110              BNE      |L1.254|
+0000dc  2e99              CMP      r6,#0x99
+0000de  d10e              BNE      |L1.254|
+;;;45       {
+;;;46         if(Flag_ReadWord == 3 && Flag_ReadHalfWord == 5 && Flag_ReadByte == 5)//批量写入成功个数判断
+0000e0  2f03              CMP      r7,#3
+0000e2  d10c              BNE      |L1.254|
+0000e4  9802              LDR      r0,[sp,#8]
+0000e6  2805              CMP      r0,#5
+0000e8  d109              BNE      |L1.254|
+0000ea  9801              LDR      r0,[sp,#4]
+0000ec  2805              CMP      r0,#5
+0000ee  d106              BNE      |L1.254|
+;;;47         {
+;;;48           IAP_Flag = 1;//IAP读写操作完成标志
+0000f0  2001              MOVS     r0,#1
+0000f2  490b              LDR      r1,|L1.288|
+0000f4  7008              STRB     r0,[r1,#0]
+;;;49           return IAP_Flag;
+0000f6  4608              MOV      r0,r1
+0000f8  7800              LDRB     r0,[r0,#0]  ; IAP_Flag
+                  |L1.250|
+;;;50         }
+;;;51       }
+;;;52     }
+0000fa  b013              ADD      sp,sp,#0x4c
+0000fc  bdf0              POP      {r4-r7,pc}
+                  |L1.254|
+0000fe  bf00              NOP      
+000100  e7fb              B        |L1.250|
+;;;53     
                           ENDP
 
-                  |L1.252|
+000102  0000              DCW      0x0000
+                  |L1.260|
                           DCD      ||.constdata||
-                  |L1.256|
-000100  99887766          DCB      153,136,"wfU",0
-000104  5500    
-000106  00                DCB      0
-000107  00                DCB      0
                   |L1.264|
-                          DCD      0x12345678
-                  |L1.268|
-                          DCD      0x0801fe00
+000108  99887766          DCB      153,136,"wfU",0
+00010c  5500    
+00010e  00                DCB      0
+00010f  00                DCB      0
                   |L1.272|
-                          DCD      0x00006666
+                          DCD      a
                   |L1.276|
+                          DCD      0x12345678
+                  |L1.280|
+                          DCD      0x0801fe00
+                  |L1.284|
+                          DCD      0x00006666
+                  |L1.288|
                           DCD      IAP_Flag
 
                           AREA ||.constdata||, DATA, READONLY, ALIGN=2
@@ -194,15 +202,17 @@
 
                   IAP_Flag
 000000  00                DCB      0x00
+                  a
+000001  00                DCB      0x00
 
 ;*** Start embedded assembler ***
 
 #line 1 "..\\Apps\\IAP_Program.C"
 	AREA ||.rev16_text||, CODE
 	THUMB
-	EXPORT |__asm___13_IAP_Program_C_8992cb62____REV16|
+	EXPORT |__asm___13_IAP_Program_C_a____REV16|
 #line 463 "..\\CMSIS\\cmsis_armcc.h"
-|__asm___13_IAP_Program_C_8992cb62____REV16| PROC
+|__asm___13_IAP_Program_C_a____REV16| PROC
 #line 464
 
  rev16 r0, r0
@@ -210,9 +220,9 @@
 	ENDP
 	AREA ||.revsh_text||, CODE
 	THUMB
-	EXPORT |__asm___13_IAP_Program_C_8992cb62____REVSH|
+	EXPORT |__asm___13_IAP_Program_C_a____REVSH|
 #line 478
-|__asm___13_IAP_Program_C_8992cb62____REVSH| PROC
+|__asm___13_IAP_Program_C_a____REVSH| PROC
 #line 479
 
  revsh r0, r0

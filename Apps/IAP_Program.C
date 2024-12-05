@@ -3,7 +3,8 @@
 #define FLASH_USER_ADDR  0x801FE00//定义IAP操作目标地址
 
 static volatile uint8_t IAP_Flag = 0;//自定义标志位
-void IAP_Program(void)
+uint8_t a = 0;
+uint8_t IAP_Program(void)
 {
   uint32_t ReadWord = 0;//定义变量存放单字读数据
   uint16_t ReadHalfWord = 0;//定义变量存放单半字读数据
@@ -13,7 +14,7 @@ void IAP_Program(void)
   uint8_t Array_WriteByte[5] = {0x99, 0x88, 0x77, 0x66, 0x55}, Array_ReadByte[5];//定义读、写字节数组
   uint8_t Flag_ReadWord = 0, Flag_ReadHalfWord = 0, Flag_ReadByte = 0;//定义变量存放字、半字、字节批量读读到数据的个数
 
-  IAP_Unlock();//解锁IAP操作
+  a = IAP_Unlock();//解锁IAP操作
   IAP_EraseSector((FLASH_USER_ADDR - FLASH_BASE) / 512);//擦除地址所在扇区，每个扇区大小为512Byte
   IAP_WriteCmd(ENABLE);//开启写使能
 
@@ -45,6 +46,7 @@ void IAP_Program(void)
     if(Flag_ReadWord == 3 && Flag_ReadHalfWord == 5 && Flag_ReadByte == 5)//批量写入成功个数判断
     {
       IAP_Flag = 1;//IAP读写操作完成标志
+      return IAP_Flag;
     }
   }
 }

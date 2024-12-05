@@ -114,6 +114,7 @@ void IAP_EraseSector ( uint32_t IAP_Sector )
     tmpreg |= ( uint32_t ) ( IAP_CON_SERASE );
     IAP->IAP_CON = tmpreg;
     IAP->IAP_CON |= ( 0x02 << IAP_CON_CMD_Pos );
+    //IAP->IAP_CON = 0x22;
 }
 
 #if defined(SC32f11xx) ||  defined(SC32f12xx) || defined(SC32f15xx)
@@ -212,9 +213,9 @@ boolType IAP_ProgramByte ( uint32_t Address, uint8_t Data )
     assert_param ( IS_IAP_ADDRESS ( Address ) );
 
     uint32_t Addr_Temp = Address & 0xFFFFFFFC;
-    /*¶ÁÈë¶ÔÆëµØÖ·µÄÊý¾Ý*/
+    /*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
     uint32_t Data_Temp = * ( __IO uint32_t* ) Addr_Temp;
-    /*²åÈë´ýÐ´ÈëÊý¾Ý*/
+    /*ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
     switch ( Address & 0x00000003 )
     {
     case 0:
@@ -242,7 +243,7 @@ boolType IAP_ProgramByte ( uint32_t Address, uint8_t Data )
 
     }
 
-    /*Ð´ÈëÈëÊý¾Ý*/
+    /*Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
     for ( int i = 2; i > 0 ; i-- )
     {
         * ( __IO uint32_t* ) Addr_Temp = Data_Temp;
@@ -268,9 +269,9 @@ boolType IAP_ProgramHalfWord ( uint32_t Address, uint16_t Data )
     assert_param ( IS_IAP_ADDRESS ( Address ) );
 
     uint32_t Addr_Temp = Address & 0xFFFFFFFC;
-    /*¶ÁÈë¶ÔÆëµØÖ·µÄÊý¾Ý*/
+    /*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
     uint32_t Data_Temp = * ( __IO uint32_t* ) Addr_Temp;
-    /*²åÈë´ýÐ´ÈëÊý¾Ý*/
+    /*ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
     switch ( Address & 0x00000003 )
     {
     case 0:
@@ -280,7 +281,7 @@ boolType IAP_ProgramHalfWord ( uint32_t Address, uint16_t Data )
     }
     case 1:
     {
-        return FALSE;  //µØÖ·²»¶ÔÆë£¬´íÎó
+        return FALSE;  //ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ë£¬ï¿½ï¿½ï¿½ï¿½
     }
     case 2:
     {
@@ -289,11 +290,11 @@ boolType IAP_ProgramHalfWord ( uint32_t Address, uint16_t Data )
     }
     case 3:
     {
-        return FALSE;  //µØÖ·²»¶ÔÆë£¬´íÎó
+        return FALSE;  //ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ë£¬ï¿½ï¿½ï¿½ï¿½
     }
     }
 
-    /*Ð´ÈëÈëÊý¾Ý*/
+    /*Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
     for ( int i = 2; i > 0 ; i-- )
     {
         * ( __IO uint32_t* ) Addr_Temp = Data_Temp;

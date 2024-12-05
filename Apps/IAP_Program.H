@@ -3,5 +3,5 @@
 
 #include "sc32_conf.h"
 
-void IAP_Program(void);
+uint8_t IAP_Program(void);
 #endif

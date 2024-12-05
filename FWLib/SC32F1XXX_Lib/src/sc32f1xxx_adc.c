@@ -188,10 +188,10 @@ void ADC_ConvModeConfig ( ADC_TypeDef* ADCx, ADC_ConvMode_TypeDef ADC_ConvMode )
  * @param  ADCx[out]: select the ADCx peripheral.
  *                  - ADC: Only ADC can be select the ADCx peripheral.
  * @param  ADC_Channel[in]: ADC input channel selection.
- *                         SC32f10xx Selection range(ADC_Channel_0 - ADC_Channel_16£¬ÓëADC_Channel_VDD_D4)
- *                         SC32f11xx Selection range(ADC_Channel_0 - ADC_Channel_17£¬ÓëADC_Channel_VDD_D4¡¢ADC_Channel_PGA)
- *                         SC32f12xx Selection range(ADC_Channel_0 - ADC_Channel_15£¬ÓëADC_Channel_VDD_D4¡¢ADC_Channel_OP)
- *                         SC32f15xx Selection range(ADC_Channel_0 - ADC_Channel_15£¬ÓëADC_Channel_VDD_D4¡¢ADC_Channel_TEMP)
+ *                         SC32f10xx Selection range(ADC_Channel_0 - ADC_Channel_16ï¿½ï¿½ï¿½ï¿½ADC_Channel_VDD_D4)
+ *                         SC32f11xx Selection range(ADC_Channel_0 - ADC_Channel_17ï¿½ï¿½ï¿½ï¿½ADC_Channel_VDD_D4ï¿½ï¿½ADC_Channel_PGA)
+ *                         SC32f12xx Selection range(ADC_Channel_0 - ADC_Channel_15ï¿½ï¿½ï¿½ï¿½ADC_Channel_VDD_D4ï¿½ï¿½ADC_Channel_OP)
+ *                         SC32f15xx Selection range(ADC_Channel_0 - ADC_Channel_15ï¿½ï¿½ï¿½ï¿½ADC_Channel_VDD_D4ï¿½ï¿½ADC_Channel_TEMP)
  *                         - ADC_Channel_0 : ADC input channel 0
  *                         - ADC_Channel_1 : ADC input channel 1
  *                         - ADC_Channel_2 : ADC input channel 2
@@ -243,10 +243,10 @@ void ADC_SetChannel ( ADC_TypeDef* ADCx, ADC_ChannelTypedef ADC_Channel )
  * @param  ADCx[out]: select the ADCx peripheral.
  *                  - ADC: Only ADC can be select the ADCx peripheral.
  * @retval ADC channel type
- *                         SC32f10xx Selection range(ADC_Channel_0 - ADC_Channel_16£¬ÓëADC_Channel_VDD_D4)
- *                         SC32f11xx Selection range(ADC_Channel_0 - ADC_Channel_17£¬ÓëADC_Channel_VDD_D4¡¢ADC_Channel_PGA)
- *                         SC32f12xx Selection range(ADC_Channel_0 - ADC_Channel_15£¬ÓëADC_Channel_VDD_D4¡¢ADC_Channel_OP)
- *                         SC32f15xx Selection range(ADC_Channel_0 - ADC_Channel_15£¬ÓëADC_Channel_VDD_D4¡¢ADC_Channel_TEMP) 
+ *                         SC32f10xx Selection range(ADC_Channel_0 - ADC_Channel_16ï¿½ï¿½ï¿½ï¿½ADC_Channel_VDD_D4)
+ *                         SC32f11xx Selection range(ADC_Channel_0 - ADC_Channel_17ï¿½ï¿½ï¿½ï¿½ADC_Channel_VDD_D4ï¿½ï¿½ADC_Channel_PGA)
+ *                         SC32f12xx Selection range(ADC_Channel_0 - ADC_Channel_15ï¿½ï¿½ï¿½ï¿½ADC_Channel_VDD_D4ï¿½ï¿½ADC_Channel_OP)
+ *                         SC32f15xx Selection range(ADC_Channel_0 - ADC_Channel_15ï¿½ï¿½ï¿½ï¿½ADC_Channel_VDD_D4ï¿½ï¿½ADC_Channel_TEMP) 
  *                         - ADC_Channel_0 : ADC input channel 0
  *                         - ADC_Channel_1 : ADC input channel 1
  *                         - ADC_Channel_2 : ADC input channel 2
@@ -407,6 +407,7 @@ void ADC_ITConfig ( ADC_TypeDef* ADCx, uint16_t ADC_IT, FunctionalState NewState
  */
 FlagStatus ADC_GetFlagStatus ( ADC_TypeDef* ADCx, uint32_t ADC_FLAG )
 {
+    ADC_SoftwareStartConv(ADC);
     ITStatus bitstatus = RESET;
     /* Check the parameters */
     assert_param ( IS_ADC_ALL_PERIPH ( ADCx ) );

@@ -5,18 +5,18 @@
                           AREA ||i.ADC_ClearFlag||, CODE, READONLY, ALIGN=1
 
                   ADC_ClearFlag PROC
-;;;440     */
-;;;441    void ADC_ClearFlag ( ADC_TypeDef* ADCx, uint32_t ADC_FLAG )
+;;;441     */
+;;;442    void ADC_ClearFlag ( ADC_TypeDef* ADCx, uint32_t ADC_FLAG )
 000000  6041              STR      r1,[r0,#4]
-;;;442    {
-;;;443        /* Check the parameters */
-;;;444        assert_param ( IS_ADC_ALL_PERIPH ( ADCx ) );
-;;;445    
-;;;446        /* Clear the flags */
-;;;447        ADCx->ADC_STS = ( uint32_t ) ADC_FLAG;
-;;;448    }
+;;;443    {
+;;;444        /* Check the parameters */
+;;;445        assert_param ( IS_ADC_ALL_PERIPH ( ADCx ) );
+;;;446    
+;;;447        /* Clear the flags */
+;;;448        ADCx->ADC_STS = ( uint32_t ) ADC_FLAG;
+;;;449    }
 000002  4770              BX       lr
-;;;449    
+;;;450    
                           ENDP
 
 
@@ -104,19 +104,19 @@
                           AREA ||i.ADC_DMACmd||, CODE, READONLY, ALIGN=1
 
                   ADC_DMACmd PROC
-;;;458     */
-;;;459    void ADC_DMACmd ( ADC_TypeDef* ADCx, FunctionalState NewState )
+;;;459     */
+;;;460    void ADC_DMACmd ( ADC_TypeDef* ADCx, FunctionalState NewState )
 000000  2900              CMP      r1,#0
-;;;460    {
-;;;461    #if defined(SC32f10xx)||defined(SC32f11xx)||defined(SC32f12xx)
-;;;462        /* Check the parameters */
-;;;463        assert_param ( IS_ADC_ALL_PERIPH ( ADCx ) );
-;;;464    
-;;;465        if ( NewState != DISABLE )
+;;;461    {
+;;;462    #if defined(SC32f10xx)||defined(SC32f11xx)||defined(SC32f12xx)
+;;;463        /* Check the parameters */
+;;;464        assert_param ( IS_ADC_ALL_PERIPH ( ADCx ) );
+;;;465    
+;;;466        if ( NewState != DISABLE )
 000002  d005              BEQ      |L4.16|
-;;;466        {
-;;;467            /* Enable the selected ADC DMA requests */
-;;;468            ADCx->ADC_CON |= ( uint32_t ) ADC_CON_DMAEN;
+;;;467        {
+;;;468            /* Enable the selected ADC DMA requests */
+;;;469            ADCx->ADC_CON |= ( uint32_t ) ADC_CON_DMAEN;
 000004  6802              LDR      r2,[r0,#0]
 000006  2301              MOVS     r3,#1
 000008  031b              LSLS     r3,r3,#12
@@ -124,36 +124,36 @@
 00000c  6002              STR      r2,[r0,#0]
 00000e  e004              B        |L4.26|
                   |L4.16|
-;;;469        }
-;;;470        else
-;;;471        {
-;;;472            /* Disable the selected ADC DMA requests */
-;;;473            ADCx->ADC_CON &= ( uint32_t ) ~ADC_CON_DMAEN;
+;;;470        }
+;;;471        else
+;;;472        {
+;;;473            /* Disable the selected ADC DMA requests */
+;;;474            ADCx->ADC_CON &= ( uint32_t ) ~ADC_CON_DMAEN;
 000010  6802              LDR      r2,[r0,#0]
 000012  2301              MOVS     r3,#1
 000014  031b              LSLS     r3,r3,#12
 000016  439a              BICS     r2,r2,r3
 000018  6002              STR      r2,[r0,#0]
                   |L4.26|
-;;;474        }
-;;;475    #elif defined(SC32f15xx)
-;;;476        /* Check the parameters */
-;;;477        assert_param(IS_ADC_ALL_PERIPH(ADCx));
-;;;478    
-;;;479        if(NewState != DISABLE)
-;;;480        {
-;;;481        /* Enable the selected ADC DMA requests */
-;;;482        ADCx->ADC_IDE |= (uint32_t)0x40;
-;;;483        }
-;;;484        else
-;;;485        {
-;;;486        /* Disable the selected ADC DMA requests */
-;;;487        ADCx->ADC_IDE &= (uint32_t)~0x40;
-;;;488        }		
-;;;489    #endif
-;;;490    }
+;;;475        }
+;;;476    #elif defined(SC32f15xx)
+;;;477        /* Check the parameters */
+;;;478        assert_param(IS_ADC_ALL_PERIPH(ADCx));
+;;;479    
+;;;480        if(NewState != DISABLE)
+;;;481        {
+;;;482        /* Enable the selected ADC DMA requests */
+;;;483        ADCx->ADC_IDE |= (uint32_t)0x40;
+;;;484        }
+;;;485        else
+;;;486        {
+;;;487        /* Disable the selected ADC DMA requests */
+;;;488        ADCx->ADC_IDE &= (uint32_t)~0x40;
+;;;489        }		
+;;;490    #endif
+;;;491    }
 00001a  4770              BX       lr
-;;;491    
+;;;492    
                           ENDP
 
 
@@ -242,41 +242,49 @@
                           ENDP
 
 
-                          AREA ||i.ADC_GetFlagStatus||, CODE, READONLY, ALIGN=1
+                          AREA ||i.ADC_GetFlagStatus||, CODE, READONLY, ALIGN=2
 
                   ADC_GetFlagStatus PROC
 ;;;407     */
 ;;;408    FlagStatus ADC_GetFlagStatus ( ADC_TypeDef* ADCx, uint32_t ADC_FLAG )
-000000  4602              MOV      r2,r0
+000000  b530              PUSH     {r4,r5,lr}
 ;;;409    {
-;;;410        ITStatus bitstatus = RESET;
-000002  2000              MOVS     r0,#0
-;;;411        /* Check the parameters */
-;;;412        assert_param ( IS_ADC_ALL_PERIPH ( ADCx ) );
-;;;413    
-;;;414        if ( ( ADCx->ADC_STS & ADC_FLAG ) != ( uint16_t ) RESET )
-000004  6853              LDR      r3,[r2,#4]
-000006  400b              ANDS     r3,r3,r1
-000008  2b00              CMP      r3,#0
-00000a  d001              BEQ      |L8.16|
-;;;415        {
-;;;416            bitstatus = SET;
-00000c  2001              MOVS     r0,#1
-00000e  e000              B        |L8.18|
-                  |L8.16|
-;;;417        }
-;;;418        else
-;;;419        {
-;;;420            bitstatus = RESET;
-000010  2000              MOVS     r0,#0
-                  |L8.18|
-;;;421        }
-;;;422        return bitstatus;
-;;;423    }
-000012  4770              BX       lr
-;;;424    
+000002  4603              MOV      r3,r0
+000004  460c              MOV      r4,r1
+;;;410        ADC_SoftwareStartConv(ADC);
+000006  4806              LDR      r0,|L8.32|
+000008  f7fffffe          BL       ADC_SoftwareStartConv
+;;;411        ITStatus bitstatus = RESET;
+00000c  2500              MOVS     r5,#0
+;;;412        /* Check the parameters */
+;;;413        assert_param ( IS_ADC_ALL_PERIPH ( ADCx ) );
+;;;414    
+;;;415        if ( ( ADCx->ADC_STS & ADC_FLAG ) != ( uint16_t ) RESET )
+00000e  6858              LDR      r0,[r3,#4]
+000010  4020              ANDS     r0,r0,r4
+000012  2800              CMP      r0,#0
+000014  d001              BEQ      |L8.26|
+;;;416        {
+;;;417            bitstatus = SET;
+000016  2501              MOVS     r5,#1
+000018  e000              B        |L8.28|
+                  |L8.26|
+;;;418        }
+;;;419        else
+;;;420        {
+;;;421            bitstatus = RESET;
+00001a  2500              MOVS     r5,#0
+                  |L8.28|
+;;;422        }
+;;;423        return bitstatus;
+00001c  4628              MOV      r0,r5
+;;;424    }
+00001e  bd30              POP      {r4,r5,pc}
+;;;425    
                           ENDP
 
+                  |L8.32|
+                          DCD      0x40022110
 
                           AREA ||i.ADC_ITConfig||, CODE, READONLY, ALIGN=1
 
