@@ -14795,7 +14795,7 @@ N// ADC相关函数
 Nvoid initADC(void);
 Nuint16_t readADC(ADC_ChannelTypedef channel);
 Nfloat adcToVoltage(uint16_t adcValue);
-Nvoid checkPowerLoss(uint8_t cnt );
+Nvoid checkPowerLoss(uint8_t cnt);
 N
 N// IAP相关函数
 Nvoid initIAP(void);
@@ -14808,6 +14808,7 @@ Ntypedef struct {
 N    uint8_t hour;
 N    uint8_t minute;
 N    uint8_t enabled;  // 是否启用闹钟
+N    
 N} AlarmSettings;
 N
 Nvoid saveAlarmSettings(uint8_t cnt);
@@ -14829,7 +14830,7 @@ N// IAP配置
 N#define FLASH_USER_ADDR  0x801FE00//定义IAP操作目标地址
 N// 读取ADC值
 Nuint16_t readADC(ADC_ChannelTypedef channel) {
-N    if (channel != 0)
+N    if (channel != 0)//通道可以是零，方便调试故写判断，要用通道0条件改一下即可
 N    {
 N        ADC_SetChannel(ADC, channel);
 X        ADC_SetChannel(((ADC_TypeDef *) (((0x40000000UL)+0x22000) +(0x00000110UL))), channel);
@@ -14852,39 +14853,29 @@ N// 检查电源电压是否低于阈值
 Nvoid checkPowerLoss(uint8_t cnt) {
 N    uint16_t adcValue = readADC(ADC_CHANNEL);
 X    uint16_t adcValue = readADC(ADC_Channel_VDD_D4);
-N    float voltage = adcToVoltage(adcValue);
+N    float voltage = adcToVoltage(adcValue)*4;
 N    
-N    if (voltage < VOLTAGE_THRESHOLD) //如果电压低于1.0V
+N    if (voltage < VOLTAGE_THRESHOLD) //如果电压低于4.0V
 X    if (voltage < 4.0) 
 N    {
-N        //saveAlarmSettings(cnt);//存数据
-N        initIAP();
-N        while(1);
+N        saveAlarmSettings(cnt);//存数据
+N        while(1);//防止多次写flash
 N    }
-N    //saveAlarmSettings(cnt);
-N    //initIAP();
-N    
 N}
 N
 N// IAP初始化
 Nvoid initIAP(void) {
 N    // 配置IAP模块
 N    IAP_Unlock();//解锁IAP操作
-N    IAP_EraseSector((FLASH_USER_ADDR - FLASH_BASE) / 512);//擦除地址所在扇区，每个扇区大小为512Byte
-X    IAP_EraseSector((0x801FE00 - (0x08000000UL)) / 512);
-N   
-N    //eraseFlashPage(FLASH_USER_ADDR);
+N    eraseFlashPage(FLASH_USER_ADDR);
+X    eraseFlashPage(0x801FE00);
 N    IAP_WriteCmd(ENABLE);//开启写使能
-N    IAP_ProgramWord(FLASH_USER_ADDR, 0x12345678);//字写入，目标地址FLASH_USER_ADDR
-X    IAP_ProgramWord(0x801FE00, 0x12345678);
-N    IAP_Lock();//上锁IAP操作，并且复位IAP操作寄存器
 N}
 N
 N// 擦除Flash页
 Nvoid eraseFlashPage(uint32_t address) {
 N    IAP_EraseSector((address - FLASH_BASE) / 512);//擦除地址所在扇区，每个扇区大小为512Byte
 X    IAP_EraseSector((address - (0x08000000UL)) / 512);
-N    //IAP_EraseSector(255);
 N}
 N
 N// 写入Flash
@@ -14904,83 +14895,27 @@ N
 N// 保存闹钟设置
 Nvoid saveAlarmSettings(uint8_t cnt) {
 N    AlarmSettings settings_IN = {
-N        .hour = 7,
+N        .hour = cnt,
 N        .minute = 30,
 N        .enabled = 1
 N    };
 N    initIAP();//准备IAP
 N    writeFlash(FLASH_USER_ADDR, (uint8_t*)&settings_IN, sizeof(settings_IN));//开写
 X    writeFlash(0x801FE00, (uint8_t*)&settings_IN, sizeof(settings_IN));
-N    //IAP_ProgramByte(FLASH_USER_ADDR, 0x12233);
 N    IAP_Lock();//上锁IAP操作，并且复位IAP操作寄存器
-N    //loadAlarmSettings();
 N}
 N
 N// 读取闹钟设置
 NAlarmSettings loadAlarmSettings(void) {
-N    
-N    uint32_t ReadWord = 0;//定义变量存放单字读数据
 N    AlarmSettings settings;
-N    //readFlash(FLASH_USER_ADDR, (uint8_t*)&settings, sizeof(settings));
-N    ReadWord = IAP_ReadWord(FLASH_USER_ADDR);//字读，目标地址（0x803FE00）
-X    ReadWord = IAP_ReadWord(0x801FE00);
-N        // 实现闹钟设置逻辑
-N        // 先关灯
-N        GPIO_SetBits(GPIOC, GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_10 | GPIO_Pin_11); // 先关闭所有 LED
-X        GPIO_SetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000200UL))), GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_10 | GPIO_Pin_11); 
-N        GPIO_SetBits(GPIOA, GPIO_Pin_7 | GPIO_Pin_8);                             // 先关闭所有 LED
-X        GPIO_SetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000000UL))), GPIO_Pin_7 | GPIO_Pin_8);                             
-N  
-N    // 根据 cnt 的值点亮相应数量的 LED
-N    if (ReadWord >= 1) 
-N        GPIO_ResetBits(GPIOC, GPIO_Pin_4); // LED1
-X        GPIO_ResetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000200UL))), GPIO_Pin_4); 
-N    if (ReadWord >= 2)
-N        GPIO_ResetBits(GPIOC, GPIO_Pin_5); // LED2
-X        GPIO_ResetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000200UL))), GPIO_Pin_5); 
-N    if (ReadWord >= 3)
-N        GPIO_ResetBits(GPIOC, GPIO_Pin_10); // LED3
-X        GPIO_ResetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000200UL))), GPIO_Pin_10); 
-N    if (ReadWord >= 4)
-N        GPIO_ResetBits(GPIOC, GPIO_Pin_11); // LED4
-X        GPIO_ResetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000200UL))), GPIO_Pin_11); 
-N    if (ReadWord >= 5)
-N        GPIO_ResetBits(GPIOA, GPIO_Pin_7); // LED5
-X        GPIO_ResetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000000UL))), GPIO_Pin_7); 
-N    if (ReadWord >= 6)
-N        GPIO_ResetBits(GPIOA, GPIO_Pin_8); // LED6
-X        GPIO_ResetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000000UL))), GPIO_Pin_8); 
-N    //setAlarm((uint8_t)ReadWord, settings.minute, settings.enabled);
-N    return settings;
+N    readFlash(FLASH_USER_ADDR, (uint8_t*)&settings, sizeof(settings));
+X    readFlash(0x801FE00, (uint8_t*)&settings, sizeof(settings));
+N    setAlarm(settings.hour, settings.minute, settings.enabled);//导出数据内部处理
+N    return settings;//外部数据处理
 N}
 N
-Nuint32_t cnt01;
 N// 设置闹钟
 Nvoid setAlarm(uint8_t hour, uint8_t minute, uint8_t enabled) {
 N    // 实现闹钟设置逻辑
-N        // 先关灯
-N        GPIO_SetBits(GPIOC, GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_10 | GPIO_Pin_11); // 先关闭所有 LED
-X        GPIO_SetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000200UL))), GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_10 | GPIO_Pin_11); 
-N        GPIO_SetBits(GPIOA, GPIO_Pin_7 | GPIO_Pin_8);                             // 先关闭所有 LED
-X        GPIO_SetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000000UL))), GPIO_Pin_7 | GPIO_Pin_8);                             
-N  
-N    // 根据 cnt 的值点亮相应数量的 LED
-N    if (hour >= 1 || minute >= 1|| enabled >= 1) 
-N        GPIO_ResetBits(GPIOC, GPIO_Pin_4); // LED1
-X        GPIO_ResetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000200UL))), GPIO_Pin_4); 
-N    if (hour >= 2)
-N        GPIO_ResetBits(GPIOC, GPIO_Pin_5); // LED2
-X        GPIO_ResetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000200UL))), GPIO_Pin_5); 
-N    if (hour >= 3)
-N        GPIO_ResetBits(GPIOC, GPIO_Pin_10); // LED3
-X        GPIO_ResetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000200UL))), GPIO_Pin_10); 
-N    if (hour >= 4)
-N        GPIO_ResetBits(GPIOC, GPIO_Pin_11); // LED4
-X        GPIO_ResetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000200UL))), GPIO_Pin_11); 
-N    if (hour >= 5)
-N        GPIO_ResetBits(GPIOA, GPIO_Pin_7); // LED5
-X        GPIO_ResetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000000UL))), GPIO_Pin_7); 
-N    if (hour >= 6)
-N        GPIO_ResetBits(GPIOA, GPIO_Pin_8); // LED6
-X        GPIO_ResetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000000UL))), GPIO_Pin_8); 
+N
 N}

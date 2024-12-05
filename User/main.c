@@ -114,12 +114,10 @@ int main(void)
     IcResourceInit();
     TIM_Cmd(TIM2, DISABLE);
     //Buzzer_SetVolume(50);
-    //TK_Init();                    //重要步骤1：TK的初始化函数
+    TK_Init();                    //重要步骤1：TK的初始化函数
     /*读取掉电保存设置*/
     loadAlarmSettings();
     Delay_ms(500);//延迟启动
-    //LED = loadAlarmSettings();
-    //test_TK_LED(LED.hour);//测试点灯
     /*<UserCodeEnd>*//*<SinOne-Tag><36>*/
 
     /*<UserCodeStart>*/ /*<SinOne-Tag><4>*/
@@ -132,73 +130,35 @@ int main(void)
         switch (Task_state)
         {
         case 0: // init
-                //            GPIO_SetBits(GPIOC, GPIO_Pin_4);  // LED1
-                //            GPIO_SetBits(GPIOC, GPIO_Pin_5);  // LED2
-                //            GPIO_SetBits(GPIOC, GPIO_Pin_10); // LED3
-                //            GPIO_SetBits(GPIOC, GPIO_Pin_11); // LED4
-                //            GPIO_SetBits(GPIOA, GPIO_Pin_7);  // LED5
-                //            GPIO_SetBits(GPIOA, GPIO_Pin_8);  // LED6
             Task_state = 1;
             break;
-        case 1: // TK task
-                //                WDT->WDT_CON |= WDT_CON_CLRWDT; // 清watchdog
+        case 1:           
+            /*检查掉电*/
+            checkPowerLoss(cnt);
+        
+            /*TK*/
+            WDT->WDT_CON |= WDT_CON_CLRWDT; // 清watchdog
 
-            //                // 重要步骤2：触摸键扫描一轮标志，是否调用TouchKeyScan()一定要根据此标志位置起�?
-            //                if (TK_TouchKeyStatus & 0x80)
-            //                { // 重要步骤3：清除标志位，需要外部清零
-            //                    TK_TouchKeyStatus &= 0x7f;
-            //                    // 重要步骤4：分析按键数据，并返回结果出来
-            //                    TK_exKeyValueFlag = TK_TouchKeyScan();
-            //                    DataProcessing(TK_exKeyValueFlag); // 按键数据处理函数
+            // 重要步骤2：触摸键扫描一轮标志，是否调用TouchKeyScan()一定要根据此标志位置起�?
+            if (TK_TouchKeyStatus & 0x80)
+            { // 重要步骤3：清除标志位，需要外部清零
+                TK_TouchKeyStatus &= 0x7f;
+                // 重要步骤4：分析按键数据，并返回结果出来
+                TK_exKeyValueFlag = TK_TouchKeyScan();
+                DataProcessing(TK_exKeyValueFlag); // 按键数据处理函数
 
-                //                    UpdateDisplay(exKeyValue);
-                //                    TK_Restart(); // 启动下一轮转换
-                //                }
-                //                test_TK_LED(cnt);//测试点灯
-                // if(b)
-                // {
-                //     GPIO_ResetBits(GPIOA, GPIO_Pin_8); // LED6
-                // }else
-                // {
-                //     GPIO_ResetBits(GPIOA, GPIO_Pin_7); // LED5
-                //     GPIO_SetBits(GPIOA, GPIO_Pin_8); // LED6
-                // }
-
-                uint16_t adcValue = readADC(ADC_Channel_VDD_D4);
-                float voltage = adcToVoltage(adcValue)*4;
-//                GPIO_SetBits(GPIOA, GPIO_Pin_7); // 关闭 LED5
-//                GPIO_SetBits(GPIOC, GPIO_Pin_11); // 关闭 LED4
-//                GPIO_SetBits(GPIOC, GPIO_Pin_10); // 关闭 LED3
-//                GPIO_SetBits(GPIOC, GPIO_Pin_5);  // 关闭 LED2
-//                GPIO_SetBits(GPIOC, GPIO_Pin_4);  // 关闭 LED1
-//                if(voltage >4.8) GPIO_ResetBits(GPIOA, GPIO_Pin_7); // LED5
-//                else if(voltage >4.6) GPIO_ResetBits(GPIOC, GPIO_Pin_11); // LED4
-//                else if(voltage >4) GPIO_ResetBits(GPIOC, GPIO_Pin_10); // LED3
-//                else if(voltage >3.8) GPIO_ResetBits(GPIOC, GPIO_Pin_5);
-//                else  GPIO_ResetBits(GPIOC, GPIO_Pin_4);
-
-
-
-                if (voltage < 4.5) // 如果电压低于1.0V
-                {
-                    // saveAlarmSettings(cnt);//存数据
-                    initIAP();
-                    while (1);
-                     
-                }
-                static uint8_t abc = 1;
-                if (abc)
-                {
-                    // initIAP();
-                    abc = 0;
+                UpdateDisplay(exKeyValue);
+                TK_Restart(); // 启动下一轮转换
             }
-
-            Delay_ms(10);
+            test_TK_LED(cnt); // 测试点灯
+            
+            
+            /*程序运行判断*/
             tim_cnt1++;
             if (tim_cnt1 % 20 == 0)
             {
                 tim_cnt2++;
-                if (tim_cnt2 % 3 == 0)
+                if (tim_cnt2 % 30 == 0)
                 {
                     GPIO_TogglePins(GPIOA, GPIO_Pin_8);
                 }
@@ -207,14 +167,7 @@ int main(void)
             break;
         case 2: // Buzz SET
             break;
-        case 3: // ADC SET
-            //ADC_value1 = ADC_GetConversionValue(ADC);
-            // ADC_value2 = readADC(ADC_Channel_13);
-            // Voltage = adcToVoltage(ADC_value2);
-            // Channel = ADC_GetChannel(ADC);
-
-         
-            
+        case 3: // ADC SET       
             break;
             case 4: // ADC get
             

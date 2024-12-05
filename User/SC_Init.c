@@ -514,7 +514,7 @@ void SC_ADC_Init(void)
     //Forbid editing areas between the labels !!!
 	/*Init Struct*/ADC_InitTypeDef ADC_Base_InitStruct;
 	ADC_Base_InitStruct.ADC_ConvMode = ADC_ConvMode_Single;
-	ADC_Base_InitStruct.ADC_Prescaler = ADC_Prescaler_16CLOCK;
+	ADC_Base_InitStruct.ADC_Prescaler = ADC_Prescaler_3CLOCK;
 	ADC_Base_InitStruct.ADC_EAIN = ADC_EAIN_Less|ADC_EAIN_13|ADC_EAIN_14;
 	ADC_Base_InitStruct.ADC_VREF = ADC_VREF_2_4V;
 	ADC_Init(ADC, &ADC_Base_InitStruct);

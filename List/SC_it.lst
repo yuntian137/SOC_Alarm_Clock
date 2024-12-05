@@ -15168,6 +15168,7 @@ N
 N
 N
 N
+N
 L 21 "..\User\SC_it.c" 2
 N#include "adc_iap.h"
 L 1 "..\ADC_IAP\Inc\adc_iap.h" 1
@@ -15180,7 +15181,7 @@ N// ADC相关函数
 Nvoid initADC(void);
 Nuint16_t readADC(ADC_ChannelTypedef channel);
 Nfloat adcToVoltage(uint16_t adcValue);
-Nvoid checkPowerLoss(uint8_t cnt );
+Nvoid checkPowerLoss(uint8_t cnt);
 N
 N// IAP相关函数
 Nvoid initIAP(void);
@@ -15193,6 +15194,7 @@ Ntypedef struct {
 N    uint8_t hour;
 N    uint8_t minute;
 N    uint8_t enabled;  // 是否启用闹钟
+N    
 N} AlarmSettings;
 N
 Nvoid saveAlarmSettings(uint8_t cnt);

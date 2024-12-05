@@ -7,7 +7,7 @@
 void initADC(void);
 uint16_t readADC(ADC_ChannelTypedef channel);
 float adcToVoltage(uint16_t adcValue);
-void checkPowerLoss(uint8_t cnt );
+void checkPowerLoss(uint8_t cnt);
 
 // IAP相关函数
 void initIAP(void);

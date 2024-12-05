@@ -15099,6 +15099,7 @@ N
 N
 N
 N
+N
 L 20 "..\User\main.c" 2
 N#include "HeadFiles\SysFunVarDefine.h"
 L 1 "..\User\HeadFiles\SysFunVarDefine.h" 1
@@ -15306,7 +15307,7 @@ N// ADC相关函数
 Nvoid initADC(void);
 Nuint16_t readADC(ADC_ChannelTypedef channel);
 Nfloat adcToVoltage(uint16_t adcValue);
-Nvoid checkPowerLoss(uint8_t cnt );
+Nvoid checkPowerLoss(uint8_t cnt);
 N
 N// IAP相关函数
 Nvoid initIAP(void);
@@ -15319,6 +15320,7 @@ Ntypedef struct {
 N    uint8_t hour;
 N    uint8_t minute;
 N    uint8_t enabled;  // 是否启用闹钟
+N    
 N} AlarmSettings;
 N
 Nvoid saveAlarmSettings(uint8_t cnt);
@@ -15427,12 +15429,10 @@ N    IcResourceInit();
 N    TIM_Cmd(TIM2, DISABLE);
 X    TIM_Cmd(((TIM_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000180UL))), DISABLE);
 N    //Buzzer_SetVolume(50);
-N    //TK_Init();                    //重要步骤1：TK的初始化函数
+N    TK_Init();                    //重要步骤1：TK的初始化函数
 N    /*读取掉电保存设置*/
 N    loadAlarmSettings();
 N    Delay_ms(500);//延迟启动
-N    //LED = loadAlarmSettings();
-N    //test_TK_LED(LED.hour);//测试点灯
 N    /*<UserCodeEnd>*//*<SinOne-Tag><36>*/
 N
 N    /*<UserCodeStart>*/ /*<SinOne-Tag><4>*/
@@ -15453,66 +15453,29 @@ N                //            GPIO_SetBits(GPIOA, GPIO_Pin_7);  // LED5
 N                //            GPIO_SetBits(GPIOA, GPIO_Pin_8);  // LED6
 N            Task_state = 1;
 N            break;
-N        case 1: // TK task
-N                //                WDT->WDT_CON |= WDT_CON_CLRWDT; // 清watchdog
+N        case 1:                             // TK task
+N            WDT->WDT_CON |= WDT_CON_CLRWDT; // 清watchdog
+X            ((WDT_TypeDef *) (((0x40000000UL)) +(0x00000330UL)))->WDT_CON |= (0x1L << (0U)); 
 N
-N            //                // 重要步骤2：触摸键扫描一轮标志，是否调用TouchKeyScan()一定要根据此标志位置起�?
-N            //                if (TK_TouchKeyStatus & 0x80)
-N            //                { // 重要步骤3：清除标志位，需要外部清零
-N            //                    TK_TouchKeyStatus &= 0x7f;
-N            //                    // 重要步骤4：分析按键数据，并返回结果出来
-N            //                    TK_exKeyValueFlag = TK_TouchKeyScan();
-N            //                    DataProcessing(TK_exKeyValueFlag); // 按键数据处理函数
+N            // 重要步骤2：触摸键扫描一轮标志，是否调用TouchKeyScan()一定要根据此标志位置起�?
+N            if (TK_TouchKeyStatus & 0x80)
+N            { // 重要步骤3：清除标志位，需要外部清零
+N                TK_TouchKeyStatus &= 0x7f;
+N                // 重要步骤4：分析按键数据，并返回结果出来
+N                TK_exKeyValueFlag = TK_TouchKeyScan();
+N                DataProcessing(TK_exKeyValueFlag); // 按键数据处理函数
 N
-N                //                    UpdateDisplay(exKeyValue);
-N                //                    TK_Restart(); // 启动下一轮转换
-N                //                }
-N                //                test_TK_LED(cnt);//测试点灯
-N                // if(b)
-N                // {
-N                //     GPIO_ResetBits(GPIOA, GPIO_Pin_8); // LED6
-N                // }else
-N                // {
-N                //     GPIO_ResetBits(GPIOA, GPIO_Pin_7); // LED5
-N                //     GPIO_SetBits(GPIOA, GPIO_Pin_8); // LED6
-N                // }
-N
-W "..\User\main.c" 167 17 a declaration cannot have a label
-N                uint16_t adcValue = readADC(ADC_Channel_VDD_D4);
-N                float voltage = adcToVoltage(adcValue)*4;
-N//                GPIO_SetBits(GPIOA, GPIO_Pin_7); // 关闭 LED5
-N//                GPIO_SetBits(GPIOC, GPIO_Pin_11); // 关闭 LED4
-N//                GPIO_SetBits(GPIOC, GPIO_Pin_10); // 关闭 LED3
-N//                GPIO_SetBits(GPIOC, GPIO_Pin_5);  // 关闭 LED2
-N//                GPIO_SetBits(GPIOC, GPIO_Pin_4);  // 关闭 LED1
-N//                if(voltage >4.8) GPIO_ResetBits(GPIOA, GPIO_Pin_7); // LED5
-N//                else if(voltage >4.6) GPIO_ResetBits(GPIOC, GPIO_Pin_11); // LED4
-N//                else if(voltage >4) GPIO_ResetBits(GPIOC, GPIO_Pin_10); // LED3
-N//                else if(voltage >3.8) GPIO_ResetBits(GPIOC, GPIO_Pin_5);
-N//                else  GPIO_ResetBits(GPIOC, GPIO_Pin_4);
-N
-N
-N
-N                if (voltage < 4.5) // 如果电压低于1.0V
-N                {
-N                    // saveAlarmSettings(cnt);//存数据
-N                    initIAP();
-N                    while (1);
-N                     
-N                }
-N                static uint8_t abc = 1;
-N                if (abc)
-N                {
-N                    // initIAP();
-N                    abc = 0;
+N                UpdateDisplay(exKeyValue);
+N                TK_Restart(); // 启动下一轮转换
 N            }
-N
-N            Delay_ms(10);
+N            test_TK_LED(cnt); // 测试点灯
+N            checkPowerLoss(cnt);
+N            
 N            tim_cnt1++;
 N            if (tim_cnt1 % 20 == 0)
 N            {
 N                tim_cnt2++;
-N                if (tim_cnt2 % 3 == 0)
+N                if (tim_cnt2 % 30 == 0)
 N                {
 N                    GPIO_TogglePins(GPIOA, GPIO_Pin_8);
 X                    GPIO_TogglePins(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000000UL))), GPIO_Pin_8);
@@ -15543,9 +15506,6 @@ N        /*<UserCodeStart>*//*<SinOne-Tag><412>*/
 N        //IAP_Program();
 N        /*<UserCodeEnd>*//*<SinOne-Tag><412>*/
 N        /*<Begin-Inserted by EasyCodeCube for Condition>*/
-W "..\User\main.c" 132 9 transfer of control bypasses initialization of:
-w "..\User\main.c" 132 9 variable "adcValue"  (declared at line 167)
-w "..\User\main.c" 132 9 variable "voltage"  (declared at line 168)
 N    }
 N    /*<UserCodeEnd>*//*<SinOne-Tag><4>*/
 N    /*<Generated by EasyCodeCube end>*/
