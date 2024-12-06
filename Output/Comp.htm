@@ -3,7 +3,7 @@
 <title>Static Call Graph - [..\Output\Comp.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image ..\Output\Comp.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Sat Dec 07 00:41:01 2024
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Sat Dec 07 01:22:37 2024
 <BR><P>
 <H3>Maximum Stack Usage =        312 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -494,7 +494,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[4a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Delay_us
 </UL>
-<BR>[Called By]<UL><LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UpdateDisplay
+<BR>[Called By]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UpdateDisplay
 </UL>
 
 <P><STRONG><a name="[4a]"></a>Delay_us</STRONG> (Thumb, 38 bytes, Stack size 8 bytes, main.o(i.Delay_us))
@@ -518,23 +518,25 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[25]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[c5]"></a>GPIO_ResetBits</STRONG> (Thumb, 34 bytes, Stack size 8 bytes, sc32f1xxx_gpio.o(i.GPIO_ResetBits))
+<P><STRONG><a name="[c2]"></a>GPIO_ResetBits</STRONG> (Thumb, 34 bytes, Stack size 8 bytes, sc32f1xxx_gpio.o(i.GPIO_ResetBits))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = GPIO_ResetBits
 </UL>
-<BR>[Called By]<UL><LI><a href="#[25]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+<BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_Handler
+<LI><a href="#[25]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
 <P><STRONG><a name="[c6]"></a>GPIO_SetBits</STRONG> (Thumb, 34 bytes, Stack size 8 bytes, sc32f1xxx_gpio.o(i.GPIO_SetBits))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = GPIO_SetBits
 </UL>
 <BR>[Called By]<UL><LI><a href="#[25]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+<LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UpdateDisplay
 </UL>
 
-<P><STRONG><a name="[c4]"></a>GPIO_TogglePins</STRONG> (Thumb, 44 bytes, Stack size 12 bytes, sc32f1xxx_gpio.o(i.GPIO_TogglePins))
+<P><STRONG><a name="[c5]"></a>GPIO_TogglePins</STRONG> (Thumb, 44 bytes, Stack size 12 bytes, sc32f1xxx_gpio.o(i.GPIO_TogglePins))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = GPIO_TogglePins
 </UL>
 <BR>[Called By]<UL><LI><a href="#[25]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
-<LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UpdateDisplay
+<LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UpdateDisplay
 </UL>
 
 <P><STRONG><a name="[a]"></a>INT0_IRQHandler</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, sc_it.o(i.INT0_IRQHandler))
@@ -1364,7 +1366,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[10]"></a>UART0_2_IRQHandler</STRONG> (Thumb, 16 bytes, Stack size 8 bytes, sc_it.o(i.UART0_2_IRQHandler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = UART0_2_IRQHandler &rArr; UART_Handler
+<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = UART0_2_IRQHandler &rArr; UART_Handler &rArr; GPIO_ResetBits
 </UL>
 <BR>[Calls]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_Handler
 <LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_ClearFlag
@@ -1394,12 +1396,14 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_Handler
 </UL>
 
-<P><STRONG><a name="[be]"></a>UART_Handler</STRONG> (Thumb, 144 bytes, Stack size 24 bytes, uart_communication.o(i.UART_Handler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = UART_Handler
+<P><STRONG><a name="[be]"></a>UART_Handler</STRONG> (Thumb, 260 bytes, Stack size 24 bytes, uart_communication.o(i.UART_Handler))
+<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = UART_Handler &rArr; GPIO_ResetBits
 </UL>
-<BR>[Calls]<UL><LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_SendData
+<BR>[Calls]<UL><LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_SendData
 <LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_GetFlagStatus
 <LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_ClearFlag
+<LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ResetBits
+<LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__ARM_common_switch8
 <LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_ReceiveData
 </UL>
 <BR>[Called By]<UL><LI><a href="#[10]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART0_2_IRQHandler
@@ -1437,7 +1441,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_Handler
 </UL>
 
-<P><STRONG><a name="[c2]"></a>UART_SendData</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, sc32f1xxx_uart.o(i.UART_SendData))
+<P><STRONG><a name="[c3]"></a>UART_SendData</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, sc32f1xxx_uart.o(i.UART_SendData))
 <BR><BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_Handler
 </UL>
 
@@ -1446,10 +1450,11 @@ Global Symbols
 <LI><a href="#[6a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SC_UART1_Init
 </UL>
 
-<P><STRONG><a name="[c3]"></a>UpdateDisplay</STRONG> (Thumb, 100 bytes, Stack size 8 bytes, main.o(i.UpdateDisplay))
+<P><STRONG><a name="[c4]"></a>UpdateDisplay</STRONG> (Thumb, 102 bytes, Stack size 8 bytes, main.o(i.UpdateDisplay))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = UpdateDisplay &rArr; Delay_ms &rArr; Delay_us
 </UL>
-<BR>[Calls]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_TogglePins
+<BR>[Calls]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_TogglePins
+<LI><a href="#[c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_SetBits
 <LI><a href="#[49]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Delay_ms
 </UL>
 <BR>[Called By]<UL><LI><a href="#[25]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
@@ -1466,7 +1471,8 @@ Global Symbols
 <P><STRONG><a name="[a8]"></a>__ARM_common_switch8</STRONG> (Thumb, 28 bytes, Stack size 8 bytes, main.o(i.__ARM_common_switch8))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = __ARM_common_switch8
 </UL>
-<BR>[Called By]<UL><LI><a href="#[25]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+<BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_Handler
+<LI><a href="#[25]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 <LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TK_GetCfgMsg
 </UL>
 
@@ -1484,13 +1490,13 @@ Global Symbols
 <LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TK_Init
 <LI><a href="#[4b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_Cmd
 <LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IcResourceInit
-<LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_TogglePins
+<LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_TogglePins
 <LI><a href="#[c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_SetBits
-<LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ResetBits
+<LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ResetBits
 <LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_ReadDataBit
 <LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Buzzer_SetVolume
 <LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__ARM_common_switch8
-<LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UpdateDisplay
+<LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UpdateDisplay
 <LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DataProcessing
 <LI><a href="#[2d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_uidivmod
 </UL>

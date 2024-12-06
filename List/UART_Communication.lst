@@ -14936,6 +14936,10 @@ Xstatic volatile uint8_t UART_TxBuffer[100];
 Nstatic volatile uint8_t RxIndex = 0; // 接收数据索引
 Nstatic volatile FlagStatus UART_RxComplete = RESET; // 接收完成标志位
 N
+N/**
+N * @brief 上位机发送返回
+N * 
+N */
 Nvoid UART_Communication_UART2Handler(void)
 N{
 N  while (UART_GetFlagStatus(UART2, UART_Flag_RX) == SET) // 接收中断
@@ -14971,7 +14975,10 @@ N
 N    RxIndex = 0; // 重置接收索引
 N  }
 N}
-N
+N/**
+N * @brief 语音模块识别
+N * @note 只有0xF1问时间的消息需要发回给语音模块
+N */
 Nvoid UART_Handler(void)
 N{
 N    if (UART_GetFlagStatus(UART2, UART_Flag_RX) == SET) // 接收中断
@@ -14987,25 +14994,71 @@ N
 N        if (RxIndex >= MAX_BUFFER_SIZE) // 防止缓冲区溢出
 X        if (RxIndex >= 100) 
 N        {
-N            RxIndex = 0; // 重置接收索引
+N          RxIndex = 0; // 重置接收索引
 N        }
 N
-N        // 检查是否接收到特定消息 "0xF1"
-N        if (RxIndex >= 1 && UART_RxBuffer[RxIndex - 1] == 0xF1)
+N        // 检查是否接收到特定消息
+N        if (RxIndex >= 1)
 N        {
-N            // 发送特定格式的消息回去
-N            uint8_t response[] = {0xAA, 0x55, 0x01, 0x00, 0x28, 0x55, 0xAA};//播报是十进制
-N            for (uint8_t i = 0; i < sizeof(response); i++)
-N            {
-N                UART_SendData(UART2, response[i]); // 发送数据
-X                UART_SendData(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL))), response[i]); 
-N                while (UART_GetFlagStatus(UART2, UART_Flag_TX) == RESET); // 等待发送完成
-X                while (UART_GetFlagStatus(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL))), UART_Flag_TX) == RESET); 
-N                UART_ClearFlag(UART2, UART_Flag_TX); // 清除发送标志
-X                UART_ClearFlag(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL))), UART_Flag_TX); 
-N            }
+N          uint8_t response[7]; // 定义响应数组
+N          response[0] = 0xAA;  // 固定头帧
+N          response[1] = 0x55;  // 固定头帧
 N
-N            RxIndex = 0; // 重置接收索引
+N          switch (UART_RxBuffer[RxIndex - 1])
+N          {
+N          case 0xF1://返回时间播报
+N            response[2] = 0x01;
+N            response[3] = 0x00;
+N            response[4] = 0x28; // F1对应的中间数据
+N            break;
+N          case 0xF2://开灯
+N            GPIO_ResetBits(GPIOC, GPIO_Pin_4);  // LED1
+X            GPIO_ResetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000200UL))), GPIO_Pin_4);  
+N
+N            break;
+N          case 0xF3:                            // 关灯
+N            GPIO_ResetBits(GPIOC, GPIO_Pin_10); // LED3
+X            GPIO_ResetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000200UL))), GPIO_Pin_10); 
+N            break;
+N          case 0xF4:                            // 提高亮度
+N            GPIO_ResetBits(GPIOC, GPIO_Pin_11); // LED4
+X            GPIO_ResetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000200UL))), GPIO_Pin_11); 
+N            break;
+N          case 0xF5:                           // 降低亮度
+N            GPIO_ResetBits(GPIOA, GPIO_Pin_7); // LED5
+X            GPIO_ResetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000000UL))), GPIO_Pin_7); 
+N            break;
+N          case 0xF6:                           // 设置闹钟时间
+N            GPIO_ResetBits(GPIOA, GPIO_Pin_8); // LED6
+X            GPIO_ResetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000000UL))), GPIO_Pin_8); 
+N            break;
+N          case 0xF7:                           // 关闹钟/停止响铃
+N            GPIO_ResetBits(GPIOC, GPIO_Pin_5); // LED2
+X            GPIO_ResetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000200UL))), GPIO_Pin_5); 
+N            break;
+N          case 0xF8: // 切歌（下一首上一首均可）
+N
+N            break;
+N          default:
+N            return; // 如果没有匹配的消息，直接返回
+N          }
+N
+N          response[5] = 0x55; // 固定尾帧
+N          response[6] = 0xAA; // 固定尾帧
+N
+N          // 发送响应
+N          for (uint8_t i = 0; i < sizeof(response); i++)
+N          {
+N            UART_SendData(UART2, response[i]); // 发送数据
+X            UART_SendData(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL))), response[i]); 
+N            while (UART_GetFlagStatus(UART2, UART_Flag_TX) == RESET)
+X            while (UART_GetFlagStatus(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL))), UART_Flag_TX) == RESET)
+N              ;                                  // 等待发送完成
+N            UART_ClearFlag(UART2, UART_Flag_TX); // 清除发送标志
+X            UART_ClearFlag(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL))), UART_Flag_TX); 
+N          }
+N
+N          RxIndex = 0; // 重置接收索引
 N        }
 N    }
 N}

@@ -61,8 +61,10 @@ void UpdateDisplay(uint8_t KeyValue)
             }
             else if (KeyValue == 18)
             {
-                GPIO_TogglePins(GPIOC, GPIO_Pin_5);  // LED 灯翻�?
-                GPIO_TogglePins(GPIOC, GPIO_Pin_11); // LED 灯翻�?
+                //GPIO_TogglePins(GPIOC, GPIO_Pin_5);  // LED 灯翻�?
+                //GPIO_TogglePins(GPIOC, GPIO_Pin_11); // LED 灯翻�?
+                GPIO_SetBits(GPIOC, GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_10 | GPIO_Pin_11); // 先关闭所有 LED
+                GPIO_SetBits(GPIOA, GPIO_Pin_7 | GPIO_Pin_8);                             // 先关闭所有 LED
             }
             //输出触摸按键按下的�?
             Delay_ms(100);
