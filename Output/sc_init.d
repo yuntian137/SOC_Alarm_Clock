@@ -35,6 +35,8 @@
 ..\output\sc_init.o: ..\FWLib\SC32F1XXX_Lib\inc\sc32f1xxx_pwr.h
 ..\output\sc_init.o: ..\Drivers\SCDriver_List.h
 ..\output\sc_init.o: ..\Drivers\.\TKDriver\C\TKDriver.h
+..\output\sc_init.o: ..\Drivers\..\Apps\TIM_TI_DMA.H
+..\output\sc_init.o: ..\Drivers\..\Apps\UART_Communication.H
 ..\output\sc_init.o: ..\User\HeadFiles\SC_itExtern.h
 ..\output\sc_init.o: ..\User\HeadFiles\SysFunVarDefine.h
 ..\output\sc_init.o: ..\User\HeadFiles\CustomType.h

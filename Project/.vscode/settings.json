@@ -1,6 +1,13 @@
 {
     "files.associations": {
         "TKDriver.C": "cpp",
-        "IAP_Program.C": "cpp"
+        "IAP_Program.C": "cpp",
+        "type_traits": "c",
+        "xtr1common": "c",
+        "sc32f1xxx_uart.h": "c",
+        "TIM_TI_DMA.C": "cpp",
+        "UART_Communication.C": "cpp",
+        "sc32_conf.h": "c",
+        "sc_it.h": "c"
     }
 }

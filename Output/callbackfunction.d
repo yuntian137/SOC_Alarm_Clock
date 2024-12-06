@@ -36,6 +36,8 @@
 ..\output\callbackfunction.o: ..\User\SC_it.h
 ..\output\callbackfunction.o: ..\User\..\Drivers\SCDriver_list.h
 ..\output\callbackfunction.o: ..\User\..\Drivers\.\TKDriver\C\TKDriver.h
+..\output\callbackfunction.o: ..\User\..\Drivers\..\Apps\TIM_TI_DMA.H
+..\output\callbackfunction.o: ..\User\..\Drivers\..\Apps\UART_Communication.H
 ..\output\callbackfunction.o: ..\User\HeadFiles\SysFunVarDefine.h
 ..\output\callbackfunction.o: ..\User\HeadFiles\CustomType.h
 ..\output\callbackfunction.o: ..\User\HeadFiles\UserExport.h

@@ -427,6 +427,18 @@
         </Group>
         <Group>
           <GroupName>Apps</GroupName>
+          <Files>
+            <File>
+              <FileName>UART_Communication.C</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Apps\UART_Communication.C</FilePath>
+            </File>
+            <File>
+              <FileName>TIM_TI_DMA.C</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Apps\TIM_TI_DMA.C</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>Drivers</GroupName>
@@ -434,6 +446,16 @@
         <Group>
           <GroupName>FWLib</GroupName>
           <Files>
+            <File>
+              <FileName>sc32f1xxx_dma.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FWLib\SC32F1XXX_Lib\src\sc32f1xxx_dma.c</FilePath>
+            </File>
+            <File>
+              <FileName>sc32f1xxx_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FWLib\SC32F1XXX_Lib\src\sc32f1xxx_uart.c</FilePath>
+            </File>
             <File>
               <FileName>sc32f1xxx_tim.c</FileName>
               <FileType>1</FileType>

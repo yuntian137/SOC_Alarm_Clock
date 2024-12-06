@@ -36,6 +36,8 @@
 ..\output\main.o: ..\User\SC_it.h
 ..\output\main.o: ..\User\..\Drivers\SCDriver_list.h
 ..\output\main.o: ..\User\..\Drivers\.\TKDriver\C\TKDriver.h
+..\output\main.o: ..\User\..\Drivers\..\Apps\TIM_TI_DMA.H
+..\output\main.o: ..\User\..\Drivers\..\Apps\UART_Communication.H
 ..\output\main.o: ..\User\HeadFiles\SysFunVarDefine.h
 ..\output\main.o: ..\User\HeadFiles\CustomType.h
 ..\output\main.o: ..\User\HeadFiles\UserExport.h
