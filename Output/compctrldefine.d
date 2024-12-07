@@ -38,6 +38,7 @@
 ..\output\compctrldefine.o: ..\User\..\Drivers\.\TKDriver\C\TKDriver.h
 ..\output\compctrldefine.o: ..\User\..\Drivers\..\Apps\TIM_TI_DMA.H
 ..\output\compctrldefine.o: ..\User\..\Drivers\..\Apps\UART_Communication.H
+..\output\compctrldefine.o: ..\User\..\Drivers\..\Apps\UART_Communication_DMA.H
 ..\output\compctrldefine.o: ..\User\HeadFiles\SysFunVarDefine.h
 ..\output\compctrldefine.o: ..\User\HeadFiles\CustomType.h
 ..\output\compctrldefine.o: ..\User\HeadFiles\UserExport.h

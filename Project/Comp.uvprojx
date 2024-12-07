@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>SC32f10xx</Define>
               <Undefine></Undefine>
-              <IncludePath>..\FWLib\SC32F1XXX_Lib\inc;..\User\HeadFiles;..\User;..\Drivers;..\Apps;..\CMSIS;..\Buzz\Inc;..\Drivers\TKDriver\C</IncludePath>
+              <IncludePath>..\FWLib\SC32F1XXX_Lib\inc;..\User\HeadFiles;..\User;..\Drivers;..\Apps;..\CMSIS;..\Buzz\Inc;..\Drivers\TKDriver\C;..\Mqtt\Inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -428,6 +428,11 @@
         <Group>
           <GroupName>Apps</GroupName>
           <Files>
+            <File>
+              <FileName>UART_Communication_DMA.C</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Apps\UART_Communication_DMA.C</FilePath>
+            </File>
             <File>
               <FileName>UART_Communication.C</FileName>
               <FileType>1</FileType>
@@ -540,6 +545,21 @@
               <FileName>sc32f10xx_HighSensitive_lib_T1Slider_V0.3.lib</FileName>
               <FileType>4</FileType>
               <FilePath>..\Drivers\TKDriver\C\sc32f10xx_HighSensitive_lib_T1Slider_V0.3.lib</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Mqtt</GroupName>
+          <Files>
+            <File>
+              <FileName>mqtt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Mqtt\Src\mqtt.c</FilePath>
+            </File>
+            <File>
+              <FileName>mqtt.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Mqtt\Inc\mqtt.h</FilePath>
             </File>
           </Files>
         </Group>

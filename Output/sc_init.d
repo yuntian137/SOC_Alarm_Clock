@@ -37,6 +37,7 @@
 ..\output\sc_init.o: ..\Drivers\.\TKDriver\C\TKDriver.h
 ..\output\sc_init.o: ..\Drivers\..\Apps\TIM_TI_DMA.H
 ..\output\sc_init.o: ..\Drivers\..\Apps\UART_Communication.H
+..\output\sc_init.o: ..\Drivers\..\Apps\UART_Communication_DMA.H
 ..\output\sc_init.o: ..\User\HeadFiles\SC_itExtern.h
 ..\output\sc_init.o: ..\User\HeadFiles\SysFunVarDefine.h
 ..\output\sc_init.o: ..\User\HeadFiles\CustomType.h

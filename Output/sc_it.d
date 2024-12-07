@@ -43,3 +43,4 @@
 ..\output\sc_it.o: ..\Drivers\.\TKDriver\C\TKDriver.h
 ..\output\sc_it.o: ..\Drivers\..\Apps\TIM_TI_DMA.H
 ..\output\sc_it.o: ..\Drivers\..\Apps\UART_Communication.H
+..\output\sc_it.o: ..\Drivers\..\Apps\UART_Communication_DMA.H

@@ -14936,50 +14936,45 @@ Xstatic volatile uint8_t UART_TxBuffer[100];
 Nstatic volatile uint8_t RxIndex = 0; // 接收数据索引
 Nstatic volatile FlagStatus UART_RxComplete = RESET; // 接收完成标志位
 N
-N/**
-N * @brief 上位机发送返回
-N * 
-N */
-Nvoid UART_Communication_UART1Handler(void)
-N{
-N  while (UART_GetFlagStatus(UART1, UART_Flag_RX) == SET) // 接收中断
-X  while (UART_GetFlagStatus(((UART_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000080UL))), UART_Flag_RX) == SET) 
-N  {
-N    UART_ClearFlag(UART1, UART_Flag_RX); // 清除接收标志
-X    UART_ClearFlag(((UART_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000080UL))), UART_Flag_RX); 
-N    uint8_t receivedChar = UART_ReceiveData(UART1); // 接收数据
-X    uint8_t receivedChar = UART_ReceiveData(((UART_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000080UL)))); 
+N// /**
+N//  * @brief 上位机发送返回
+N//  * 
+N//  */
+N// void UART_Communication_UART2Handler(void)
+N// {
+N//   while (UART_GetFlagStatus(UART2, UART_Flag_RX) == SET) // 接收中断
+N//   {
+N//     UART_ClearFlag(UART2, UART_Flag_RX); // 清除接收标志
+N//     uint8_t receivedChar = UART_ReceiveData(UART2); // 接收数据
 N
-N    UART_RxBuffer[RxIndex++] = receivedChar; // 接收数据并存入缓冲区
+N//     UART_RxBuffer[RxIndex++] = receivedChar; // 接收数据并存入缓冲区
 N
-N    if (RxIndex >= MAX_BUFFER_SIZE) // 防止缓冲区溢出
-X    if (RxIndex >= 100) 
-N    {
-N      RxIndex = 0; // 重置接收索引
-N    }
+N//     if (RxIndex >= MAX_BUFFER_SIZE) // 防止缓冲区溢出
+N//     {
+N//       RxIndex = 0; // 重置接收索引
+N//     }
 N
-N    // 将接收到的数据复制到发送缓冲区
-N    memcpy((void *)UART_TxBuffer, (void *)UART_RxBuffer, RxIndex);
+N//     // 将接收到的数据复制到发送缓冲区
+N//     memcpy((void *)UART_TxBuffer, (void *)UART_RxBuffer, RxIndex);
 N
-N    // 发送数据
-N    for (uint8_t i = 0; i < RxIndex; i++)
-N    {
-N      UART_SendData(UART1, UART_TxBuffer[i]); // 发送数据
-X      UART_SendData(((UART_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000080UL))), UART_TxBuffer[i]); 
-N      while (UART_GetFlagStatus(UART1, UART_Flag_TX) == RESET); // 等待发送完成
-X      while (UART_GetFlagStatus(((UART_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000080UL))), UART_Flag_TX) == RESET); 
-N      UART_ClearFlag(UART1, UART_Flag_TX); // 清除发送标志
-X      UART_ClearFlag(((UART_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000080UL))), UART_Flag_TX); 
-N    }
+N//     // 发送数据
+N//     for (uint8_t i = 0; i < RxIndex; i++)
+N//     {
+N//       UART_SendData(UART2, UART_TxBuffer[i]); // 发送数据
+N//       while (UART_GetFlagStatus(UART2, UART_Flag_TX) == RESET); // 等待发送完成
+N//       UART_ClearFlag(UART2, UART_Flag_TX); // 清除发送标志
+N//     }
 N
-N    RxIndex = 0; // 重置接收索引
-N  }
-N}
+N//     RxIndex = 0; // 重置接收索引
+N//   }
+N// }
+N
+N
 N/**
 N * @brief 语音模块识别
 N * @note 只有0xF1问时间的消息需要发回给语音模块
 N */
-Nvoid UART_Handler(void)
+Nvoid UART2_Handler(void)
 N{
 N    if (UART_GetFlagStatus(UART2, UART_Flag_RX) == SET) // 接收中断
 X    if (UART_GetFlagStatus(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL))), UART_Flag_RX) == SET) 

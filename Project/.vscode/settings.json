@@ -8,6 +8,18 @@
         "TIM_TI_DMA.C": "cpp",
         "UART_Communication.C": "cpp",
         "sc32_conf.h": "c",
-        "sc_it.h": "c"
+        "sc_it.h": "c",
+        "mqtt.h": "c",
+        "sc_init.h": "c",
+        "delay.h": "c",
+        "buzzer.h": "c",
+        "atomic": "c",
+        "cstring": "c",
+        "xmemory": "c",
+        "xstring": "c",
+        "xutility": "c",
+        "stdio.h": "c",
+        "string.h": "c",
+        "UART_Communication_DMA.C": "cpp"
     }
 }
