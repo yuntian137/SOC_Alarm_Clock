@@ -15352,6 +15352,12 @@ N	GPIOInit_PA08_Struct.GPIO_Mode = GPIO_Mode_OUT_PP;
 N	GPIOInit_PA08_Struct.GPIO_DriveLevel = 0;
 N	GPIO_Init(GPIOA,&GPIOInit_PA08_Struct);/*PA.08端口初始化*/
 X	GPIO_Init(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000000UL))),&GPIOInit_PA08_Struct); 
+N	/*GPIOInit_PA09 Struct*/GPIO_InitTypeDef GPIOInit_PA09_Struct;
+N	GPIOInit_PA09_Struct.GPIO_Pin = GPIO_Pin_9;
+N	GPIOInit_PA09_Struct.GPIO_Mode = GPIO_Mode_OUT_PP;
+N	GPIOInit_PA09_Struct.GPIO_DriveLevel = 0;
+N	GPIO_Init(GPIOA,&GPIOInit_PA09_Struct);/*PA.09端口初始化*/
+X	GPIO_Init(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000000UL))),&GPIOInit_PA09_Struct); 
 N	/*GPIOInit_PA11 Struct*/GPIO_InitTypeDef GPIOInit_PA11_Struct;
 N	GPIOInit_PA11_Struct.GPIO_Pin = GPIO_Pin_11;
 N	GPIOInit_PA11_Struct.GPIO_Mode = GPIO_Mode_IN_PU;

@@ -165,6 +165,11 @@ void SC_GPIO_Init(void)
 	GPIOInit_PA08_Struct.GPIO_Mode = GPIO_Mode_OUT_PP;
 	GPIOInit_PA08_Struct.GPIO_DriveLevel = 0;
 	GPIO_Init(GPIOA,&GPIOInit_PA08_Struct);/*PA.08端口初始化*/
+	/*GPIOInit_PA09 Struct*/GPIO_InitTypeDef GPIOInit_PA09_Struct;
+	GPIOInit_PA09_Struct.GPIO_Pin = GPIO_Pin_9;
+	GPIOInit_PA09_Struct.GPIO_Mode = GPIO_Mode_OUT_PP;
+	GPIOInit_PA09_Struct.GPIO_DriveLevel = 0;
+	GPIO_Init(GPIOA,&GPIOInit_PA09_Struct);/*PA.09端口初始化*/
 	/*GPIOInit_PA11 Struct*/GPIO_InitTypeDef GPIOInit_PA11_Struct;
 	GPIOInit_PA11_Struct.GPIO_Pin = GPIO_Pin_11;
 	GPIOInit_PA11_Struct.GPIO_Mode = GPIO_Mode_IN_PU;

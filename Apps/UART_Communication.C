@@ -12,12 +12,12 @@ static volatile FlagStatus UART_RxComplete = RESET; // 接收完成标志位
  * @brief 上位机发送返回
  * 
  */
-void UART_Communication_UART2Handler(void)
+void UART_Communication_UART1Handler(void)
 {
-  while (UART_GetFlagStatus(UART2, UART_Flag_RX) == SET) // 接收中断
+  while (UART_GetFlagStatus(UART1, UART_Flag_RX) == SET) // 接收中断
   {
-    UART_ClearFlag(UART2, UART_Flag_RX); // 清除接收标志
-    uint8_t receivedChar = UART_ReceiveData(UART2); // 接收数据
+    UART_ClearFlag(UART1, UART_Flag_RX); // 清除接收标志
+    uint8_t receivedChar = UART_ReceiveData(UART1); // 接收数据
 
     UART_RxBuffer[RxIndex++] = receivedChar; // 接收数据并存入缓冲区
 
@@ -32,9 +32,9 @@ void UART_Communication_UART2Handler(void)
     // 发送数据
     for (uint8_t i = 0; i < RxIndex; i++)
     {
-      UART_SendData(UART2, UART_TxBuffer[i]); // 发送数据
-      while (UART_GetFlagStatus(UART2, UART_Flag_TX) == RESET); // 等待发送完成
-      UART_ClearFlag(UART2, UART_Flag_TX); // 清除发送标志
+      UART_SendData(UART1, UART_TxBuffer[i]); // 发送数据
+      while (UART_GetFlagStatus(UART1, UART_Flag_TX) == RESET); // 等待发送完成
+      UART_ClearFlag(UART1, UART_Flag_TX); // 清除发送标志
     }
 
     RxIndex = 0; // 重置接收索引

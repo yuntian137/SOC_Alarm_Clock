@@ -14940,15 +14940,15 @@ N/**
 N * @brief 上位机发送返回
 N * 
 N */
-Nvoid UART_Communication_UART2Handler(void)
+Nvoid UART_Communication_UART1Handler(void)
 N{
-N  while (UART_GetFlagStatus(UART2, UART_Flag_RX) == SET) // 接收中断
-X  while (UART_GetFlagStatus(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL))), UART_Flag_RX) == SET) 
+N  while (UART_GetFlagStatus(UART1, UART_Flag_RX) == SET) // 接收中断
+X  while (UART_GetFlagStatus(((UART_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000080UL))), UART_Flag_RX) == SET) 
 N  {
-N    UART_ClearFlag(UART2, UART_Flag_RX); // 清除接收标志
-X    UART_ClearFlag(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL))), UART_Flag_RX); 
-N    uint8_t receivedChar = UART_ReceiveData(UART2); // 接收数据
-X    uint8_t receivedChar = UART_ReceiveData(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL)))); 
+N    UART_ClearFlag(UART1, UART_Flag_RX); // 清除接收标志
+X    UART_ClearFlag(((UART_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000080UL))), UART_Flag_RX); 
+N    uint8_t receivedChar = UART_ReceiveData(UART1); // 接收数据
+X    uint8_t receivedChar = UART_ReceiveData(((UART_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000080UL)))); 
 N
 N    UART_RxBuffer[RxIndex++] = receivedChar; // 接收数据并存入缓冲区
 N
@@ -14964,12 +14964,12 @@ N
 N    // 发送数据
 N    for (uint8_t i = 0; i < RxIndex; i++)
 N    {
-N      UART_SendData(UART2, UART_TxBuffer[i]); // 发送数据
-X      UART_SendData(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL))), UART_TxBuffer[i]); 
-N      while (UART_GetFlagStatus(UART2, UART_Flag_TX) == RESET); // 等待发送完成
-X      while (UART_GetFlagStatus(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL))), UART_Flag_TX) == RESET); 
-N      UART_ClearFlag(UART2, UART_Flag_TX); // 清除发送标志
-X      UART_ClearFlag(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL))), UART_Flag_TX); 
+N      UART_SendData(UART1, UART_TxBuffer[i]); // 发送数据
+X      UART_SendData(((UART_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000080UL))), UART_TxBuffer[i]); 
+N      while (UART_GetFlagStatus(UART1, UART_Flag_TX) == RESET); // 等待发送完成
+X      while (UART_GetFlagStatus(((UART_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000080UL))), UART_Flag_TX) == RESET); 
+N      UART_ClearFlag(UART1, UART_Flag_TX); // 清除发送标志
+X      UART_ClearFlag(((UART_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000080UL))), UART_Flag_TX); 
 N    }
 N
 N    RxIndex = 0; // 重置接收索引

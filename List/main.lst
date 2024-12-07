@@ -15361,6 +15361,8 @@ N                GPIO_TogglePins(GPIOA, GPIO_Pin_12);  // 红外传感器开关
 X                GPIO_TogglePins(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000000UL))), GPIO_Pin_12);  
 N                GPIO_TogglePins(GPIOC, GPIO_Pin_10); // LED 灯翻�?
 X                GPIO_TogglePins(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000200UL))), GPIO_Pin_10); 
+N                GPIO_SetBits(GPIOA, GPIO_Pin_9);//开马达
+X                GPIO_SetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000000UL))), GPIO_Pin_9);
 N            }
 N            else if (KeyValue == 18)
 N            {
@@ -15370,6 +15372,9 @@ N                GPIO_SetBits(GPIOC, GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_10 | GPI
 X                GPIO_SetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000200UL))), GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_10 | GPIO_Pin_11); 
 N                GPIO_SetBits(GPIOA, GPIO_Pin_7 | GPIO_Pin_8);                             // 先关闭所有 LED
 X                GPIO_SetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000000UL))), GPIO_Pin_7 | GPIO_Pin_8);                             
+N                GPIO_SetBits(GPIOA, GPIO_Pin_9);//开马达
+X                GPIO_SetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000000UL))), GPIO_Pin_9);
+N                
 N            }
 N            //输出触摸按键按下的�?
 N            Delay_ms(100);
@@ -15449,7 +15454,7 @@ X                    GPIO_TogglePins(((GPIO_TypeDef *) (((0x40000000UL)+0x11000)
 N            }
 N            cnt1++;
 N
-N            if(GPIO_ReadDataBit(GPIOA, GPIO_Pin_11))
+N            if(GPIO_ReadDataBit(GPIOA, GPIO_Pin_11))//检测物体接近为0 平常为1
 X            if(GPIO_ReadDataBit(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000000UL))), GPIO_Pin_11))
 N            {
 N                GPIO_ResetBits(GPIOC, GPIO_Pin_4);  // LED 灯翻�?
@@ -15459,6 +15464,9 @@ N            {
 N                GPIO_SetBits(GPIOC, GPIO_Pin_4);  // LED 灯翻�?
 X                GPIO_SetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000200UL))), GPIO_Pin_4);  
 N            }
+N
+N            GPIO_ResetBits(GPIOA, GPIO_Pin_9);//关马达
+X            GPIO_ResetBits(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000000UL))), GPIO_Pin_9);
 N
 N            break;
 N        case 2: // Buzz SET

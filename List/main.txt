@@ -57,63 +57,63 @@
                           AREA ||i.Delay_ms||, CODE, READONLY, ALIGN=1
 
                   Delay_ms PROC
-;;;177    
-;;;178    void Delay_ms(uint16_t xms)
+;;;182    
+;;;183    void Delay_ms(uint16_t xms)
 000000  b570              PUSH     {r4-r6,lr}
-;;;179    {
+;;;184    {
 000002  4604              MOV      r4,r0
-;;;180        int i;
-;;;181        for (i = 0; i < xms; i++)
+;;;185        int i;
+;;;186        for (i = 0; i < xms; i++)
 000004  2500              MOVS     r5,#0
 000006  e004              B        |L2.18|
                   |L2.8|
-;;;182        {
-;;;183            Delay_us(1000);
+;;;187        {
+;;;188            Delay_us(1000);
 000008  207d              MOVS     r0,#0x7d
 00000a  00c0              LSLS     r0,r0,#3
 00000c  f7fffffe          BL       Delay_us
-000010  1c6d              ADDS     r5,r5,#1              ;181
+000010  1c6d              ADDS     r5,r5,#1              ;186
                   |L2.18|
-000012  42a5              CMP      r5,r4                 ;181
+000012  42a5              CMP      r5,r4                 ;186
 000014  dbf8              BLT      |L2.8|
-;;;184        }
-;;;185    }
+;;;189        }
+;;;190    }
 000016  bd70              POP      {r4-r6,pc}
-;;;186    
+;;;191    
                           ENDP
 
 
                           AREA ||i.Delay_us||, CODE, READONLY, ALIGN=2
 
                   Delay_us PROC
-;;;168    }
-;;;169    void Delay_us(uint16_t xus)
+;;;173    }
+;;;174    void Delay_us(uint16_t xus)
 000000  b510              PUSH     {r4,lr}
-;;;170    {
+;;;175    {
 000002  4604              MOV      r4,r0
-;;;171        TIM_Cmd(TIM1, ENABLE);
+;;;176        TIM_Cmd(TIM1, ENABLE);
 000004  2101              MOVS     r1,#1
 000006  4808              LDR      r0,|L3.40|
 000008  f7fffffe          BL       TIM_Cmd
-;;;172        while (TIM1->TIM_CNT < xus)
+;;;177        while (TIM1->TIM_CNT < xus)
 00000c  bf00              NOP      
                   |L3.14|
 00000e  4806              LDR      r0,|L3.40|
 000010  6840              LDR      r0,[r0,#4]
 000012  42a0              CMP      r0,r4
 000014  d3fb              BCC      |L3.14|
-;;;173        ;
-;;;174        TIM1->TIM_CNT = 0;
+;;;178        ;
+;;;179        TIM1->TIM_CNT = 0;
 000016  2000              MOVS     r0,#0
 000018  4903              LDR      r1,|L3.40|
 00001a  6048              STR      r0,[r1,#4]
-;;;175        TIM_Cmd(TIM1, DISABLE);
+;;;180        TIM_Cmd(TIM1, DISABLE);
 00001c  2100              MOVS     r1,#0
 00001e  4802              LDR      r0,|L3.40|
 000020  f7fffffe          BL       TIM_Cmd
-;;;176    }
+;;;181    }
 000024  bd10              POP      {r4,pc}
-;;;177    
+;;;182    
                           ENDP
 
 000026  0000              DCW      0x0000
@@ -129,113 +129,124 @@
 ;;;50     {
 000002  4604              MOV      r4,r0
 ;;;51         if (exKeyValue != 0XFF) // 松手前只出一次键
-000004  4818              LDR      r0,|L4.104|
+000004  481d              LDR      r0,|L4.124|
 000006  7800              LDRB     r0,[r0,#0]  ; exKeyValue
 000008  28ff              CMP      r0,#0xff
-00000a  d026              BEQ      |L4.90|
+00000a  d030              BEQ      |L4.110|
 ;;;52         {
 ;;;53             gTkIsValid = 1;
 00000c  2001              MOVS     r0,#1
-00000e  4917              LDR      r1,|L4.108|
+00000e  491c              LDR      r1,|L4.128|
 000010  7008              STRB     r0,[r1,#0]
 ;;;54             ///KeyValue = exKeyValue;
 ;;;55             if (first_Press == 0)
-000012  4817              LDR      r0,|L4.112|
+000012  481c              LDR      r0,|L4.132|
 000014  7800              LDRB     r0,[r0,#0]  ; first_Press
 000016  2800              CMP      r0,#0
-000018  d124              BNE      |L4.100|
+000018  d12e              BNE      |L4.120|
 ;;;56             {
 ;;;57                 if (KeyValue == 17)
 00001a  2c11              CMP      r4,#0x11
-00001c  d10a              BNE      |L4.52|
+00001c  d10f              BNE      |L4.62|
 ;;;58                 {
 ;;;59                     GPIO_TogglePins(GPIOA, GPIO_Pin_12);  // 红外传感器开关
 00001e  2101              MOVS     r1,#1
 000020  0309              LSLS     r1,r1,#12
-000022  4814              LDR      r0,|L4.116|
+000022  4819              LDR      r0,|L4.136|
 000024  f7fffffe          BL       GPIO_TogglePins
 ;;;60                     GPIO_TogglePins(GPIOC, GPIO_Pin_10); // LED 灯翻�?
 000028  2101              MOVS     r1,#1
 00002a  0289              LSLS     r1,r1,#10
-00002c  4812              LDR      r0,|L4.120|
+00002c  4817              LDR      r0,|L4.140|
 00002e  f7fffffe          BL       GPIO_TogglePins
-000032  e00b              B        |L4.76|
-                  |L4.52|
-;;;61                 }
-;;;62                 else if (KeyValue == 18)
-000034  2c12              CMP      r4,#0x12
-000036  d109              BNE      |L4.76|
-;;;63                 {
-;;;64                     //GPIO_TogglePins(GPIOC, GPIO_Pin_5);  // LED 灯翻�?
-;;;65                     //GPIO_TogglePins(GPIOC, GPIO_Pin_11); // LED 灯翻�?
-;;;66                     GPIO_SetBits(GPIOC, GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_10 | GPIO_Pin_11); // 先关闭所有 LED
-000038  21c3              MOVS     r1,#0xc3
-00003a  0109              LSLS     r1,r1,#4
-00003c  480e              LDR      r0,|L4.120|
-00003e  f7fffffe          BL       GPIO_SetBits
-;;;67                     GPIO_SetBits(GPIOA, GPIO_Pin_7 | GPIO_Pin_8);                             // 先关闭所有 LED
-000042  21ff              MOVS     r1,#0xff
-000044  3181              ADDS     r1,r1,#0x81
-000046  480b              LDR      r0,|L4.116|
+;;;61                     GPIO_SetBits(GPIOA, GPIO_Pin_9);//开马达
+000032  2101              MOVS     r1,#1
+000034  0249              LSLS     r1,r1,#9
+000036  4814              LDR      r0,|L4.136|
+000038  f7fffffe          BL       GPIO_SetBits
+00003c  e010              B        |L4.96|
+                  |L4.62|
+;;;62                 }
+;;;63                 else if (KeyValue == 18)
+00003e  2c12              CMP      r4,#0x12
+000040  d10e              BNE      |L4.96|
+;;;64                 {
+;;;65                     //GPIO_TogglePins(GPIOC, GPIO_Pin_5);  // LED 灯翻�?
+;;;66                     //GPIO_TogglePins(GPIOC, GPIO_Pin_11); // LED 灯翻�?
+;;;67                     GPIO_SetBits(GPIOC, GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_10 | GPIO_Pin_11); // 先关闭所有 LED
+000042  21c3              MOVS     r1,#0xc3
+000044  0109              LSLS     r1,r1,#4
+000046  4811              LDR      r0,|L4.140|
 000048  f7fffffe          BL       GPIO_SetBits
-                  |L4.76|
-;;;68                 }
-;;;69                 //输出触摸按键按下的�?
-;;;70                 Delay_ms(100);
-00004c  2064              MOVS     r0,#0x64
-00004e  f7fffffe          BL       Delay_ms
-;;;71                 //printf("按下value%u\r\n", exKeyValue);
-;;;72                 first_Press = 1;
-000052  2001              MOVS     r0,#1
-000054  4906              LDR      r1,|L4.112|
-000056  7008              STRB     r0,[r1,#0]
-000058  e004              B        |L4.100|
-                  |L4.90|
-;;;73             }
-;;;74         }
-;;;75         else
-;;;76         {
-;;;77             gTkIsValid = 0;
-00005a  2000              MOVS     r0,#0
-00005c  4903              LDR      r1,|L4.108|
-00005e  7008              STRB     r0,[r1,#0]
-;;;78             first_Press = 0;
-000060  4903              LDR      r1,|L4.112|
-000062  7008              STRB     r0,[r1,#0]
-                  |L4.100|
-;;;79         }
-;;;80     }
-000064  bd10              POP      {r4,pc}
-;;;81     /**
+;;;68                     GPIO_SetBits(GPIOA, GPIO_Pin_7 | GPIO_Pin_8);                             // 先关闭所有 LED
+00004c  21ff              MOVS     r1,#0xff
+00004e  3181              ADDS     r1,r1,#0x81
+000050  480d              LDR      r0,|L4.136|
+000052  f7fffffe          BL       GPIO_SetBits
+;;;69                     GPIO_SetBits(GPIOA, GPIO_Pin_9);//开马达
+000056  2101              MOVS     r1,#1
+000058  0249              LSLS     r1,r1,#9
+00005a  480b              LDR      r0,|L4.136|
+00005c  f7fffffe          BL       GPIO_SetBits
+                  |L4.96|
+;;;70                     
+;;;71                 }
+;;;72                 //输出触摸按键按下的�?
+;;;73                 Delay_ms(100);
+000060  2064              MOVS     r0,#0x64
+000062  f7fffffe          BL       Delay_ms
+;;;74                 //printf("按下value%u\r\n", exKeyValue);
+;;;75                 first_Press = 1;
+000066  2001              MOVS     r0,#1
+000068  4906              LDR      r1,|L4.132|
+00006a  7008              STRB     r0,[r1,#0]
+00006c  e004              B        |L4.120|
+                  |L4.110|
+;;;76             }
+;;;77         }
+;;;78         else
+;;;79         {
+;;;80             gTkIsValid = 0;
+00006e  2000              MOVS     r0,#0
+000070  4903              LDR      r1,|L4.128|
+000072  7008              STRB     r0,[r1,#0]
+;;;81             first_Press = 0;
+000074  4903              LDR      r1,|L4.132|
+000076  7008              STRB     r0,[r1,#0]
+                  |L4.120|
+;;;82         }
+;;;83     }
+000078  bd10              POP      {r4,pc}
+;;;84     /**
                           ENDP
 
-000066  0000              DCW      0x0000
-                  |L4.104|
+00007a  0000              DCW      0x0000
+                  |L4.124|
                           DCD      exKeyValue
-                  |L4.108|
+                  |L4.128|
                           DCD      gTkIsValid
-                  |L4.112|
+                  |L4.132|
                           DCD      first_Press
-                  |L4.116|
+                  |L4.136|
                           DCD      0x40011000
-                  |L4.120|
+                  |L4.140|
                           DCD      0x40011200
 
                           AREA ||i.fputc||, CODE, READONLY, ALIGN=2
 
                   fputc PROC
-;;;186    
-;;;187    int fputc(int ch, FILE *f)
+;;;191    
+;;;192    int fputc(int ch, FILE *f)
 000000  b570              PUSH     {r4-r6,lr}
-;;;188    {
+;;;193    {
 000002  4604              MOV      r4,r0
 000004  460d              MOV      r5,r1
-;;;189        //发送字符到UART0
-;;;190        UART_SendData(UART1, (uint8_t)ch);
+;;;194        //发送字符到UART0
+;;;195        UART_SendData(UART1, (uint8_t)ch);
 000006  b2e1              UXTB     r1,r4
 000008  4807              LDR      r0,|L5.40|
 00000a  f7fffffe          BL       UART_SendData
-;;;191        while (UART_GetFlagStatus(UART1, UART_Flag_TX) == RESET); // 等待发送完成
+;;;196        while (UART_GetFlagStatus(UART1, UART_Flag_TX) == RESET); // 等待发送完成
 00000e  bf00              NOP      
                   |L5.16|
 000010  2102              MOVS     r1,#2
@@ -243,15 +254,15 @@
 000014  f7fffffe          BL       UART_GetFlagStatus
 000018  2800              CMP      r0,#0
 00001a  d0f9              BEQ      |L5.16|
-;;;192        UART_ClearFlag(UART1, UART_Flag_TX); // 清除发送完成标�?
+;;;197        UART_ClearFlag(UART1, UART_Flag_TX); // 清除发送完成标�?
 00001c  2102              MOVS     r1,#2
 00001e  4802              LDR      r0,|L5.40|
 000020  f7fffffe          BL       UART_ClearFlag
-;;;193        return ch;
+;;;198        return ch;
 000024  4620              MOV      r0,r4
-;;;194    }
+;;;199    }
 000026  bd70              POP      {r4-r6,pc}
-;;;195    
+;;;200    
                           ENDP
 
                   |L5.40|
@@ -260,233 +271,238 @@
                           AREA ||i.main||, CODE, READONLY, ALIGN=2
 
                   main PROC
-;;;87     uint32_t cnt2;
-;;;88     int main(void)
+;;;90     uint32_t cnt2;
+;;;91     int main(void)
 000000  f7fffffe          BL       IcResourceInit
-;;;89     {
-;;;90         /*<Generated by EasyCodeCube begin>*/
-;;;91         /*<UserCodeStart>*/ /*<SinOne-Tag><36>*/
-;;;92         IcResourceInit();
-;;;93         TIM_Cmd(TIM2, DISABLE);
+;;;92     {
+;;;93         /*<Generated by EasyCodeCube begin>*/
+;;;94         /*<UserCodeStart>*/ /*<SinOne-Tag><36>*/
+;;;95         IcResourceInit();
+;;;96         TIM_Cmd(TIM2, DISABLE);
 000004  2100              MOVS     r1,#0
-000006  4843              LDR      r0,|L6.276|
+000006  4845              LDR      r0,|L6.284|
 000008  f7fffffe          BL       TIM_Cmd
-;;;94         Buzzer_SetVolume(50);
+;;;97         Buzzer_SetVolume(50);
 00000c  2032              MOVS     r0,#0x32
 00000e  f7fffffe          BL       Buzzer_SetVolume
-;;;95         TK_Init();          // 重要步骤1：TK的初始化函数
+;;;98         TK_Init();          // 重要步骤1：TK的初始化函数
 000012  f7fffffe          BL       TK_Init
-;;;96         /*<UserCodeEnd>*/   /*<SinOne-Tag><36>*/
-;;;97         /*<UserCodeStart>*/ /*<SinOne-Tag><4>*/
-;;;98         /*****MainLoop*****/
-;;;99         while (1)
-000016  e07b              B        |L6.272|
+;;;99         /*<UserCodeEnd>*/   /*<SinOne-Tag><36>*/
+;;;100        /*<UserCodeStart>*/ /*<SinOne-Tag><4>*/
+;;;101        /*****MainLoop*****/
+;;;102        while (1)
+000016  e080              B        |L6.282|
                   |L6.24|
-;;;100        {
-;;;101            /*<UserCodeStart>*/ /*<SinOne-Tag><14>*/
-;;;102            /***User program***/
-;;;103    
-;;;104            switch (Task_state)
-000018  483f              LDR      r0,|L6.280|
+;;;103        {
+;;;104            /*<UserCodeStart>*/ /*<SinOne-Tag><14>*/
+;;;105            /***User program***/
+;;;106    
+;;;107            switch (Task_state)
+000018  4841              LDR      r0,|L6.288|
 00001a  7800              LDRB     r0,[r0,#0]  ; Task_state
 00001c  0003              MOVS     r3,r0
 00001e  f7fffffe          BL       __ARM_common_switch8
 000022  0504              DCB      0x05,0x04
-000024  24737475          DCB      0x24,0x73,0x74,0x75
-000028  7600              DCB      0x76,0x00
-;;;105            {
-;;;106            case 0:                                 // init
-;;;107                GPIO_ResetBits(GPIOC, GPIO_Pin_4);  // LED1
+000024  2478797a          DCB      0x24,0x78,0x79,0x7a
+000028  7b00              DCB      0x7b,0x00
+;;;108            {
+;;;109            case 0:                                 // init
+;;;110                GPIO_ResetBits(GPIOC, GPIO_Pin_4);  // LED1
 00002a  2110              MOVS     r1,#0x10
-00002c  483b              LDR      r0,|L6.284|
+00002c  483d              LDR      r0,|L6.292|
 00002e  f7fffffe          BL       GPIO_ResetBits
-;;;108                GPIO_ResetBits(GPIOC, GPIO_Pin_10); // LED3
+;;;111                GPIO_ResetBits(GPIOC, GPIO_Pin_10); // LED3
 000032  2101              MOVS     r1,#1
 000034  0289              LSLS     r1,r1,#10
-000036  4839              LDR      r0,|L6.284|
+000036  483b              LDR      r0,|L6.292|
 000038  f7fffffe          BL       GPIO_ResetBits
-;;;109                GPIO_ResetBits(GPIOC, GPIO_Pin_11); // LED4
+;;;112                GPIO_ResetBits(GPIOC, GPIO_Pin_11); // LED4
 00003c  2101              MOVS     r1,#1
 00003e  02c9              LSLS     r1,r1,#11
-000040  4836              LDR      r0,|L6.284|
+000040  4838              LDR      r0,|L6.292|
 000042  f7fffffe          BL       GPIO_ResetBits
-;;;110                GPIO_ResetBits(GPIOA, GPIO_Pin_7);  // LED5
+;;;113                GPIO_ResetBits(GPIOA, GPIO_Pin_7);  // LED5
 000046  2180              MOVS     r1,#0x80
-000048  4835              LDR      r0,|L6.288|
+000048  4837              LDR      r0,|L6.296|
 00004a  f7fffffe          BL       GPIO_ResetBits
-;;;111                GPIO_ResetBits(GPIOA, GPIO_Pin_8);  // LED6
+;;;114                GPIO_ResetBits(GPIOA, GPIO_Pin_8);  // LED6
 00004e  21ff              MOVS     r1,#0xff
 000050  3101              ADDS     r1,#1
-000052  4833              LDR      r0,|L6.288|
+000052  4835              LDR      r0,|L6.296|
 000054  f7fffffe          BL       GPIO_ResetBits
-;;;112    
-;;;113                GPIO_SetBits(GPIOA, GPIO_Pin_12);//红外线控制
+;;;115    
+;;;116                GPIO_SetBits(GPIOA, GPIO_Pin_12);//红外线控制
 000058  2101              MOVS     r1,#1
 00005a  0309              LSLS     r1,r1,#12
-00005c  4830              LDR      r0,|L6.288|
+00005c  4832              LDR      r0,|L6.296|
 00005e  f7fffffe          BL       GPIO_SetBits
-;;;114                Task_state = 1;
+;;;117                Task_state = 1;
 000062  2001              MOVS     r0,#1
-000064  492c              LDR      r1,|L6.280|
+000064  492e              LDR      r1,|L6.288|
 000066  7008              STRB     r0,[r1,#0]
-;;;115                break;
-000068  e051              B        |L6.270|
-;;;116            case 1:                             // TK task
-;;;117                WDT->WDT_CON |= WDT_CON_CLRWDT; // 清watchdog
-00006a  482e              LDR      r0,|L6.292|
+;;;118                break;
+000068  e056              B        |L6.280|
+;;;119            case 1:                             // TK task
+;;;120                WDT->WDT_CON |= WDT_CON_CLRWDT; // 清watchdog
+00006a  4830              LDR      r0,|L6.300|
 00006c  6bc0              LDR      r0,[r0,#0x3c]
 00006e  2101              MOVS     r1,#1
 000070  4308              ORRS     r0,r0,r1
-000072  492c              LDR      r1,|L6.292|
+000072  492e              LDR      r1,|L6.300|
 000074  63c8              STR      r0,[r1,#0x3c]
-;;;118    
-;;;119                // 重要步骤2：触摸键扫描一轮标志，是否调用TouchKeyScan()一定要根据此标志位置起�?
-;;;120                if (TK_TouchKeyStatus & 0x80)
-000076  482c              LDR      r0,|L6.296|
+;;;121    
+;;;122                // 重要步骤2：触摸键扫描一轮标志，是否调用TouchKeyScan()一定要根据此标志位置起�?
+;;;123                if (TK_TouchKeyStatus & 0x80)
+000076  482e              LDR      r0,|L6.304|
 000078  7800              LDRB     r0,[r0,#0]  ; TK_TouchKeyStatus
 00007a  2180              MOVS     r1,#0x80
 00007c  4008              ANDS     r0,r0,r1
 00007e  2800              CMP      r0,#0
 000080  d013              BEQ      |L6.170|
-;;;121                { // 重要步骤3：清除标志位，需要外部清�?
-;;;122                    TK_TouchKeyStatus &= 0x7f;
-000082  4829              LDR      r0,|L6.296|
+;;;124                { // 重要步骤3：清除标志位，需要外部清�?
+;;;125                    TK_TouchKeyStatus &= 0x7f;
+000082  482b              LDR      r0,|L6.304|
 000084  7800              LDRB     r0,[r0,#0]  ; TK_TouchKeyStatus
 000086  0640              LSLS     r0,r0,#25
 000088  0e40              LSRS     r0,r0,#25
-00008a  4927              LDR      r1,|L6.296|
+00008a  4929              LDR      r1,|L6.304|
 00008c  7008              STRB     r0,[r1,#0]
-;;;123                    // 重要步骤4：分析按键数据，并返回结果出�?
-;;;124                    TK_exKeyValueFlag = TK_TouchKeyScan();
+;;;126                    // 重要步骤4：分析按键数据，并返回结果出�?
+;;;127                    TK_exKeyValueFlag = TK_TouchKeyScan();
 00008e  f7fffffe          BL       TK_TouchKeyScan
-000092  4926              LDR      r1,|L6.300|
+000092  4928              LDR      r1,|L6.308|
 000094  6008              STR      r0,[r1,#0]  ; TK_exKeyValueFlag
-;;;125                    DataProcessing(TK_exKeyValueFlag); // 按键数据处理函数
+;;;128                    DataProcessing(TK_exKeyValueFlag); // 按键数据处理函数
 000096  4608              MOV      r0,r1
 000098  6800              LDR      r0,[r0,#0]  ; TK_exKeyValueFlag
 00009a  f7fffffe          BL       DataProcessing
-;;;126    
-;;;127                    UpdateDisplay(exKeyValue);
-00009e  4824              LDR      r0,|L6.304|
+;;;129    
+;;;130                    UpdateDisplay(exKeyValue);
+00009e  4826              LDR      r0,|L6.312|
 0000a0  7800              LDRB     r0,[r0,#0]  ; exKeyValue
 0000a2  f7fffffe          BL       UpdateDisplay
-;;;128                    TK_Restart(); // 启动下一轮转�?
+;;;131                    TK_Restart(); // 启动下一轮转�?
 0000a6  f7fffffe          BL       TK_Restart
                   |L6.170|
-;;;129                }
-;;;130                if (cnt1 % 300 == 0)
+;;;132                }
+;;;133                if (cnt1 % 300 == 0)
 0000aa  21ff              MOVS     r1,#0xff
 0000ac  312d              ADDS     r1,r1,#0x2d
-0000ae  4821              LDR      r0,|L6.308|
+0000ae  4823              LDR      r0,|L6.316|
 0000b0  6800              LDR      r0,[r0,#0]  ; cnt1
 0000b2  f7fffffe          BL       __aeabi_uidivmod
 0000b6  2900              CMP      r1,#0
 0000b8  d110              BNE      |L6.220|
-;;;131                {
-;;;132                    cnt2++;
-0000ba  481f              LDR      r0,|L6.312|
+;;;134                {
+;;;135                    cnt2++;
+0000ba  4821              LDR      r0,|L6.320|
 0000bc  6800              LDR      r0,[r0,#0]  ; cnt2
 0000be  1c40              ADDS     r0,r0,#1
-0000c0  491d              LDR      r1,|L6.312|
+0000c0  491f              LDR      r1,|L6.320|
 0000c2  6008              STR      r0,[r1,#0]  ; cnt2
-;;;133                    if (cnt2 % 80 == 0)
+;;;136                    if (cnt2 % 80 == 0)
 0000c4  2150              MOVS     r1,#0x50
-0000c6  481c              LDR      r0,|L6.312|
+0000c6  481e              LDR      r0,|L6.320|
 0000c8  6800              LDR      r0,[r0,#0]  ; cnt2
 0000ca  f7fffffe          BL       __aeabi_uidivmod
 0000ce  2900              CMP      r1,#0
 0000d0  d104              BNE      |L6.220|
-;;;134                        GPIO_TogglePins(GPIOA, GPIO_Pin_8); // LED 灯翻�?
+;;;137                        GPIO_TogglePins(GPIOA, GPIO_Pin_8); // LED 灯翻�?
 0000d2  21ff              MOVS     r1,#0xff
 0000d4  3101              ADDS     r1,#1
-0000d6  4812              LDR      r0,|L6.288|
+0000d6  4814              LDR      r0,|L6.296|
 0000d8  f7fffffe          BL       GPIO_TogglePins
                   |L6.220|
-;;;135                }
-;;;136                cnt1++;
-0000dc  4815              LDR      r0,|L6.308|
+;;;138                }
+;;;139                cnt1++;
+0000dc  4817              LDR      r0,|L6.316|
 0000de  6800              LDR      r0,[r0,#0]  ; cnt1
 0000e0  1c40              ADDS     r0,r0,#1
-0000e2  4914              LDR      r1,|L6.308|
+0000e2  4916              LDR      r1,|L6.316|
 0000e4  6008              STR      r0,[r1,#0]  ; cnt1
-;;;137    
-;;;138                if(GPIO_ReadDataBit(GPIOA, GPIO_Pin_11))
+;;;140    
+;;;141                if(GPIO_ReadDataBit(GPIOA, GPIO_Pin_11))//检测物体接近为0 平常为1
 0000e6  2101              MOVS     r1,#1
 0000e8  02c9              LSLS     r1,r1,#11
-0000ea  480d              LDR      r0,|L6.288|
+0000ea  480f              LDR      r0,|L6.296|
 0000ec  f7fffffe          BL       GPIO_ReadDataBit
 0000f0  2800              CMP      r0,#0
 0000f2  d004              BEQ      |L6.254|
-;;;139                {
-;;;140                    GPIO_ResetBits(GPIOC, GPIO_Pin_4);  // LED 灯翻�?
+;;;142                {
+;;;143                    GPIO_ResetBits(GPIOC, GPIO_Pin_4);  // LED 灯翻�?
 0000f4  2110              MOVS     r1,#0x10
-0000f6  4809              LDR      r0,|L6.284|
+0000f6  480b              LDR      r0,|L6.292|
 0000f8  f7fffffe          BL       GPIO_ResetBits
 0000fc  e003              B        |L6.262|
                   |L6.254|
-;;;141                }else
-;;;142                {
-;;;143                    GPIO_SetBits(GPIOC, GPIO_Pin_4);  // LED 灯翻�?
+;;;144                }else
+;;;145                {
+;;;146                    GPIO_SetBits(GPIOC, GPIO_Pin_4);  // LED 灯翻�?
 0000fe  2110              MOVS     r1,#0x10
-000100  4806              LDR      r0,|L6.284|
+000100  4808              LDR      r0,|L6.292|
 000102  f7fffffe          BL       GPIO_SetBits
                   |L6.262|
-;;;144                }
-;;;145    
-;;;146                break;
-000106  e002              B        |L6.270|
-;;;147            case 2: // Buzz SET
-;;;148                break;
-000108  e001              B        |L6.270|
-;;;149            case 3: // RGB SET
-;;;150                break;
-00010a  e000              B        |L6.270|
-;;;151            case 4: // ADC get
-;;;152                break;
-00010c  bf00              NOP      
-                  |L6.270|
-00010e  bf00              NOP                            ;115
-                  |L6.272|
-000110  e782              B        |L6.24|
-;;;153            }
-;;;154    
-;;;155            /*<UserCodeEnd>*/   /*<SinOne-Tag><14>*/
-;;;156            /*<UserCodeStart>*/ /*<SinOne-Tag><77>*/
-;;;157            /*<UserCodeEnd>*/   /*<SinOne-Tag><77>*/
-;;;158            /*<UserCodeStart>*/ /*<SinOne-Tag><453>*/
-;;;159            //TIM_TI_DMA();
-;;;160            /*<UserCodeEnd>*/   /*<SinOne-Tag><453>*/
-;;;161            /*<UserCodeStart>*/ /*<SinOne-Tag><469>*/
-;;;162            //UART_Communication();
-;;;163            /*<UserCodeEnd>*/ /*<SinOne-Tag><469>*/
-;;;164            /*<Begin-Inserted by EasyCodeCube for Condition>*/
-;;;165        }
-;;;166        /*<UserCodeEnd>*/ /*<SinOne-Tag><4>*/
-;;;167                          /*<Generated by EasyCodeCube end>*/
-;;;168    }
-;;;169    void Delay_us(uint16_t xus)
+;;;147                }
+;;;148    
+;;;149                GPIO_ResetBits(GPIOA, GPIO_Pin_9);//关马达
+000106  2101              MOVS     r1,#1
+000108  0249              LSLS     r1,r1,#9
+00010a  4807              LDR      r0,|L6.296|
+00010c  f7fffffe          BL       GPIO_ResetBits
+;;;150    
+;;;151                break;
+000110  e002              B        |L6.280|
+;;;152            case 2: // Buzz SET
+;;;153                break;
+000112  e001              B        |L6.280|
+;;;154            case 3: // RGB SET
+;;;155                break;
+000114  e000              B        |L6.280|
+;;;156            case 4: // ADC get
+;;;157                break;
+000116  bf00              NOP      
+                  |L6.280|
+000118  bf00              NOP                            ;118
+                  |L6.282|
+00011a  e77d              B        |L6.24|
+;;;158            }
+;;;159    
+;;;160            /*<UserCodeEnd>*/   /*<SinOne-Tag><14>*/
+;;;161            /*<UserCodeStart>*/ /*<SinOne-Tag><77>*/
+;;;162            /*<UserCodeEnd>*/   /*<SinOne-Tag><77>*/
+;;;163            /*<UserCodeStart>*/ /*<SinOne-Tag><453>*/
+;;;164            //TIM_TI_DMA();
+;;;165            /*<UserCodeEnd>*/   /*<SinOne-Tag><453>*/
+;;;166            /*<UserCodeStart>*/ /*<SinOne-Tag><469>*/
+;;;167            //UART_Communication();
+;;;168            /*<UserCodeEnd>*/ /*<SinOne-Tag><469>*/
+;;;169            /*<Begin-Inserted by EasyCodeCube for Condition>*/
+;;;170        }
+;;;171        /*<UserCodeEnd>*/ /*<SinOne-Tag><4>*/
+;;;172                          /*<Generated by EasyCodeCube end>*/
+;;;173    }
+;;;174    void Delay_us(uint16_t xus)
                           ENDP
 
-000112  0000              DCW      0x0000
-                  |L6.276|
-                          DCD      0x40020180
-                  |L6.280|
-                          DCD      Task_state
                   |L6.284|
-                          DCD      0x40011200
+                          DCD      0x40020180
                   |L6.288|
-                          DCD      0x40011000
+                          DCD      Task_state
                   |L6.292|
-                          DCD      0x40000300
+                          DCD      0x40011200
                   |L6.296|
-                          DCD      TK_TouchKeyStatus
+                          DCD      0x40011000
                   |L6.300|
-                          DCD      TK_exKeyValueFlag
+                          DCD      0x40000300
                   |L6.304|
-                          DCD      exKeyValue
+                          DCD      TK_TouchKeyStatus
                   |L6.308|
-                          DCD      cnt1
+                          DCD      TK_exKeyValueFlag
                   |L6.312|
+                          DCD      exKeyValue
+                  |L6.316|
+                          DCD      cnt1
+                  |L6.320|
                           DCD      cnt2
 
                           AREA ||.data||, DATA, ALIGN=2

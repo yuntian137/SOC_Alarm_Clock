@@ -58,6 +58,7 @@ void UpdateDisplay(uint8_t KeyValue)
             {
                 GPIO_TogglePins(GPIOA, GPIO_Pin_12);  // 红外传感器开关
                 GPIO_TogglePins(GPIOC, GPIO_Pin_10); // LED 灯翻�?
+                GPIO_SetBits(GPIOA, GPIO_Pin_9);//开马达
             }
             else if (KeyValue == 18)
             {
@@ -65,6 +66,8 @@ void UpdateDisplay(uint8_t KeyValue)
                 //GPIO_TogglePins(GPIOC, GPIO_Pin_11); // LED 灯翻�?
                 GPIO_SetBits(GPIOC, GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_10 | GPIO_Pin_11); // 先关闭所有 LED
                 GPIO_SetBits(GPIOA, GPIO_Pin_7 | GPIO_Pin_8);                             // 先关闭所有 LED
+                GPIO_SetBits(GPIOA, GPIO_Pin_9);//开马达
+                
             }
             //输出触摸按键按下的�?
             Delay_ms(100);
@@ -135,13 +138,15 @@ int main(void)
             }
             cnt1++;
 
-            if(GPIO_ReadDataBit(GPIOA, GPIO_Pin_11))
+            if(GPIO_ReadDataBit(GPIOA, GPIO_Pin_11))//检测物体接近为0 平常为1
             {
                 GPIO_ResetBits(GPIOC, GPIO_Pin_4);  // LED 灯翻�?
             }else
             {
                 GPIO_SetBits(GPIOC, GPIO_Pin_4);  // LED 灯翻�?
             }
+
+            GPIO_ResetBits(GPIOA, GPIO_Pin_9);//关马达
 
             break;
         case 2: // Buzz SET
