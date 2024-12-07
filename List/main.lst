@@ -15160,6 +15160,18 @@ N
 N
 N
 N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
 L 20 "..\User\main.c" 2
 N#include "HeadFiles\SysFunVarDefine.h"
 L 1 "..\User\HeadFiles\SysFunVarDefine.h" 1
@@ -15435,6 +15447,8 @@ N    TIM_Cmd(TIM2, DISABLE);
 X    TIM_Cmd(((TIM_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000180UL))), DISABLE);
 N    Buzzer_SetVolume(50);
 N    TK_Init();        // 重要步骤1：TK的初始化函数
+W "..\User\main.c" 98 5 function "WIFI_Init" declared implicitly
+N    WIFI_Init();
 N    /*<UserCodeEnd>*/ /*<SinOne-Tag><36>*/
 N
 N    /*<UserCodeStart>*/ /*<SinOne-Tag><4>*/
@@ -15482,6 +15496,10 @@ N                    GPIO_TogglePins(GPIOA, GPIO_Pin_8); // LED 灯翻�?
 X                    GPIO_TogglePins(((GPIO_TypeDef *) (((0x40000000UL)+0x11000) +(0x00000000UL))), GPIO_Pin_8); 
 N            }
 N            cnt1++;
+N
+N
+N
+N
 N            break;
 N        case 2: // Buzz SET
 N            break;
@@ -15499,7 +15517,7 @@ N        /*<UserCodeEnd>*/   /*<SinOne-Tag><453>*/
 N        /*<UserCodeStart>*/ /*<SinOne-Tag><469>*/
 N        /*<UserCodeEnd>*/   /*<SinOne-Tag><469>*/
 N        /*<UserCodeStart>*/ /*<SinOne-Tag><481>*/
-N        UART_Communication_DMA();
+N        //UART_Communication_DMA();
 N        /*<UserCodeEnd>*/ /*<SinOne-Tag><481>*/
 N                          /*<Begin-Inserted by EasyCodeCube for Condition>*/
 N

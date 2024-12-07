@@ -15002,10 +15002,11 @@ N/*********************重启WIFI模块*****************************/
 N/*********************重启WIFI模块*****************************/
 Nvoid WIFI_Rst(void)
 N{
+N    char rst_buff[11] = {"AT+RST\r\n\r\n"};
 N    USART_TxStr(UART2,"重启模块...\r\n");
 X    USART_TxStr(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL))),"重启模块...\r\n");
-N    USART_TxStr(UART1,"AT+RST\r\n");
-X    USART_TxStr(((UART_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000080UL))),"AT+RST\r\n");
+N    USART_TxStr(UART1,rst_buff);  
+X    USART_TxStr(((UART_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000080UL))),rst_buff);  
 N    Delay_ms(1000); // WIFI重启需要时间
 N    Delay_ms(1000);
 N    Delay_ms(1000);
@@ -15036,7 +15037,7 @@ N
 N/*********************登录网址******************************/
 Nvoid Login_URL(void)
 N{
-N    char login_url[100] = {"AT+CIPSNTPCFG=1,8,\"ntp1.aliyun.com\"\r\n"};
+N    char login_url[100] = {"AT+CIPSNTPCFG=1,8,\"iot.console.aliyun.com\"\r\n"};
 N    USART_TxStr(UART2,"连接阿里云服务器...\r\n");
 X    USART_TxStr(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL))),"连接阿里云服务器...\r\n");
 N    USART_TxStr(UART1,login_url);
@@ -15071,7 +15072,7 @@ N/*********************连接客户端*******************************/
 Nvoid Client_Connect(void)
 N{
 N    char client_connect_buf[100] = {"AT+MQTTCLIENTID=0,\"12345|securemode=3\\,signmethod=hmacsha1|\"\r\n"};
-W "..\Mqtt\Src\mqtt.c" 91 31 invalid multibyte character sequence
+W "..\Mqtt\Src\mqtt.c" 92 31 invalid multibyte character sequence
 N    USART_TxStr(UART2,"连接客户端...\r\n");
 X    USART_TxStr(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL))),"连接客户端...\r\n");
 N    USART_TxStr(UART1,client_connect_buf);
@@ -15092,7 +15093,7 @@ N/*********************客户端订阅*************************/
 Nvoid Client_Subscribe(void)
 N{
 N    char client_subscribe_buf[100] = {"AT+MQTTSUB=0,\"/k23m6LAJ0V9/SC32F10TS8/user/Test\",1\r\n"};
-W "..\Mqtt\Src\mqtt.c" 107 34 invalid multibyte character sequence
+W "..\Mqtt\Src\mqtt.c" 108 34 invalid multibyte character sequence
 N    USART_TxStr(UART2,"客户端订阅消息...\r\n");
 X    USART_TxStr(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL))),"客户端订阅消息...\r\n");
 N    USART_TxStr(UART1,client_subscribe_buf);
@@ -15136,11 +15137,11 @@ N}
 N
 Nvoid UART1_Handler(void)
 N{
-N    while(UART_GetFlagStatus(UART1, UART_Flag_RX) == SET) // 接收中断收完再处理
-X    while(UART_GetFlagStatus(((UART_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000080UL))), UART_Flag_RX) == SET) 
+N    while (UART_GetFlagStatus(UART1, UART_Flag_RX) == SET) // 接收中断收完再处理
+X    while (UART_GetFlagStatus(((UART_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000080UL))), UART_Flag_RX) == SET) 
 N    {
-N        UART_ClearFlag(UART1, UART_Flag_RX); // 清除接收标志
-X        UART_ClearFlag(((UART_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000080UL))), UART_Flag_RX); 
+N        UART_ClearFlag(UART1, UART_Flag_RX);            // 清除接收标志
+X        UART_ClearFlag(((UART_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000080UL))), UART_Flag_RX);            
 N        uint8_t receivedChar = UART_ReceiveData(UART1); // 接收数据
 X        uint8_t receivedChar = UART_ReceiveData(((UART_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000080UL)))); 
 N
@@ -15151,6 +15152,20 @@ X        if (RxIndex >= 100)
 N        {
 N            RxIndex = 0; // 重置接收索引
 N        }
+N        // 将接收到的数据复制到发送缓冲区
+N        memcpy((void *)UART_TxBuffer, (void *)UART_RxBuffer, RxIndex);
+N
+N        // 发送数据
+N        for (uint8_t i = 0; i < RxIndex; i++)
+N        {
+N            UART_SendData(UART2, UART_TxBuffer[i]); // 发送数据
+X            UART_SendData(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL))), UART_TxBuffer[i]); 
+N            while (UART_GetFlagStatus(UART2, UART_Flag_TX) == RESET)
+X            while (UART_GetFlagStatus(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL))), UART_Flag_TX) == RESET)
+N                ;                                // 等待发送完成
+N            UART_ClearFlag(UART2, UART_Flag_TX); // 清除发送标志
+X            UART_ClearFlag(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL))), UART_Flag_TX); 
+N        }
 N
 N        // 检查是否接收到 "OK"
 N        if (RxIndex >= 2 && UART_RxBuffer[RxIndex - 2] == 'O' && UART_RxBuffer[RxIndex - 1] == 'K')
@@ -15160,11 +15175,10 @@ N        }
 N    }
 N}
 N
-N
 Nvoid wait_OK(void)
 N{
 N    uint32_t timeout = 5000000; // 设置超时时间为5000ms
-N    uint16_t elapsed_time = 0; // 已经过的时间
+N    uint32_t elapsed_time = 0; // 已经过的时间
 N    while (!Flag_usart2_receive_OK) // 等待接收到OK字符串
 N    {
 N        Delay_us(100); // 每次循环延时100微秒
@@ -15174,6 +15188,8 @@ N        if (elapsed_time >= timeout) // 检查是否超时
 N        {
 N            // 超时处理
 N            wait_timeout = 1;
+N            USART_TxStr(UART2,"超时！！！\r\n");
+X            USART_TxStr(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL))),"超时！！！\r\n");
 N            break; // 跳出循环
 N        }
 N    }

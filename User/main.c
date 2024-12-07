@@ -95,6 +95,7 @@ int main(void)
     TIM_Cmd(TIM2, DISABLE);
     Buzzer_SetVolume(50);
     TK_Init();        // 重要步骤1：TK的初始化函数
+    WIFI_Init();
     /*<UserCodeEnd>*/ /*<SinOne-Tag><36>*/
 
     /*<UserCodeStart>*/ /*<SinOne-Tag><4>*/
@@ -135,6 +136,10 @@ int main(void)
                     GPIO_TogglePins(GPIOA, GPIO_Pin_8); // LED 灯翻�?
             }
             cnt1++;
+
+
+
+
             break;
         case 2: // Buzz SET
             break;
@@ -152,7 +157,7 @@ int main(void)
         /*<UserCodeStart>*/ /*<SinOne-Tag><469>*/
         /*<UserCodeEnd>*/   /*<SinOne-Tag><469>*/
         /*<UserCodeStart>*/ /*<SinOne-Tag><481>*/
-        UART_Communication_DMA();
+        //UART_Communication_DMA();
         /*<UserCodeEnd>*/ /*<SinOne-Tag><481>*/
                           /*<Begin-Inserted by EasyCodeCube for Condition>*/
 

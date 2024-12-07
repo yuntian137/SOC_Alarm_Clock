@@ -27,14 +27,17 @@ Project File Date:  12/08/2024
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\keil\ARM\ARMCC\Bin'
 Build target '<Comp>'
-compiling SC_it.c...
-..\User\SC_it.c(85): warning:  #223-D: function "UART2_Handler" declared implicitly
-      UART2_Handler();
-..\User\SC_it.c: 1 warning, 0 errors
+compiling UART_Communication.C...
+compiling mqtt.c...
+..\Mqtt\Src\mqtt.c(92): warning:  #870-D: invalid multibyte character sequence
+      USART_TxStr(UART2,"连接客户�?...\r\n");
+..\Mqtt\Src\mqtt.c(108): warning:  #870-D: invalid multibyte character sequence
+      USART_TxStr(UART2,"客户端订阅消�?...\r\n");
+..\Mqtt\Src\mqtt.c: 2 warnings, 0 errors
 linking...
-Program Size: Code=13680 RO-data=372 RW-data=184 ZI-data=1488  
+Program Size: Code=14960 RO-data=1072 RW-data=188 ZI-data=1692  
 FromELF: creating hex file...
-"..\Output\Comp.axf" - 0 Error(s), 1 Warning(s).
+"..\Output\Comp.axf" - 0 Error(s), 2 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -47,7 +50,7 @@ Package Vendor: SinOne
   D:\keil\ARM\PACK\Keil\SC32F1xxx_DFP\1.0.6\Device\SC32F10xx\FWLib\SC32_Lib\inc
 
 <h2>Collection of Component Files used:</h2>
-Build Time Elapsed:  00:00:00
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>

@@ -77,14 +77,14 @@
 000064  23292e2f          DCB      0x23,0x29,0x2e,0x2f
 ;;;71               {
 ;;;72               case 0xF1://返回时间播报
-;;;73                 response[2] = 0x01;
+;;;73                 response[2] = 0x01;//不改
 000068  2101              MOVS     r1,#1
 00006a  4668              MOV      r0,sp
 00006c  7081              STRB     r1,[r0,#2]
-;;;74                 response[3] = 0x00;
+;;;74                 response[3] = 0x00;//时
 00006e  2100              MOVS     r1,#0
 000070  70c1              STRB     r1,[r0,#3]
-;;;75                 response[4] = 0x28; // F1对应的中间数据
+;;;75                 response[4] = 0x28;//分
 000072  2128              MOVS     r1,#0x28
 000074  7101              STRB     r1,[r0,#4]
 ;;;76                 break;
@@ -111,91 +111,92 @@
 000090  02c9              LSLS     r1,r1,#11
 000092  481f              LDR      r0,|L1.272|
 000094  f7fffffe          BL       GPIO_ResetBits
-;;;86                 break;
+;;;86     
+;;;87                 break;
 000098  e011              B        |L1.190|
-;;;87               case 0xF5:                           // 降低亮度
-;;;88                 GPIO_ResetBits(GPIOA, GPIO_Pin_7); // LED5
+;;;88               case 0xF5:                           // 降低亮度
+;;;89                 GPIO_ResetBits(GPIOA, GPIO_Pin_7); // LED5
 00009a  2180              MOVS     r1,#0x80
 00009c  481d              LDR      r0,|L1.276|
 00009e  f7fffffe          BL       GPIO_ResetBits
-;;;89                 break;
+;;;90                 break;
 0000a2  e00c              B        |L1.190|
-;;;90               case 0xF6:                           // 设置闹钟时间
-;;;91                 GPIO_ResetBits(GPIOA, GPIO_Pin_8); // LED6
+;;;91               case 0xF6:                           // 设置闹钟时间
+;;;92                 GPIO_ResetBits(GPIOA, GPIO_Pin_8); // LED6
 0000a4  21ff              MOVS     r1,#0xff
 0000a6  3101              ADDS     r1,#1
 0000a8  481a              LDR      r0,|L1.276|
 0000aa  f7fffffe          BL       GPIO_ResetBits
-;;;92                 break;
+;;;93                 break;
 0000ae  e006              B        |L1.190|
-;;;93               case 0xF7:                           // 关闹钟/停止响铃
-;;;94                 GPIO_ResetBits(GPIOC, GPIO_Pin_5); // LED2
+;;;94               case 0xF7:                           // 关闹钟/停止响铃
+;;;95                 GPIO_ResetBits(GPIOC, GPIO_Pin_5); // LED2
 0000b0  2120              MOVS     r1,#0x20
 0000b2  4817              LDR      r0,|L1.272|
 0000b4  f7fffffe          BL       GPIO_ResetBits
-;;;95                 break;
+;;;96                 break;
 0000b8  e001              B        |L1.190|
-;;;96               case 0xF8: // 切歌（下一首上一首均可）
-;;;97     
-;;;98                 break;
+;;;97               case 0xF8: // 切歌（下一首上一首均可）
+;;;98     
+;;;99                 break;
 0000ba  e000              B        |L1.190|
                   |L1.188|
-;;;99               default:
-;;;100                return; // 如果没有匹配的消息，直接返回
-;;;101              }
-;;;102    
-;;;103              response[5] = 0x55; // 固定尾帧
-;;;104              response[6] = 0xAA; // 固定尾帧
-;;;105    
-;;;106              // 发送响应
-;;;107              for (uint8_t i = 0; i < sizeof(response); i++)
-;;;108              {
-;;;109                UART_SendData(UART2, response[i]); // 发送数据
-;;;110                while (UART_GetFlagStatus(UART2, UART_Flag_TX) == RESET)
-;;;111                  ;                                  // 等待发送完成
-;;;112                UART_ClearFlag(UART2, UART_Flag_TX); // 清除发送标志
-;;;113              }
-;;;114    
-;;;115              RxIndex = 0; // 重置接收索引
-;;;116            }
-;;;117        }
-;;;118    }
+;;;100              default:
+;;;101                return; // 如果没有匹配的消息，直接返回
+;;;102              }
+;;;103    
+;;;104              response[5] = 0x55; // 固定尾帧
+;;;105              response[6] = 0xAA; // 固定尾帧
+;;;106    
+;;;107              // 发送响应
+;;;108              for (uint8_t i = 0; i < sizeof(response); i++)
+;;;109              {
+;;;110                UART_SendData(UART2, response[i]); // 发送数据
+;;;111                while (UART_GetFlagStatus(UART2, UART_Flag_TX) == RESET)
+;;;112                  ;                                  // 等待发送完成
+;;;113                UART_ClearFlag(UART2, UART_Flag_TX); // 清除发送标志
+;;;114              }
+;;;115    
+;;;116              RxIndex = 0; // 重置接收索引
+;;;117            }
+;;;118        }
+;;;119    }
 0000bc  bd7c              POP      {r2-r6,pc}
                   |L1.190|
 0000be  bf00              NOP                            ;76
-0000c0  2155              MOVS     r1,#0x55              ;103
-0000c2  4668              MOV      r0,sp                 ;103
-0000c4  7141              STRB     r1,[r0,#5]            ;103
-0000c6  21aa              MOVS     r1,#0xaa              ;104
-0000c8  7181              STRB     r1,[r0,#6]            ;104
-0000ca  2400              MOVS     r4,#0                 ;107
+0000c0  2155              MOVS     r1,#0x55              ;104
+0000c2  4668              MOV      r0,sp                 ;104
+0000c4  7141              STRB     r1,[r0,#5]            ;104
+0000c6  21aa              MOVS     r1,#0xaa              ;105
+0000c8  7181              STRB     r1,[r0,#6]            ;105
+0000ca  2400              MOVS     r4,#0                 ;108
 0000cc  e011              B        |L1.242|
                   |L1.206|
-0000ce  4668              MOV      r0,sp                 ;109
-0000d0  5d01              LDRB     r1,[r0,r4]            ;109
+0000ce  4668              MOV      r0,sp                 ;110
+0000d0  5d01              LDRB     r1,[r0,r4]            ;110
 0000d2  480c              LDR      r0,|L1.260|
 0000d4  f7fffffe          BL       UART_SendData
-0000d8  bf00              NOP                            ;110
+0000d8  bf00              NOP                            ;111
                   |L1.218|
-0000da  2102              MOVS     r1,#2                 ;110
+0000da  2102              MOVS     r1,#2                 ;111
 0000dc  4809              LDR      r0,|L1.260|
 0000de  f7fffffe          BL       UART_GetFlagStatus
-0000e2  2800              CMP      r0,#0                 ;110
+0000e2  2800              CMP      r0,#0                 ;111
 0000e4  d0f9              BEQ      |L1.218|
-0000e6  2102              MOVS     r1,#2                 ;112
+0000e6  2102              MOVS     r1,#2                 ;113
 0000e8  4806              LDR      r0,|L1.260|
 0000ea  f7fffffe          BL       UART_ClearFlag
-0000ee  1c60              ADDS     r0,r4,#1              ;107
-0000f0  b2c4              UXTB     r4,r0                 ;107
+0000ee  1c60              ADDS     r0,r4,#1              ;108
+0000f0  b2c4              UXTB     r4,r0                 ;108
                   |L1.242|
-0000f2  2c07              CMP      r4,#7                 ;107
+0000f2  2c07              CMP      r4,#7                 ;108
 0000f4  d3eb              BCC      |L1.206|
-0000f6  2000              MOVS     r0,#0                 ;115
+0000f6  2000              MOVS     r0,#0                 ;116
 0000f8  4903              LDR      r1,|L1.264|
-0000fa  7008              STRB     r0,[r1,#0]            ;115
-0000fc  bf00              NOP                            ;116
+0000fa  7008              STRB     r0,[r1,#0]            ;116
+0000fc  bf00              NOP                            ;117
                   |L1.254|
-0000fe  bf00              NOP                            ;117
+0000fe  bf00              NOP                            ;118
                   |L1.256|
 000100  bf00              NOP      
 000102  e7db              B        |L1.188|
@@ -211,6 +212,115 @@
                           DCD      0x40011200
                   |L1.276|
                           DCD      0x40011000
+
+                          AREA ||i.UART_Communication_UART2Handler||, CODE, READONLY, ALIGN=2
+
+                  UART_Communication_UART2Handler PROC
+;;;14      */
+;;;15     void UART_Communication_UART2Handler(void)
+000000  b570              PUSH     {r4-r6,lr}
+;;;16     {
+;;;17       while (UART_GetFlagStatus(UART2, UART_Flag_RX) == SET) // 接收中断
+000002  e037              B        |L2.116|
+                  |L2.4|
+;;;18       {
+;;;19         UART_ClearFlag(UART2, UART_Flag_RX); // 清除接收标志
+000004  2101              MOVS     r1,#1
+000006  481f              LDR      r0,|L2.132|
+000008  f7fffffe          BL       UART_ClearFlag
+;;;20         uint8_t receivedChar = UART_ReceiveData(UART2); // 接收数据
+00000c  481d              LDR      r0,|L2.132|
+00000e  f7fffffe          BL       UART_ReceiveData
+000012  b2c5              UXTB     r5,r0
+;;;21     
+;;;22         UART_RxBuffer[RxIndex++] = receivedChar; // 接收数据并存入缓冲区
+000014  491c              LDR      r1,|L2.136|
+000016  7808              LDRB     r0,[r1,#0]  ; RxIndex
+000018  1c41              ADDS     r1,r0,#1
+00001a  4a1b              LDR      r2,|L2.136|
+00001c  7011              STRB     r1,[r2,#0]
+00001e  491b              LDR      r1,|L2.140|
+000020  540d              STRB     r5,[r1,r0]
+;;;23     
+;;;24         if (RxIndex >= MAX_BUFFER_SIZE) // 防止缓冲区溢出
+000022  4610              MOV      r0,r2
+000024  7800              LDRB     r0,[r0,#0]  ; RxIndex
+000026  2864              CMP      r0,#0x64
+000028  db02              BLT      |L2.48|
+;;;25         {
+;;;26           RxIndex = 0; // 重置接收索引
+00002a  2000              MOVS     r0,#0
+00002c  4611              MOV      r1,r2
+00002e  7008              STRB     r0,[r1,#0]
+                  |L2.48|
+;;;27         }
+;;;28     
+;;;29         // 将接收到的数据复制到发送缓冲区
+;;;30         memcpy((void *)UART_TxBuffer, (void *)UART_RxBuffer, RxIndex);
+000030  4815              LDR      r0,|L2.136|
+000032  7802              LDRB     r2,[r0,#0]  ; RxIndex
+000034  4915              LDR      r1,|L2.140|
+000036  4816              LDR      r0,|L2.144|
+000038  f7fffffe          BL       __aeabi_memcpy
+;;;31     
+;;;32         // 发送数据
+;;;33         for (uint8_t i = 0; i < RxIndex; i++)
+00003c  2400              MOVS     r4,#0
+00003e  e011              B        |L2.100|
+                  |L2.64|
+;;;34         {
+;;;35           UART_SendData(UART2, UART_TxBuffer[i]); // 发送数据
+000040  4813              LDR      r0,|L2.144|
+000042  5d01              LDRB     r1,[r0,r4]
+000044  480f              LDR      r0,|L2.132|
+000046  f7fffffe          BL       UART_SendData
+;;;36           while (UART_GetFlagStatus(UART2, UART_Flag_TX) == RESET); // 等待发送完成
+00004a  bf00              NOP      
+                  |L2.76|
+00004c  2102              MOVS     r1,#2
+00004e  480d              LDR      r0,|L2.132|
+000050  f7fffffe          BL       UART_GetFlagStatus
+000054  2800              CMP      r0,#0
+000056  d0f9              BEQ      |L2.76|
+;;;37           UART_ClearFlag(UART2, UART_Flag_TX); // 清除发送标志
+000058  2102              MOVS     r1,#2
+00005a  480a              LDR      r0,|L2.132|
+00005c  f7fffffe          BL       UART_ClearFlag
+000060  1c60              ADDS     r0,r4,#1              ;33
+000062  b2c4              UXTB     r4,r0                 ;33
+                  |L2.100|
+000064  4808              LDR      r0,|L2.136|
+000066  7800              LDRB     r0,[r0,#0]            ;33  ; RxIndex
+000068  4284              CMP      r4,r0                 ;33
+00006a  dbe9              BLT      |L2.64|
+;;;38         }
+;;;39     
+;;;40         RxIndex = 0; // 重置接收索引
+00006c  2000              MOVS     r0,#0
+00006e  4906              LDR      r1,|L2.136|
+000070  7008              STRB     r0,[r1,#0]
+;;;41       }
+000072  bf00              NOP      
+                  |L2.116|
+000074  2101              MOVS     r1,#1                 ;17
+000076  4803              LDR      r0,|L2.132|
+000078  f7fffffe          BL       UART_GetFlagStatus
+00007c  2801              CMP      r0,#1                 ;17
+00007e  d0c1              BEQ      |L2.4|
+;;;42     }
+000080  bd70              POP      {r4-r6,pc}
+;;;43     
+                          ENDP
+
+000082  0000              DCW      0x0000
+                  |L2.132|
+                          DCD      0x40021020
+                  |L2.136|
+                          DCD      RxIndex
+                  |L2.140|
+                          DCD      UART_RxBuffer
+                  |L2.144|
+                          DCD      UART_TxBuffer
 
                           AREA ||.bss||, DATA, NOINIT, ALIGN=0
 
@@ -235,16 +345,16 @@
 000006  7825              LDRB     r5,[r4,#0]
 000008  1c64              ADDS     r4,r4,#1
 00000a  42ab              CMP      r3,r5
-00000c  d304              BCC      |L16.24|
-                  |L16.14|
+00000c  d304              BCC      |L22.24|
+                  |L22.14|
 00000e  5d63              LDRB     r3,[r4,r5]
 000010  005b              LSLS     r3,r3,#1
 000012  18e3              ADDS     r3,r4,r3
 000014  bc30              POP      {r4,r5}
 000016  4718              BX       r3
-                  |L16.24|
+                  |L22.24|
 000018  461d              MOV      r5,r3
-00001a  e7f8              B        |L16.14|
+00001a  e7f8              B        |L22.14|
                           ENDP
 
 
@@ -253,9 +363,9 @@
 #line 1 "..\\Apps\\UART_Communication.C"
 	AREA ||.rev16_text||, CODE
 	THUMB
-	EXPORT |__asm___20_UART_Communication_C_6dbd81b9____REV16|
+	EXPORT |__asm___20_UART_Communication_C_3e2e9311____REV16|
 #line 463 "..\\CMSIS\\cmsis_armcc.h"
-|__asm___20_UART_Communication_C_6dbd81b9____REV16| PROC
+|__asm___20_UART_Communication_C_3e2e9311____REV16| PROC
 #line 464
 
  rev16 r0, r0
@@ -263,9 +373,9 @@
 	ENDP
 	AREA ||.revsh_text||, CODE
 	THUMB
-	EXPORT |__asm___20_UART_Communication_C_6dbd81b9____REVSH|
+	EXPORT |__asm___20_UART_Communication_C_3e2e9311____REVSH|
 #line 478
-|__asm___20_UART_Communication_C_6dbd81b9____REVSH| PROC
+|__asm___20_UART_Communication_C_3e2e9311____REVSH| PROC
 #line 479
 
  revsh r0, r0

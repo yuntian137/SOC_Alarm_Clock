@@ -29,8 +29,9 @@ void WIFI_Init(void)
 /*********************重启WIFI模块*****************************/
 void WIFI_Rst(void)
 {
+    char rst_buff[11] = {"AT+RST\r\n\r\n"};
     USART_TxStr(UART2,"重启模块...\r\n");
-    USART_TxStr(UART1,"AT+RST\r\n");
+    USART_TxStr(UART1,rst_buff);  
     Delay_ms(1000); // WIFI重启需要时间
     Delay_ms(1000);
     Delay_ms(1000);
@@ -59,7 +60,7 @@ void Setting_Connect_Work(char *type)
 /*********************登录网址******************************/
 void Login_URL(void)
 {
-    char login_url[100] = {"AT+CIPSNTPCFG=1,8,\"ntp1.aliyun.com\"\r\n"};
+    char login_url[100] = {"AT+CIPSNTPCFG=1,8,\"iot.console.aliyun.com\"\r\n"};
     USART_TxStr(UART2,"连接阿里云服务器...\r\n");
     USART_TxStr(UART1,login_url);
 }
@@ -136,9 +137,9 @@ void CLR_Buf2(void)
 
 void UART1_Handler(void)
 {
-    while(UART_GetFlagStatus(UART1, UART_Flag_RX) == SET) // 接收中断收完再处理
+    while (UART_GetFlagStatus(UART1, UART_Flag_RX) == SET) // 接收中断收完再处理
     {
-        UART_ClearFlag(UART1, UART_Flag_RX); // 清除接收标志
+        UART_ClearFlag(UART1, UART_Flag_RX);            // 清除接收标志
         uint8_t receivedChar = UART_ReceiveData(UART1); // 接收数据
 
         UART_RxBuffer[RxIndex++] = receivedChar; // 接收数据并存入缓冲区
@@ -146,6 +147,17 @@ void UART1_Handler(void)
         if (RxIndex >= MAX_BUFFER_SIZE) // 防止缓冲区溢出
         {
             RxIndex = 0; // 重置接收索引
+        }
+        // 将接收到的数据复制到发送缓冲区
+        memcpy((void *)UART_TxBuffer, (void *)UART_RxBuffer, RxIndex);
+
+        // 发送数据
+        for (uint8_t i = 0; i < RxIndex; i++)
+        {
+            UART_SendData(UART2, UART_TxBuffer[i]); // 发送数据
+            while (UART_GetFlagStatus(UART2, UART_Flag_TX) == RESET)
+                ;                                // 等待发送完成
+            UART_ClearFlag(UART2, UART_Flag_TX); // 清除发送标志
         }
 
         // 检查是否接收到 "OK"
@@ -156,11 +168,10 @@ void UART1_Handler(void)
     }
 }
 
-
 void wait_OK(void)
 {
     uint32_t timeout = 5000000; // 设置超时时间为5000ms
-    uint16_t elapsed_time = 0; // 已经过的时间
+    uint32_t elapsed_time = 0; // 已经过的时间
     while (!Flag_usart2_receive_OK) // 等待接收到OK字符串
     {
         Delay_us(100); // 每次循环延时100微秒
@@ -170,6 +181,7 @@ void wait_OK(void)
         {
             // 超时处理
             wait_timeout = 1;
+            USART_TxStr(UART2,"超时！！！\r\n");
             break; // 跳出循环
         }
     }

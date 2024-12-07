@@ -70,9 +70,9 @@ void UART2_Handler(void)
           switch (UART_RxBuffer[RxIndex - 1])
           {
           case 0xF1://返回时间播报
-            response[2] = 0x01;
-            response[3] = 0x00;
-            response[4] = 0x28; // F1对应的中间数据
+            response[2] = 0x01;//不改
+            response[3] = 0x00;//时
+            response[4] = 0x28;//分
             break;
           case 0xF2://开灯
             GPIO_ResetBits(GPIOC, GPIO_Pin_4);  // LED1
@@ -83,6 +83,7 @@ void UART2_Handler(void)
             break;
           case 0xF4:                            // 提高亮度
             GPIO_ResetBits(GPIOC, GPIO_Pin_11); // LED4
+
             break;
           case 0xF5:                           // 降低亮度
             GPIO_ResetBits(GPIOA, GPIO_Pin_7); // LED5
