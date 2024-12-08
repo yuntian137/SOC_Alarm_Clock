@@ -95,7 +95,7 @@ int main(void)
     TIM_Cmd(TIM2, DISABLE);
     Buzzer_SetVolume(50);
     TK_Init();        // 重要步骤1：TK的初始化函数
-    WIFI_Init();
+    //WIFI_Init();
     /*<UserCodeEnd>*/ /*<SinOne-Tag><36>*/
 
     /*<UserCodeStart>*/ /*<SinOne-Tag><4>*/
@@ -104,7 +104,7 @@ int main(void)
     {
         /*<UserCodeStart>*/ /*<SinOne-Tag><14>*/
         /***User program***/
-
+        UART_Communication_DMA();
         switch (Task_state)
         {
         case 0:                                 // init

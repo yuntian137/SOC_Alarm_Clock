@@ -14379,51 +14379,99 @@ Nvoid UART_Communication_DMA_DAM1Handler(void);
 N#endif
 L 2 "..\Apps\UART_Communication_DMA.C" 2
 N
-Nstatic volatile FlagStatus UART_RxFlag = RESET, UART_TxFlag = RESET;//×Ô¶¨ÒåDMA1¡¢DMA0°áÔË±êÖ¾Î»
-Nuint8_t UART_Communication_DMA_Data[200];//¶¨Òå±äÁ¿Êı×é´æ·Å·¢ËÍ200¸ö8Î»×Ô¶¨ÒåÊı¾İ£¨ÈôÒªĞŞ¸ÄÊı¾İ¸öÊıĞèĞŞ¸ÄÏàÓ¦Êı×é´óĞ¡ºÍDMA°áÔË¸öÊı£¬DMA0¡¢DMA1³õÊ¼»¯ÅäÖÃ´°¿ÚÅäÖÃÏî¡°»º´æ´óĞ¡¡±Ó¦Óë´ËÏî´óĞ¡Ò»ÖÂ£©
+Nstatic volatile FlagStatus UART_RxFlag = RESET, UART_TxFlag = RESET;
+Nuint8_t UART_Communication_DMA_Data[200]; // å®šä¹‰å˜é‡æ•°ç»„å­˜æ”¾å‘é€200ä¸ª8ä½è‡ªå®šä¹‰æ•°æ®
+Nuint8_t UART_Communication_DMA_Buffer[200]; // å®šä¹‰å˜é‡æ•°ç»„å­˜æ”¾æ¥æ”¶æ•°æ®
+Nstatic uint16_t UART_Communication_DMA_RxCount = 0; // æ¥æ”¶æ•°æ®è®¡æ•°å™¨
 N
 Nvoid UART_Communication_DMA(void)
 N{
-N  while(1)
-N  {
-N    if(UART_RxFlag == SET)//DMA1°áÔËÍê³É
+N    if (UART_RxFlag == SET) // ç©ºé—²ä¸­æ–­è§¦å‘
 N    {
-N      UART_RxFlag = RESET;//Çå±êÖ¾
-N      /* DMA1ÖØĞÂÊ¹ÄÜ */
-N      DMA_SetCurrDataCounter(DMA0, 200);//ÖØĞÂĞ´Èë°áÔË¸öÊı£¨ÖØĞÂĞ´Èë°áÔË¸öÊı´óĞ¡Ó¦ÓëĞŞ¸ÄµÄÊı¾İ¸öÊı´óĞ¡Ò»ÖÂ£©
-X      DMA_SetCurrDataCounter(((DMA_TypeDef *) (((0x40000000UL)+0x10800) +(0x00000000UL))), 200);
-N      UART_DMACmd(UART1, UART_DMAReq_TX, ENABLE);//ÖØĞÂÊ¹ÄÜUART1 TX´¥·¢DMA1
-X      UART_DMACmd(((UART_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000080UL))), UART_DMAReq_TX, ENABLE);
-N      /* Èí¼şÊ¹ÄÜDMA0°áÔË */
-N      DMA_SoftwareTrigger(DMA0);
-X      DMA_SoftwareTrigger(((DMA_TypeDef *) (((0x40000000UL)+0x10800) +(0x00000000UL))));
-N      while(UART_TxFlag == RESET);//µÈ´ıDMA0°áÔËÍê³É
-N      UART_TxFlag = RESET;//Çå±êÖ¾
+N        UART_RxFlag = RESET; // æ¸…æ ‡å¿—
+N        // å¤„ç†æ¥æ”¶åˆ°çš„æ•°æ®
+N        // å°†æ¥æ”¶åˆ°çš„æ•°æ®å¤åˆ¶åˆ°å‘é€ç¼“å†²åŒº
+W "..\Apps\UART_Communication_DMA.C" 15 9 function "memcpy" declared implicitly
+N        memcpy(UART_Communication_DMA_Data, UART_Communication_DMA_Buffer, UART_Communication_DMA_RxCount);
+N
+N        // è®¾ç½®DMA0çš„å½“å‰æ•°æ®è®¡æ•°å™¨
+N        DMA_SetCurrDataCounter(DMA0, UART_Communication_DMA_RxCount);
+X        DMA_SetCurrDataCounter(((DMA_TypeDef *) (((0x40000000UL)+0x10800) +(0x00000000UL))), UART_Communication_DMA_RxCount);
+N
+N        // è½¯ä»¶ä½¿èƒ½DMA0æ¬è¿
+N        // æ£€æŸ¥æ¥æ”¶åˆ°çš„æ•°æ®é•¿åº¦æ˜¯å¦ä¸ºé›¶
+N        if (UART_Communication_DMA_RxCount > 0)
+N        {
+N            // è®¾ç½®DMA0çš„å½“å‰æ•°æ®è®¡æ•°å™¨
+N            DMA_SetCurrDataCounter(DMA0, UART_Communication_DMA_RxCount);
+X            DMA_SetCurrDataCounter(((DMA_TypeDef *) (((0x40000000UL)+0x10800) +(0x00000000UL))), UART_Communication_DMA_RxCount);
+N
+N            // è½¯ä»¶ä½¿èƒ½DMA0æ¬è¿
+N            DMA_SoftwareTrigger(DMA0);
+X            DMA_SoftwareTrigger(((DMA_TypeDef *) (((0x40000000UL)+0x10800) +(0x00000000UL))));
+N            while (DMA_GetFlagStatus(DMA0, DMA_FLAG_TCIF) == RESET); // ç­‰å¾…DMA0æ¬è¿å®Œæˆ
+X            while (DMA_GetFlagStatus(((DMA_TypeDef *) (((0x40000000UL)+0x10800) +(0x00000000UL))), DMA_FLAG_TCIF) == RESET); 
+N            DMA_ClearFlag(DMA0, DMA_FLAG_TCIF); // DMA0æ ‡å¿—ä½æ¸…é›¶
+X            DMA_ClearFlag(((DMA_TypeDef *) (((0x40000000UL)+0x10800) +(0x00000000UL))), DMA_FLAG_TCIF); 
+N        }
+N
+N
+N        // DMA1é‡æ–°ä½¿èƒ½
+N        DMA_SetCurrDataCounter(DMA1, 200); // é‡æ–°å†™å…¥æ¬è¿ä¸ªæ•°ï¼ˆé‡æ–°å†™å…¥æ¬è¿ä¸ªæ•°å¤§å°åº”ä¸ä¿®æ”¹çš„æ•°æ®ä¸ªæ•°å¤§å°ä¸€è‡´ï¼‰
+X        DMA_SetCurrDataCounter(((DMA_TypeDef *) (((0x40000000UL)+0x10800) +(0x00000040UL))), 200); 
+N        UART_DMACmd(UART1, UART_DMAReq_RX, ENABLE); // é‡æ–°ä½¿èƒ½UART1 RXè§¦å‘DMA1
+X        UART_DMACmd(((UART_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000080UL))), UART_DMAReq_RX, ENABLE); 
 N    }
-N  }
+N}
+N// UARTæ¥æ”¶ä¸­æ–­å¤„ç†å‡½æ•°
+Nvoid UART1_IRQHandler_DMA(void)
+N{
+N    if (UART_GetFlagStatus(UART1, UART_Flag_RX) == SET)
+X    if (UART_GetFlagStatus(((UART_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000080UL))), UART_Flag_RX) == SET)
+N    {
+N        UART_ClearFlag(UART1, UART_Flag_RX); // æ¸…é™¤UARTæ¥æ”¶æ ‡å¿—
+X        UART_ClearFlag(((UART_TypeDef *) (((0x40000000UL)+0x20000) +(0x00000080UL))), UART_Flag_RX); 
+N        // é‡ç½®å®šæ—¶å™¨ä»¥æ£€æµ‹ç©ºé—²æ—¶é—´
+N        TIM_SetCounter(TIM3, 0);
+X        TIM_SetCounter(((TIM_TypeDef *) (((0x40000000UL)+0x20000) +(0x000001C0UL))), 0);
+N    }
 N}
 N
-N//DMA0ÖĞ¶Ï
+N
+N// å®šæ—¶å™¨ä¸­æ–­å¤„ç†å‡½æ•°
+Nvoid TIM3_IRQHandler(void)
+N{
+N    if (TIM_GetFlagStatus(TIM3, TIM_Flag_TI) == SET)
+X    if (TIM_GetFlagStatus(((TIM_TypeDef *) (((0x40000000UL)+0x20000) +(0x000001C0UL))), TIM_Flag_TI) == SET)
+N    {
+N        TIM_ClearFlag(TIM3, TIM_Flag_TI); // æ¸…é™¤å®šæ—¶å™¨ä¸­æ–­æ ‡å¿—  
+X        TIM_ClearFlag(((TIM_TypeDef *) (((0x40000000UL)+0x20000) +(0x000001C0UL))), TIM_Flag_TI); 
+N        if (UART_RxFlag == RESET) // å¦‚æœDMA1æ²¡æœ‰æ¬è¿å®Œæˆ
+N        {
+N            UART_RxFlag = SET; // è®¾ç½®æ¥æ”¶å®Œæˆæ ‡å¿—
+N            UART_Communication_DMA_RxCount = 200 - DMA_GetCurrDataCounter(DMA1); // è·å–æ¥æ”¶åˆ°çš„æ•°æ®é•¿åº¦
+X            UART_Communication_DMA_RxCount = 200 - DMA_GetCurrDataCounter(((DMA_TypeDef *) (((0x40000000UL)+0x10800) +(0x00000040UL)))); 
+N        }
+N    }
+N}
+N/*
+N//DMA0ä¸­æ–­ å‘é€å‡ºå»
 Nvoid UART_Communication_DMA_DAM0Handler(void)
 N{
-N  if(DMA_GetFlagStatus(DMA0, DMA_FLAG_TCIF))//DMA0°áÔËÍê³É
-X  if(DMA_GetFlagStatus(((DMA_TypeDef *) (((0x40000000UL)+0x10800) +(0x00000000UL))), DMA_FLAG_TCIF))
+N  if(DMA_GetFlagStatus(DMA0, DMA_FLAG_TCIF))//DMA0æ¬è¿å®Œæˆ
 N  {
-N    DMA_ClearFlag(DMA0, DMA_FLAG_TCIF);//DMA0±êÖ¾Î»ÇåÁã
-X    DMA_ClearFlag(((DMA_TypeDef *) (((0x40000000UL)+0x10800) +(0x00000000UL))), DMA_FLAG_TCIF);
-N    UART_TxFlag = SET;//DMA0°áÔË±êÖ¾Î»ÖÃÆğ£¬×¼±¸ÏÂÒ»´Î°áÔË
+N    DMA_ClearFlag(DMA0, DMA_FLAG_TCIF);//DMA0æ ‡å¿—ä½æ¸…é›¶
+N    UART_TxFlag = SET;//DMA0æ¬è¿æ ‡å¿—ä½ç½®èµ·ï¼Œå‡†å¤‡ä¸‹ä¸€æ¬¡æ¬è¿
 N  }
 N}
 N
-N//DMA1ÖĞ¶Ï
+N//DMA1ä¸­æ–­ æ¥æ”¶åˆ°
 Nvoid UART_Communication_DMA_DAM1Handler(void)
 N{
-N  if(DMA_GetFlagStatus(DMA1, DMA_FLAG_TCIF))//DMA1°áÔËÍê³É
-X  if(DMA_GetFlagStatus(((DMA_TypeDef *) (((0x40000000UL)+0x10800) +(0x00000040UL))), DMA_FLAG_TCIF))
+N  if(DMA_GetFlagStatus(DMA1, DMA_FLAG_TCIF))//DMA1æ¬è¿å®Œæˆ
 N  {
-N    DMA_ClearFlag(DMA1, DMA_FLAG_TCIF);//DMA1±êÖ¾Î»ÇåÁã
-X    DMA_ClearFlag(((DMA_TypeDef *) (((0x40000000UL)+0x10800) +(0x00000040UL))), DMA_FLAG_TCIF);
-N    UART_RxFlag = SET;//DMA1°áÔË±êÖ¾Î»ÖÃÆğ£¬×¼±¸ÏÂÒ»´Î°áÔË
+N    DMA_ClearFlag(DMA1, DMA_FLAG_TCIF);//DMA1æ ‡å¿—ä½æ¸…é›¶
+N    UART_RxFlag = SET;//DMA1æ¬è¿æ ‡å¿—ä½ç½®èµ·ï¼Œå‡†å¤‡ä¸‹ä¸€æ¬¡æ¬è¿
 N  }
 N}
-N
+N*/

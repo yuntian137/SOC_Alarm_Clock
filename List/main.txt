@@ -277,19 +277,19 @@
 00000e  f7fffffe          BL       Buzzer_SetVolume
 ;;;97         TK_Init();        // 重要步骤1：TK的初始化函数
 000012  f7fffffe          BL       TK_Init
-;;;98         WIFI_Init();
-000016  f7fffffe          BL       WIFI_Init
+;;;98         //WIFI_Init();
 ;;;99         /*<UserCodeEnd>*/ /*<SinOne-Tag><36>*/
 ;;;100    
 ;;;101        /*<UserCodeStart>*/ /*<SinOne-Tag><4>*/
 ;;;102        /*****MainLoop*****/
 ;;;103        while (1)
-00001a  e066              B        |L6.234|
-                  |L6.28|
+000016  e068              B        |L6.234|
+                  |L6.24|
 ;;;104        {
 ;;;105            /*<UserCodeStart>*/ /*<SinOne-Tag><14>*/
 ;;;106            /***User program***/
-;;;107    
+;;;107            UART_Communication_DMA();
+000018  f7fffffe          BL       UART_Communication_DMA
 ;;;108            switch (Task_state)
 00001c  4834              LDR      r0,|L6.240|
 00001e  7800              LDRB     r0,[r0,#0]  ; Task_state
@@ -425,7 +425,7 @@
                   |L6.232|
 0000e8  bf00              NOP                            ;117
                   |L6.234|
-0000ea  e797              B        |L6.28|
+0000ea  e795              B        |L6.24|
 ;;;150            }
 ;;;151    
 ;;;152            /*<UserCodeEnd>*/   /*<SinOne-Tag><14>*/

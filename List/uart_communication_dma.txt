@@ -2,150 +2,208 @@
 ; commandline ArmCC [--c99 --list --split_sections --debug -c --asm --interleave -o..\output\uart_communication_dma.o --asm_dir=..\List\ --list_dir=..\List\ --depend=..\output\uart_communication_dma.d --cpu=Cortex-M0+ --apcs=interwork -O0 --diag_suppress=9931 -I..\FWLib\SC32F1XXX_Lib\inc -I..\User\HeadFiles -I..\User -I..\Drivers -I..\Apps -I..\CMSIS -I..\Buzz\Inc -I..\Drivers\TKDriver\C -I..\Mqtt\Inc -ID:\keil\ARM\PACK\Keil\SC32F1xxx_DFP\1.0.6\Device\SC32F10xx\FWLib\SC32_Lib\inc -D__MICROLIB -D__UVISION_VERSION=534 -DSC32F10xx -DSC32f10xx --omf_browse=..\output\uart_communication_dma.crf ..\Apps\UART_Communication_DMA.C]
                           THUMB
 
+                          AREA ||i.TIM3_IRQHandler||, CODE, READONLY, ALIGN=2
+
+                  TIM3_IRQHandler PROC
+;;;51     // ÂÆöÊó∂Âô®‰∏≠Êñ≠Â§ÑÁêÜÂáΩÊï∞
+;;;52     void TIM3_IRQHandler(void)
+000000  b510              PUSH     {r4,lr}
+;;;53     {
+;;;54         if (TIM_GetFlagStatus(TIM3, TIM_Flag_TI) == SET)
+000002  2101              MOVS     r1,#1
+000004  480b              LDR      r0,|L1.52|
+000006  f7fffffe          BL       TIM_GetFlagStatus
+00000a  2801              CMP      r0,#1
+00000c  d111              BNE      |L1.50|
+;;;55         {
+;;;56             TIM_ClearFlag(TIM3, TIM_Flag_TI); // Ê∏ÖÈô§ÂÆöÊó∂Âô®‰∏≠Êñ≠Ê†áÂøó  
+00000e  2101              MOVS     r1,#1
+000010  4808              LDR      r0,|L1.52|
+000012  f7fffffe          BL       TIM_ClearFlag
+;;;57             if (UART_RxFlag == RESET) // Â¶ÇÊûúDMA1Ê≤°ÊúâÊê¨ËøêÂÆåÊàê
+000016  4808              LDR      r0,|L1.56|
+000018  7800              LDRB     r0,[r0,#0]  ; UART_RxFlag
+00001a  2800              CMP      r0,#0
+00001c  d109              BNE      |L1.50|
+;;;58             {
+;;;59                 UART_RxFlag = SET; // ËÆæÁΩÆÊé•Êî∂ÂÆåÊàêÊ†áÂøó
+00001e  2001              MOVS     r0,#1
+000020  4905              LDR      r1,|L1.56|
+000022  7008              STRB     r0,[r1,#0]
+;;;60                 UART_Communication_DMA_RxCount = 200 - DMA_GetCurrDataCounter(DMA1); // Ëé∑ÂèñÊé•Êî∂Âà∞ÁöÑÊï∞ÊçÆÈïøÂ∫¶
+000024  4805              LDR      r0,|L1.60|
+000026  f7fffffe          BL       DMA_GetCurrDataCounter
+00002a  21c8              MOVS     r1,#0xc8
+00002c  1a08              SUBS     r0,r1,r0
+00002e  4904              LDR      r1,|L1.64|
+000030  8008              STRH     r0,[r1,#0]
+                  |L1.50|
+;;;61             }
+;;;62         }
+;;;63     }
+000032  bd10              POP      {r4,pc}
+;;;64     /*
+                          ENDP
+
+                  |L1.52|
+                          DCD      0x400201c0
+                  |L1.56|
+                          DCD      UART_RxFlag
+                  |L1.60|
+                          DCD      0x40010840
+                  |L1.64|
+                          DCD      UART_Communication_DMA_RxCount
+
+                          AREA ||i.UART1_IRQHandler_DMA||, CODE, READONLY, ALIGN=2
+
+                  UART1_IRQHandler_DMA PROC
+;;;39     // UARTÊé•Êî∂‰∏≠Êñ≠Â§ÑÁêÜÂáΩÊï∞
+;;;40     void UART1_IRQHandler_DMA(void)
+000000  b510              PUSH     {r4,lr}
+;;;41     {
+;;;42         if (UART_GetFlagStatus(UART1, UART_Flag_RX) == SET)
+000002  2101              MOVS     r1,#1
+000004  4806              LDR      r0,|L2.32|
+000006  f7fffffe          BL       UART_GetFlagStatus
+00000a  2801              CMP      r0,#1
+00000c  d107              BNE      |L2.30|
+;;;43         {
+;;;44             UART_ClearFlag(UART1, UART_Flag_RX); // Ê∏ÖÈô§UARTÊé•Êî∂Ê†áÂøó
+00000e  2101              MOVS     r1,#1
+000010  4803              LDR      r0,|L2.32|
+000012  f7fffffe          BL       UART_ClearFlag
+;;;45             // ÈáçÁΩÆÂÆöÊó∂Âô®‰ª•Ê£ÄÊµãÁ©∫Èó≤Êó∂Èó¥
+;;;46             TIM_SetCounter(TIM3, 0);
+000016  2100              MOVS     r1,#0
+000018  4802              LDR      r0,|L2.36|
+00001a  f7fffffe          BL       TIM_SetCounter
+                  |L2.30|
+;;;47         }
+;;;48     }
+00001e  bd10              POP      {r4,pc}
+;;;49     
+                          ENDP
+
+                  |L2.32|
+                          DCD      0x40020080
+                  |L2.36|
+                          DCD      0x400201c0
+
                           AREA ||i.UART_Communication_DMA||, CODE, READONLY, ALIGN=2
 
                   UART_Communication_DMA PROC
-;;;5      
-;;;6      void UART_Communication_DMA(void)
-000000  e01a              B        |L1.56|
-                  |L1.2|
-;;;7      {
-;;;8        while(1)
-;;;9        {
-;;;10         if(UART_RxFlag == SET)//DMA1∞·‘ÀÕÍ≥…
-000002  480e              LDR      r0,|L1.60|
+;;;7      
+;;;8      void UART_Communication_DMA(void)
+000000  b510              PUSH     {r4,lr}
+;;;9      {
+;;;10         if (UART_RxFlag == SET) // Á©∫Èó≤‰∏≠Êñ≠Ëß¶Âèë
+000002  481a              LDR      r0,|L3.108|
 000004  7800              LDRB     r0,[r0,#0]  ; UART_RxFlag
 000006  2801              CMP      r0,#1
-000008  d116              BNE      |L1.56|
+000008  d12e              BNE      |L3.104|
 ;;;11         {
-;;;12           UART_RxFlag = RESET;//«Â±Í÷æ
+;;;12             UART_RxFlag = RESET; // Ê∏ÖÊ†áÂøó
 00000a  2000              MOVS     r0,#0
-00000c  490b              LDR      r1,|L1.60|
+00000c  4917              LDR      r1,|L3.108|
 00000e  7008              STRB     r0,[r1,#0]
-;;;13           /* DMA1÷ÿ–¬ πƒ‹ */
-;;;14           DMA_SetCurrDataCounter(DMA0, 200);//÷ÿ–¬–¥»Î∞·‘À∏ˆ ˝£®÷ÿ–¬–¥»Î∞·‘À∏ˆ ˝¥Û–°”¶”Î–ﬁ∏ƒµƒ ˝æ›∏ˆ ˝¥Û–°“ª÷¬£©
-000010  21c8              MOVS     r1,#0xc8
-000012  480b              LDR      r0,|L1.64|
-000014  f7fffffe          BL       DMA_SetCurrDataCounter
-;;;15           UART_DMACmd(UART1, UART_DMAReq_TX, ENABLE);//÷ÿ–¬ πƒ‹UART1 TX¥•∑¢DMA1
-000018  2201              MOVS     r2,#1
-00001a  2180              MOVS     r1,#0x80
-00001c  4809              LDR      r0,|L1.68|
-00001e  f7fffffe          BL       UART_DMACmd
-;;;16           /* »Ìº˛ πƒ‹DMA0∞·‘À */
-;;;17           DMA_SoftwareTrigger(DMA0);
-000022  4807              LDR      r0,|L1.64|
-000024  f7fffffe          BL       DMA_SoftwareTrigger
-;;;18           while(UART_TxFlag == RESET);//µ»¥˝DMA0∞·‘ÀÕÍ≥…
-000028  bf00              NOP      
-                  |L1.42|
-00002a  4807              LDR      r0,|L1.72|
-00002c  7800              LDRB     r0,[r0,#0]  ; UART_TxFlag
-00002e  2800              CMP      r0,#0
-000030  d0fb              BEQ      |L1.42|
-;;;19           UART_TxFlag = RESET;//«Â±Í÷æ
-000032  2000              MOVS     r0,#0
-000034  4904              LDR      r1,|L1.72|
-000036  7008              STRB     r0,[r1,#0]
-                  |L1.56|
-000038  e7e3              B        |L1.2|
-;;;20         }
-;;;21       }
-;;;22     }
-;;;23     
-                          ENDP
-
-00003a  0000              DCW      0x0000
-                  |L1.60|
-                          DCD      UART_RxFlag
-                  |L1.64|
-                          DCD      0x40010800
-                  |L1.68|
-                          DCD      0x40020080
-                  |L1.72|
-                          DCD      UART_TxFlag
-
-                          AREA ||i.UART_Communication_DMA_DAM0Handler||, CODE, READONLY, ALIGN=2
-
-                  UART_Communication_DMA_DAM0Handler PROC
-;;;24     //DMA0÷–∂œ
-;;;25     void UART_Communication_DMA_DAM0Handler(void)
-000000  b510              PUSH     {r4,lr}
-;;;26     {
-;;;27       if(DMA_GetFlagStatus(DMA0, DMA_FLAG_TCIF))//DMA0∞·‘ÀÕÍ≥…
-000002  2102              MOVS     r1,#2
-000004  4806              LDR      r0,|L2.32|
-000006  f7fffffe          BL       DMA_GetFlagStatus
-00000a  2800              CMP      r0,#0
-00000c  d006              BEQ      |L2.28|
-;;;28       {
-;;;29         DMA_ClearFlag(DMA0, DMA_FLAG_TCIF);//DMA0±Í÷æŒª«Â¡„
-00000e  2102              MOVS     r1,#2
-000010  4803              LDR      r0,|L2.32|
-000012  f7fffffe          BL       DMA_ClearFlag
-;;;30         UART_TxFlag = SET;//DMA0∞·‘À±Í÷æŒª÷√∆£¨◊º±∏œ¬“ª¥Œ∞·‘À
-000016  2001              MOVS     r0,#1
-000018  4902              LDR      r1,|L2.36|
-00001a  7008              STRB     r0,[r1,#0]
-                  |L2.28|
-;;;31       }
-;;;32     }
-00001c  bd10              POP      {r4,pc}
+;;;13             // Â§ÑÁêÜÊé•Êî∂Âà∞ÁöÑÊï∞ÊçÆ
+;;;14             // Â∞ÜÊé•Êî∂Âà∞ÁöÑÊï∞ÊçÆÂ§çÂà∂Âà∞ÂèëÈÄÅÁºìÂÜ≤Âå∫
+;;;15             memcpy(UART_Communication_DMA_Data, UART_Communication_DMA_Buffer, UART_Communication_DMA_RxCount);
+000010  4817              LDR      r0,|L3.112|
+000012  8802              LDRH     r2,[r0,#0]  ; UART_Communication_DMA_RxCount
+000014  4917              LDR      r1,|L3.116|
+000016  4818              LDR      r0,|L3.120|
+000018  f7fffffe          BL       __aeabi_memcpy
+;;;16     
+;;;17             // ËÆæÁΩÆDMA0ÁöÑÂΩìÂâçÊï∞ÊçÆËÆ°Êï∞Âô®
+;;;18             DMA_SetCurrDataCounter(DMA0, UART_Communication_DMA_RxCount);
+00001c  4814              LDR      r0,|L3.112|
+00001e  8801              LDRH     r1,[r0,#0]  ; UART_Communication_DMA_RxCount
+000020  4816              LDR      r0,|L3.124|
+000022  f7fffffe          BL       DMA_SetCurrDataCounter
+;;;19     
+;;;20             // ËΩØ‰ª∂‰ΩøËÉΩDMA0Êê¨Ëøê
+;;;21             // Ê£ÄÊü•Êé•Êî∂Âà∞ÁöÑÊï∞ÊçÆÈïøÂ∫¶ÊòØÂê¶‰∏∫Èõ∂
+;;;22             if (UART_Communication_DMA_RxCount > 0)
+000026  4812              LDR      r0,|L3.112|
+000028  8800              LDRH     r0,[r0,#0]  ; UART_Communication_DMA_RxCount
+00002a  2800              CMP      r0,#0
+00002c  dd12              BLE      |L3.84|
+;;;23             {
+;;;24                 // ËÆæÁΩÆDMA0ÁöÑÂΩìÂâçÊï∞ÊçÆËÆ°Êï∞Âô®
+;;;25                 DMA_SetCurrDataCounter(DMA0, UART_Communication_DMA_RxCount);
+00002e  4810              LDR      r0,|L3.112|
+000030  8801              LDRH     r1,[r0,#0]  ; UART_Communication_DMA_RxCount
+000032  4812              LDR      r0,|L3.124|
+000034  f7fffffe          BL       DMA_SetCurrDataCounter
+;;;26     
+;;;27                 // ËΩØ‰ª∂‰ΩøËÉΩDMA0Êê¨Ëøê
+;;;28                 DMA_SoftwareTrigger(DMA0);
+000038  4810              LDR      r0,|L3.124|
+00003a  f7fffffe          BL       DMA_SoftwareTrigger
+;;;29                 while (DMA_GetFlagStatus(DMA0, DMA_FLAG_TCIF) == RESET); // Á≠âÂæÖDMA0Êê¨ËøêÂÆåÊàê
+00003e  bf00              NOP      
+                  |L3.64|
+000040  2102              MOVS     r1,#2
+000042  480e              LDR      r0,|L3.124|
+000044  f7fffffe          BL       DMA_GetFlagStatus
+000048  2800              CMP      r0,#0
+00004a  d0f9              BEQ      |L3.64|
+;;;30                 DMA_ClearFlag(DMA0, DMA_FLAG_TCIF); // DMA0Ê†áÂøó‰ΩçÊ∏ÖÈõ∂
+00004c  2102              MOVS     r1,#2
+00004e  480b              LDR      r0,|L3.124|
+000050  f7fffffe          BL       DMA_ClearFlag
+                  |L3.84|
+;;;31             }
+;;;32     
 ;;;33     
+;;;34             // DMA1ÈáçÊñ∞‰ΩøËÉΩ
+;;;35             DMA_SetCurrDataCounter(DMA1, 200); // ÈáçÊñ∞ÂÜôÂÖ•Êê¨Ëøê‰∏™Êï∞ÔºàÈáçÊñ∞ÂÜôÂÖ•Êê¨Ëøê‰∏™Êï∞Â§ßÂ∞èÂ∫î‰∏é‰øÆÊîπÁöÑÊï∞ÊçÆ‰∏™Êï∞Â§ßÂ∞è‰∏ÄËá¥Ôºâ
+000054  21c8              MOVS     r1,#0xc8
+000056  4809              LDR      r0,|L3.124|
+000058  3040              ADDS     r0,r0,#0x40
+00005a  f7fffffe          BL       DMA_SetCurrDataCounter
+;;;36             UART_DMACmd(UART1, UART_DMAReq_RX, ENABLE); // ÈáçÊñ∞‰ΩøËÉΩUART1 RXËß¶ÂèëDMA1
+00005e  2201              MOVS     r2,#1
+000060  2140              MOVS     r1,#0x40
+000062  4807              LDR      r0,|L3.128|
+000064  f7fffffe          BL       UART_DMACmd
+                  |L3.104|
+;;;37         }
+;;;38     }
+000068  bd10              POP      {r4,pc}
+;;;39     // UARTÊé•Êî∂‰∏≠Êñ≠Â§ÑÁêÜÂáΩÊï∞
                           ENDP
 
-00001e  0000              DCW      0x0000
-                  |L2.32|
-                          DCD      0x40010800
-                  |L2.36|
-                          DCD      UART_TxFlag
-
-                          AREA ||i.UART_Communication_DMA_DAM1Handler||, CODE, READONLY, ALIGN=2
-
-                  UART_Communication_DMA_DAM1Handler PROC
-;;;34     //DMA1÷–∂œ
-;;;35     void UART_Communication_DMA_DAM1Handler(void)
-000000  b510              PUSH     {r4,lr}
-;;;36     {
-;;;37       if(DMA_GetFlagStatus(DMA1, DMA_FLAG_TCIF))//DMA1∞·‘ÀÕÍ≥…
-000002  2102              MOVS     r1,#2
-000004  4806              LDR      r0,|L3.32|
-000006  f7fffffe          BL       DMA_GetFlagStatus
-00000a  2800              CMP      r0,#0
-00000c  d006              BEQ      |L3.28|
-;;;38       {
-;;;39         DMA_ClearFlag(DMA1, DMA_FLAG_TCIF);//DMA1±Í÷æŒª«Â¡„
-00000e  2102              MOVS     r1,#2
-000010  4803              LDR      r0,|L3.32|
-000012  f7fffffe          BL       DMA_ClearFlag
-;;;40         UART_RxFlag = SET;//DMA1∞·‘À±Í÷æŒª÷√∆£¨◊º±∏œ¬“ª¥Œ∞·‘À
-000016  2001              MOVS     r0,#1
-000018  4902              LDR      r1,|L3.36|
-00001a  7008              STRB     r0,[r1,#0]
-                  |L3.28|
-;;;41       }
-;;;42     }
-00001c  bd10              POP      {r4,pc}
-;;;43     
-                          ENDP
-
-00001e  0000              DCW      0x0000
-                  |L3.32|
-                          DCD      0x40010840
-                  |L3.36|
+00006a  0000              DCW      0x0000
+                  |L3.108|
                           DCD      UART_RxFlag
+                  |L3.112|
+                          DCD      UART_Communication_DMA_RxCount
+                  |L3.116|
+                          DCD      UART_Communication_DMA_Buffer
+                  |L3.120|
+                          DCD      UART_Communication_DMA_Data
+                  |L3.124|
+                          DCD      0x40010800
+                  |L3.128|
+                          DCD      0x40020080
 
                           AREA ||.bss||, DATA, NOINIT, ALIGN=0
 
                   UART_Communication_DMA_Data
                           %        200
+                  UART_Communication_DMA_Buffer
+                          %        200
 
-                          AREA ||.data||, DATA, ALIGN=0
+                          AREA ||.data||, DATA, ALIGN=1
 
                   UART_RxFlag
 000000  00                DCB      0x00
                   UART_TxFlag
 000001  00                DCB      0x00
+                  UART_Communication_DMA_RxCount
+000002  0000              DCW      0x0000
 
 ;*** Start embedded assembler ***
 
