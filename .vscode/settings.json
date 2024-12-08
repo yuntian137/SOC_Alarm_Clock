@@ -14,6 +14,8 @@
         "sc32f1xxx_tim.h": "c",
         "TKDriver.C": "cpp",
         "tkdriver.h": "c",
-        "sc32f1xxx_rcc.h": "c"
+        "sc32f1xxx_rcc.h": "c",
+        "uart_communication_dma.h": "c",
+        "UART_Communication_DMA.C": "cpp"
     }
 }

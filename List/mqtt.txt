@@ -36,7 +36,7 @@
 000000  b500              PUSH     {lr}
 ;;;90     {
 000002  b099              SUB      sp,sp,#0x64
-;;;91         char client_connect_buf[100] = {"AT+MQTTCLIENTID=0,\"12345|securemode=3\\,signmethod=hmacsha1|\"\r\n"};
+;;;91         char client_connect_buf[100] = {"AT+MQTTCLIENTID=0,\"12345|securemode=3\\,signmethod=hmacsha1|\"\r\n\r\n"};
 000004  2264              MOVS     r2,#0x64
 000006  4907              LDR      r1,|L2.36|
 000008  4668              MOV      r0,sp
@@ -81,7 +81,7 @@
 000000  b500              PUSH     {lr}
 ;;;106    {
 000002  b099              SUB      sp,sp,#0x64
-;;;107        char client_subscribe_buf[100] = {"AT+MQTTSUB=0,\"/k23m6LAJ0V9/SC32F10TS8/user/Test\",1\r\n"};
+;;;107        char client_subscribe_buf[100] = {"AT+MQTTSUB=0,\"/k23m6LAJ0V9/SC32F10TS8/user/Test\",1\r\n\r\n"};
 000004  2264              MOVS     r2,#0x64
 000006  4907              LDR      r1,|L3.36|
 000008  4668              MOV      r0,sp
@@ -125,7 +125,7 @@
 000000  b500              PUSH     {lr}
 ;;;98     {
 000002  b099              SUB      sp,sp,#0x64
-;;;99         char connect_server_buf[100] = {"AT+MQTTCONN=0,\"k23m6LAJ0V9.iot-as-mqtt.cn-shanghai.aliyuncs.com\",1883,1\r\n"};
+;;;99         char connect_server_buf[100] = {"AT+MQTTCONN=0,\"k23m6LAJ0V9.iot-as-mqtt.cn-shanghai.aliyuncs.com\",1883,1\r\n\r\n"};
 000004  2264              MOVS     r2,#0x64
 000006  4907              LDR      r1,|L4.36|
 000008  4668              MOV      r0,sp
@@ -171,7 +171,7 @@
 000000  b500              PUSH     {lr}
 ;;;62     {
 000002  b099              SUB      sp,sp,#0x64
-;;;63         char login_url[100] = {"AT+CIPSNTPCFG=1,8,\"iot.console.aliyun.com\"\r\n"};
+;;;63         char login_url[100] = {"AT+CIPSNTPCFG=1,8,\"iot.console.aliyun.com\"\r\n\r\n"};
 000004  2264              MOVS     r2,#0x64
 000006  4907              LDR      r1,|L5.36|
 000008  4668              MOV      r0,sp
@@ -476,7 +476,7 @@
 000000  b500              PUSH     {lr}
 ;;;82     {
 000002  b0b3              SUB      sp,sp,#0xcc
-;;;83         char user_connect_buf[200] = {"AT+MQTTUSERCFG=0,1,\"NULL\",\"SC32F10TS8&k23m6LAJ0V9\",\"C2B81F691F8AFC60347A715F0155D0D97FAFE2FC\",0,0,\"\"\r\n"};
+;;;83         char user_connect_buf[200] = {"AT+MQTTUSERCFG=0,1,\"NULL\",\"SC32F10TS8&k23m6LAJ0V9\",\"C2B81F691F8AFC60347A715F0155D0D97FAFE2FC\",0,0,\"\"\r\n\r\n"};
 000004  22c8              MOVS     r2,#0xc8
 000006  4907              LDR      r1,|L9.36|
 000008  a801              ADD      r0,sp,#4
@@ -815,7 +815,7 @@
 000020  6c697975          DCB      0x6c,0x69,0x79,0x75
 000024  6e2e636f          DCB      0x6e,0x2e,0x63,0x6f
 000028  6d220d0a          DCB      0x6d,0x22,0x0d,0x0a
-00002c  00000000          DCB      0x00,0x00,0x00,0x00
+00002c  0d0a0000          DCB      0x0d,0x0a,0x00,0x00
                           %        52
 000064  41542b43          DCB      0x41,0x54,0x2b,0x43
 000068  574a4150          DCB      0x57,0x4a,0x41,0x50
@@ -846,8 +846,9 @@
 000120  45324643          DCB      0x45,0x32,0x46,0x43
 000124  222c302c          DCB      0x22,0x2c,0x30,0x2c
 000128  302c2222          DCB      0x30,0x2c,0x22,0x22
-00012c  0d0a0000          DCB      0x0d,0x0a,0x00,0x00
-                          %        96
+00012c  0d0a0d0a          DCB      0x0d,0x0a,0x0d,0x0a
+000130  00000000          DCB      0x00,0x00,0x00,0x00
+                          %        92
 000190  41542b4d          DCB      0x41,0x54,0x2b,0x4d
 000194  51545443          DCB      0x51,0x54,0x54,0x43
 000198  4c49454e          DCB      0x4c,0x49,0x45,0x4e
@@ -863,8 +864,9 @@
 0001c0  643d686d          DCB      0x64,0x3d,0x68,0x6d
 0001c4  61637368          DCB      0x61,0x63,0x73,0x68
 0001c8  61317c22          DCB      0x61,0x31,0x7c,0x22
-0001cc  0d0a0000          DCB      0x0d,0x0a,0x00,0x00
-                          %        36
+0001cc  0d0a0d0a          DCB      0x0d,0x0a,0x0d,0x0a
+0001d0  00000000          DCB      0x00,0x00,0x00,0x00
+                          %        32
 0001f4  41542b4d          DCB      0x41,0x54,0x2b,0x4d
 0001f8  51545443          DCB      0x51,0x54,0x54,0x43
 0001fc  4f4e4e3d          DCB      0x4f,0x4e,0x4e,0x3d
@@ -883,7 +885,7 @@
 000230  636f6d22          DCB      0x63,0x6f,0x6d,0x22
 000234  2c313838          DCB      0x2c,0x31,0x38,0x38
 000238  332c310d          DCB      0x33,0x2c,0x31,0x0d
-00023c  0a000000          DCB      0x0a,0x00,0x00,0x00
+00023c  0a0d0a00          DCB      0x0a,0x0d,0x0a,0x00
                           %        24
 000258  41542b4d          DCB      0x41,0x54,0x2b,0x4d
 00025c  51545453          DCB      0x51,0x54,0x54,0x53
@@ -898,7 +900,7 @@
 000280  65722f54          DCB      0x65,0x72,0x2f,0x54
 000284  65737422          DCB      0x65,0x73,0x74,0x22
 000288  2c310d0a          DCB      0x2c,0x31,0x0d,0x0a
-00028c  00000000          DCB      0x00,0x00,0x00,0x00
+00028c  0d0a0000          DCB      0x0d,0x0a,0x00,0x00
                           %        44
 
                           AREA ||.data||, DATA, ALIGN=0

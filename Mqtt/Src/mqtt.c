@@ -60,7 +60,7 @@ void Setting_Connect_Work(char *type)
 /*********************登录网址******************************/
 void Login_URL(void)
 {
-    char login_url[100] = {"AT+CIPSNTPCFG=1,8,\"iot.console.aliyun.com\"\r\n"};
+    char login_url[100] = {"AT+CIPSNTPCFG=1,8,\"iot.console.aliyun.com\"\r\n\r\n"};
     USART_TxStr(UART2,"连接阿里云服务器...\r\n");
     USART_TxStr(UART1,login_url);
 }
@@ -80,7 +80,7 @@ void WIFI_Connect(char *name, char *password)
 /*********************用户设备连接*******************************/
 void USER_Connect(void)
 {
-    char user_connect_buf[200] = {"AT+MQTTUSERCFG=0,1,\"NULL\",\"SC32F10TS8&k23m6LAJ0V9\",\"C2B81F691F8AFC60347A715F0155D0D97FAFE2FC\",0,0,\"\"\r\n"};
+    char user_connect_buf[200] = {"AT+MQTTUSERCFG=0,1,\"NULL\",\"SC32F10TS8&k23m6LAJ0V9\",\"C2B81F691F8AFC60347A715F0155D0D97FAFE2FC\",0,0,\"\"\r\n\r\n"};
     USART_TxStr(UART2,"用户设备连接...\r\n");
     USART_TxStr(UART1,user_connect_buf);
 }
@@ -88,7 +88,7 @@ void USER_Connect(void)
 /*********************连接客户端*******************************/
 void Client_Connect(void)
 {
-    char client_connect_buf[100] = {"AT+MQTTCLIENTID=0,\"12345|securemode=3\\,signmethod=hmacsha1|\"\r\n"};
+    char client_connect_buf[100] = {"AT+MQTTCLIENTID=0,\"12345|securemode=3\\,signmethod=hmacsha1|\"\r\n\r\n"};
     USART_TxStr(UART2,"连接客户端...\r\n");
     USART_TxStr(UART1,client_connect_buf);
 }
@@ -96,7 +96,7 @@ void Client_Connect(void)
 /*********************连接阿里云服务器*************************/
 void Connect_Aliyun_Server(void)
 {
-    char connect_server_buf[100] = {"AT+MQTTCONN=0,\"k23m6LAJ0V9.iot-as-mqtt.cn-shanghai.aliyuncs.com\",1883,1\r\n"};
+    char connect_server_buf[100] = {"AT+MQTTCONN=0,\"k23m6LAJ0V9.iot-as-mqtt.cn-shanghai.aliyuncs.com\",1883,1\r\n\r\n"};
     USART_TxStr(UART2,"连接阿里云服务器...\r\n");
     USART_TxStr(UART1,connect_server_buf);
 }
@@ -104,7 +104,7 @@ void Connect_Aliyun_Server(void)
 /*********************客户端订阅*************************/
 void Client_Subscribe(void)
 {
-    char client_subscribe_buf[100] = {"AT+MQTTSUB=0,\"/k23m6LAJ0V9/SC32F10TS8/user/Test\",1\r\n"};
+    char client_subscribe_buf[100] = {"AT+MQTTSUB=0,\"/k23m6LAJ0V9/SC32F10TS8/user/Test\",1\r\n\r\n"};
     USART_TxStr(UART2,"客户端订阅消息...\r\n");
     USART_TxStr(UART1,client_subscribe_buf);
 }

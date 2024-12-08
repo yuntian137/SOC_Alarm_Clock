@@ -15037,7 +15037,7 @@ N
 N/*********************登录网址******************************/
 Nvoid Login_URL(void)
 N{
-N    char login_url[100] = {"AT+CIPSNTPCFG=1,8,\"iot.console.aliyun.com\"\r\n"};
+N    char login_url[100] = {"AT+CIPSNTPCFG=1,8,\"iot.console.aliyun.com\"\r\n\r\n"};
 N    USART_TxStr(UART2,"连接阿里云服务器...\r\n");
 X    USART_TxStr(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL))),"连接阿里云服务器...\r\n");
 N    USART_TxStr(UART1,login_url);
@@ -15061,7 +15061,7 @@ N
 N/*********************用户设备连接*******************************/
 Nvoid USER_Connect(void)
 N{
-N    char user_connect_buf[200] = {"AT+MQTTUSERCFG=0,1,\"NULL\",\"SC32F10TS8&k23m6LAJ0V9\",\"C2B81F691F8AFC60347A715F0155D0D97FAFE2FC\",0,0,\"\"\r\n"};
+N    char user_connect_buf[200] = {"AT+MQTTUSERCFG=0,1,\"NULL\",\"SC32F10TS8&k23m6LAJ0V9\",\"C2B81F691F8AFC60347A715F0155D0D97FAFE2FC\",0,0,\"\"\r\n\r\n"};
 N    USART_TxStr(UART2,"用户设备连接...\r\n");
 X    USART_TxStr(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL))),"用户设备连接...\r\n");
 N    USART_TxStr(UART1,user_connect_buf);
@@ -15071,7 +15071,7 @@ N
 N/*********************连接客户端*******************************/
 Nvoid Client_Connect(void)
 N{
-N    char client_connect_buf[100] = {"AT+MQTTCLIENTID=0,\"12345|securemode=3\\,signmethod=hmacsha1|\"\r\n"};
+N    char client_connect_buf[100] = {"AT+MQTTCLIENTID=0,\"12345|securemode=3\\,signmethod=hmacsha1|\"\r\n\r\n"};
 W "..\Mqtt\Src\mqtt.c" 92 31 invalid multibyte character sequence
 N    USART_TxStr(UART2,"连接客户端...\r\n");
 X    USART_TxStr(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL))),"连接客户端...\r\n");
@@ -15082,7 +15082,7 @@ N
 N/*********************连接阿里云服务器*************************/
 Nvoid Connect_Aliyun_Server(void)
 N{
-N    char connect_server_buf[100] = {"AT+MQTTCONN=0,\"k23m6LAJ0V9.iot-as-mqtt.cn-shanghai.aliyuncs.com\",1883,1\r\n"};
+N    char connect_server_buf[100] = {"AT+MQTTCONN=0,\"k23m6LAJ0V9.iot-as-mqtt.cn-shanghai.aliyuncs.com\",1883,1\r\n\r\n"};
 N    USART_TxStr(UART2,"连接阿里云服务器...\r\n");
 X    USART_TxStr(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL))),"连接阿里云服务器...\r\n");
 N    USART_TxStr(UART1,connect_server_buf);
@@ -15092,7 +15092,7 @@ N
 N/*********************客户端订阅*************************/
 Nvoid Client_Subscribe(void)
 N{
-N    char client_subscribe_buf[100] = {"AT+MQTTSUB=0,\"/k23m6LAJ0V9/SC32F10TS8/user/Test\",1\r\n"};
+N    char client_subscribe_buf[100] = {"AT+MQTTSUB=0,\"/k23m6LAJ0V9/SC32F10TS8/user/Test\",1\r\n\r\n"};
 W "..\Mqtt\Src\mqtt.c" 108 34 invalid multibyte character sequence
 N    USART_TxStr(UART2,"客户端订阅消息...\r\n");
 X    USART_TxStr(((UART_TypeDef *) (((0x40000000UL)+0x21000) +(0x00000020UL))),"客户端订阅消息...\r\n");
