@@ -5,189 +5,316 @@
                           AREA ||i.TIM3_IRQHandler||, CODE, READONLY, ALIGN=2
 
                   TIM3_IRQHandler PROC
-;;;51     // 定时器中断处理函数
-;;;52     void TIM3_IRQHandler(void)
+;;;98     // 定时器中断处理函数
+;;;99     void TIM3_IRQHandler(void)
 000000  b510              PUSH     {r4,lr}
-;;;53     {
-;;;54         if (TIM_GetFlagStatus(TIM3, TIM_Flag_TI) == SET)
+;;;100    {
+;;;101        if (TIM_GetFlagStatus(TIM3, TIM_Flag_TI) == SET)
 000002  2101              MOVS     r1,#1
 000004  480b              LDR      r0,|L1.52|
 000006  f7fffffe          BL       TIM_GetFlagStatus
 00000a  2801              CMP      r0,#1
-00000c  d111              BNE      |L1.50|
-;;;55         {
-;;;56             TIM_ClearFlag(TIM3, TIM_Flag_TI); // 清除定时器中断标志  
+00000c  d110              BNE      |L1.48|
+;;;102        {
+;;;103            TIM_ClearFlag(TIM3, TIM_Flag_TI); // 清除定时器中断标志  
 00000e  2101              MOVS     r1,#1
 000010  4808              LDR      r0,|L1.52|
 000012  f7fffffe          BL       TIM_ClearFlag
-;;;57             if (UART_RxFlag == RESET) // 如果DMA1没有搬运完成
-000016  4808              LDR      r0,|L1.56|
-000018  7800              LDRB     r0,[r0,#0]  ; UART_RxFlag
-00001a  2800              CMP      r0,#0
-00001c  d109              BNE      |L1.50|
-;;;58             {
-;;;59                 UART_RxFlag = SET; // 设置接收完成标志
-00001e  2001              MOVS     r0,#1
-000020  4905              LDR      r1,|L1.56|
-000022  7008              STRB     r0,[r1,#0]
-;;;60                 UART_Communication_DMA_RxCount = 200 - DMA_GetCurrDataCounter(DMA1); // 获取接收到的数据长度
-000024  4805              LDR      r0,|L1.60|
-000026  f7fffffe          BL       DMA_GetCurrDataCounter
-00002a  21c8              MOVS     r1,#0xc8
-00002c  1a08              SUBS     r0,r1,r0
-00002e  4904              LDR      r1,|L1.64|
-000030  8008              STRH     r0,[r1,#0]
-                  |L1.50|
-;;;61             }
-;;;62         }
-;;;63     }
-000032  bd10              POP      {r4,pc}
-;;;64     /*
+;;;104            TIM_Cmd(TIM3, DISABLE); // 关闭定时器
+000016  2100              MOVS     r1,#0
+000018  4806              LDR      r0,|L1.52|
+00001a  f7fffffe          BL       TIM_Cmd
+;;;105            if (UART_RxFlag == RESET) // 如果DMA1没有搬运完成
+00001e  4806              LDR      r0,|L1.56|
+000020  7800              LDRB     r0,[r0,#0]  ; UART_RxFlag
+000022  2800              CMP      r0,#0
+000024  d104              BNE      |L1.48|
+;;;106            {
+;;;107                UART_RxFlag = SET; // 设置接收完成标志
+000026  2001              MOVS     r0,#1
+000028  4903              LDR      r1,|L1.56|
+00002a  7008              STRB     r0,[r1,#0]
+;;;108                UART_DMA_Receive();//调用接收处理函数
+00002c  f7fffffe          BL       UART_DMA_Receive
+                  |L1.48|
+;;;109            }
+;;;110        }
+;;;111        
+;;;112    }
+000030  bd10              POP      {r4,pc}
+;;;113    /*
                           ENDP
 
+000032  0000              DCW      0x0000
                   |L1.52|
                           DCD      0x400201c0
                   |L1.56|
                           DCD      UART_RxFlag
-                  |L1.60|
-                          DCD      0x40010840
-                  |L1.64|
-                          DCD      UART_Communication_DMA_RxCount
 
                           AREA ||i.UART1_IRQHandler_DMA||, CODE, READONLY, ALIGN=2
 
                   UART1_IRQHandler_DMA PROC
-;;;39     // UART接收中断处理函数
-;;;40     void UART1_IRQHandler_DMA(void)
+;;;87     // UART接收中断处理函数
+;;;88     void UART1_IRQHandler_DMA(void)
 000000  b510              PUSH     {r4,lr}
-;;;41     {
-;;;42         if (UART_GetFlagStatus(UART1, UART_Flag_RX) == SET)
+;;;89     {
+;;;90       if (UART_GetFlagStatus(UART1, UART_Flag_RX) == SET)
 000002  2101              MOVS     r1,#1
-000004  4806              LDR      r0,|L2.32|
+000004  4808              LDR      r0,|L2.40|
 000006  f7fffffe          BL       UART_GetFlagStatus
 00000a  2801              CMP      r0,#1
-00000c  d107              BNE      |L2.30|
-;;;43         {
-;;;44             UART_ClearFlag(UART1, UART_Flag_RX); // 清除UART接收标志
+00000c  d10b              BNE      |L2.38|
+;;;91       {
+;;;92         UART_ClearFlag(UART1, UART_Flag_RX); // 清除UART接收标志
 00000e  2101              MOVS     r1,#1
-000010  4803              LDR      r0,|L2.32|
+000010  4805              LDR      r0,|L2.40|
 000012  f7fffffe          BL       UART_ClearFlag
-;;;45             // 重置定时器以检测空闲时间
-;;;46             TIM_SetCounter(TIM3, 0);
+;;;93         // 重置定时器以检测空闲时间
+;;;94         TIM_SetCounter(TIM3, 0);
 000016  2100              MOVS     r1,#0
-000018  4802              LDR      r0,|L2.36|
+000018  4804              LDR      r0,|L2.44|
 00001a  f7fffffe          BL       TIM_SetCounter
-                  |L2.30|
-;;;47         }
-;;;48     }
-00001e  bd10              POP      {r4,pc}
-;;;49     
+;;;95         TIM_Cmd(TIM3, ENABLE); // 开启定时器
+00001e  2101              MOVS     r1,#1
+000020  4802              LDR      r0,|L2.44|
+000022  f7fffffe          BL       TIM_Cmd
+                  |L2.38|
+;;;96       }
+;;;97     }
+000026  bd10              POP      {r4,pc}
+;;;98     // 定时器中断处理函数
                           ENDP
 
-                  |L2.32|
+                  |L2.40|
                           DCD      0x40020080
-                  |L2.36|
+                  |L2.44|
                           DCD      0x400201c0
 
                           AREA ||i.UART_Communication_DMA||, CODE, READONLY, ALIGN=2
 
                   UART_Communication_DMA PROC
-;;;7      
-;;;8      void UART_Communication_DMA(void)
+;;;11     uint8_t b = 0;
+;;;12     void UART_Communication_DMA(void)
 000000  b510              PUSH     {r4,lr}
-;;;9      {
-;;;10         if (UART_RxFlag == SET) // 空闲中断触发
-000002  481a              LDR      r0,|L3.108|
+;;;13     {
+;;;14       if (UART_RxFlag == SET) // 空闲中断触发
+000002  4818              LDR      r0,|L3.100|
 000004  7800              LDRB     r0,[r0,#0]  ; UART_RxFlag
 000006  2801              CMP      r0,#1
-000008  d12e              BNE      |L3.104|
-;;;11         {
-;;;12             UART_RxFlag = RESET; // 清标志
+000008  d12b              BNE      |L3.98|
+;;;15       {
+;;;16         UART_RxFlag = RESET; // 清标志
 00000a  2000              MOVS     r0,#0
-00000c  4917              LDR      r1,|L3.108|
+00000c  4915              LDR      r1,|L3.100|
 00000e  7008              STRB     r0,[r1,#0]
-;;;13             // 处理接收到的数据
-;;;14             // 将接收到的数据复制到发送缓冲区
-;;;15             memcpy(UART_Communication_DMA_Data, UART_Communication_DMA_Buffer, UART_Communication_DMA_RxCount);
-000010  4817              LDR      r0,|L3.112|
+;;;17         // 处理接收到的数据
+;;;18         // 将接收到的数据复制到发送缓冲区
+;;;19         memcpy(UART_Communication_DMA_Data, UART_Communication_DMA_Buffer, UART_Communication_DMA_RxCount);
+000010  4815              LDR      r0,|L3.104|
 000012  8802              LDRH     r2,[r0,#0]  ; UART_Communication_DMA_RxCount
-000014  4917              LDR      r1,|L3.116|
-000016  4818              LDR      r0,|L3.120|
+000014  4915              LDR      r1,|L3.108|
+000016  4816              LDR      r0,|L3.112|
 000018  f7fffffe          BL       __aeabi_memcpy
-;;;16     
-;;;17             // 设置DMA0的当前数据计数器
-;;;18             DMA_SetCurrDataCounter(DMA0, UART_Communication_DMA_RxCount);
-00001c  4814              LDR      r0,|L3.112|
-00001e  8801              LDRH     r1,[r0,#0]  ; UART_Communication_DMA_RxCount
-000020  4816              LDR      r0,|L3.124|
-000022  f7fffffe          BL       DMA_SetCurrDataCounter
-;;;19     
-;;;20             // 软件使能DMA0搬运
-;;;21             // 检查接收到的数据长度是否为零
-;;;22             if (UART_Communication_DMA_RxCount > 0)
-000026  4812              LDR      r0,|L3.112|
-000028  8800              LDRH     r0,[r0,#0]  ; UART_Communication_DMA_RxCount
-00002a  2800              CMP      r0,#0
-00002c  dd12              BLE      |L3.84|
-;;;23             {
-;;;24                 // 设置DMA0的当前数据计数器
-;;;25                 DMA_SetCurrDataCounter(DMA0, UART_Communication_DMA_RxCount);
-00002e  4810              LDR      r0,|L3.112|
-000030  8801              LDRH     r1,[r0,#0]  ; UART_Communication_DMA_RxCount
-000032  4812              LDR      r0,|L3.124|
-000034  f7fffffe          BL       DMA_SetCurrDataCounter
-;;;26     
-;;;27                 // 软件使能DMA0搬运
-;;;28                 DMA_SoftwareTrigger(DMA0);
-000038  4810              LDR      r0,|L3.124|
-00003a  f7fffffe          BL       DMA_SoftwareTrigger
-;;;29                 while (DMA_GetFlagStatus(DMA0, DMA_FLAG_TCIF) == RESET); // 等待DMA0搬运完成
-00003e  bf00              NOP      
-                  |L3.64|
-000040  2102              MOVS     r1,#2
-000042  480e              LDR      r0,|L3.124|
-000044  f7fffffe          BL       DMA_GetFlagStatus
-000048  2800              CMP      r0,#0
-00004a  d0f9              BEQ      |L3.64|
-;;;30                 DMA_ClearFlag(DMA0, DMA_FLAG_TCIF); // DMA0标志位清零
-00004c  2102              MOVS     r1,#2
-00004e  480b              LDR      r0,|L3.124|
-000050  f7fffffe          BL       DMA_ClearFlag
-                  |L3.84|
-;;;31             }
+;;;20     
+;;;21         // 软件使能DMA0搬运
+;;;22         // 检查接收到的数据长度是否为零
+;;;23         if (UART_Communication_DMA_RxCount > 0)
+00001c  4812              LDR      r0,|L3.104|
+00001e  8800              LDRH     r0,[r0,#0]  ; UART_Communication_DMA_RxCount
+000020  2800              CMP      r0,#0
+000022  dd04              BLE      |L3.46|
+;;;24         {
+;;;25           UART_DMA_Send(UART_Communication_DMA_Data, UART_Communication_DMA_RxCount);
+000024  4810              LDR      r0,|L3.104|
+000026  8801              LDRH     r1,[r0,#0]  ; UART_Communication_DMA_RxCount
+000028  4811              LDR      r0,|L3.112|
+00002a  f7fffffe          BL       UART_DMA_Send
+                  |L3.46|
+;;;26         }
+;;;27         // 清空接收缓冲区
+;;;28         memset(UART_Communication_DMA_Buffer, 0, sizeof(UART_Communication_DMA_Buffer));
+00002e  21c8              MOVS     r1,#0xc8
+000030  480e              LDR      r0,|L3.108|
+000032  f7fffffe          BL       __aeabi_memclr
+;;;29     
+;;;30         // DMA1重新使能
+;;;31         DMA_SetCurrDataCounter(DMA1, 200); // 重新写入搬运个数 !!!!!!!!无效，必须重启
+000036  21c8              MOVS     r1,#0xc8
+000038  480e              LDR      r0,|L3.116|
+00003a  f7fffffe          BL       DMA_SetCurrDataCounter
 ;;;32     
-;;;33     
-;;;34             // DMA1重新使能
-;;;35             DMA_SetCurrDataCounter(DMA1, 200); // 重新写入搬运个数（重新写入搬运个数大小应与修改的数据个数大小一致）
-000054  21c8              MOVS     r1,#0xc8
-000056  4809              LDR      r0,|L3.124|
-000058  3040              ADDS     r0,r0,#0x40
-00005a  f7fffffe          BL       DMA_SetCurrDataCounter
-;;;36             UART_DMACmd(UART1, UART_DMAReq_RX, ENABLE); // 重新使能UART1 RX触发DMA1
-00005e  2201              MOVS     r2,#1
-000060  2140              MOVS     r1,#0x40
-000062  4807              LDR      r0,|L3.128|
-000064  f7fffffe          BL       UART_DMACmd
-                  |L3.104|
-;;;37         }
+;;;33         DMA_Cmd(DMA1, DISABLE);
+00003e  2100              MOVS     r1,#0
+000040  480c              LDR      r0,|L3.116|
+000042  f7fffffe          BL       DMA_Cmd
+;;;34         DMA_Cmd(DMA1, ENABLE);
+000046  2101              MOVS     r1,#1
+000048  480a              LDR      r0,|L3.116|
+00004a  f7fffffe          BL       DMA_Cmd
+;;;35         a = DMA_GetCurrDataCounter(DMA1);           // 获取接收到的数据长度;
+00004e  4809              LDR      r0,|L3.116|
+000050  f7fffffe          BL       DMA_GetCurrDataCounter
+000054  4908              LDR      r1,|L3.120|
+000056  7008              STRB     r0,[r1,#0]
+;;;36         UART_DMACmd(UART1, UART_DMAReq_RX, ENABLE); // 重新使能UART1 RX触发DMA1
+000058  2201              MOVS     r2,#1
+00005a  2140              MOVS     r1,#0x40
+00005c  4807              LDR      r0,|L3.124|
+00005e  f7fffffe          BL       UART_DMACmd
+                  |L3.98|
+;;;37       }
 ;;;38     }
-000068  bd10              POP      {r4,pc}
-;;;39     // UART接收中断处理函数
+000062  bd10              POP      {r4,pc}
+;;;39     
                           ENDP
 
-00006a  0000              DCW      0x0000
-                  |L3.108|
+                  |L3.100|
                           DCD      UART_RxFlag
-                  |L3.112|
+                  |L3.104|
                           DCD      UART_Communication_DMA_RxCount
-                  |L3.116|
+                  |L3.108|
                           DCD      UART_Communication_DMA_Buffer
-                  |L3.120|
+                  |L3.112|
                           DCD      UART_Communication_DMA_Data
+                  |L3.116|
+                          DCD      0x40010840
+                  |L3.120|
+                          DCD      a
                   |L3.124|
-                          DCD      0x40010800
-                  |L3.128|
                           DCD      0x40020080
+
+                          AREA ||i.UART_DMA_Receive||, CODE, READONLY, ALIGN=2
+
+                  UART_DMA_Receive PROC
+;;;55     
+;;;56     void UART_DMA_Receive(void)
+000000  b510              PUSH     {r4,lr}
+;;;57     {
+;;;58         if (UART_RxFlag == SET) // 空闲中断触发
+000002  4812              LDR      r0,|L4.76|
+000004  7800              LDRB     r0,[r0,#0]  ; UART_RxFlag
+000006  2801              CMP      r0,#1
+000008  d11e              BNE      |L4.72|
+;;;59       {
+;;;60         UART_RxFlag = RESET; // 清标志
+00000a  2000              MOVS     r0,#0
+00000c  490f              LDR      r1,|L4.76|
+00000e  7008              STRB     r0,[r1,#0]
+;;;61         // 获取接收到的数据长度
+;;;62         UART_Communication_DMA_RxCount = 200 - DMA_GetCurrDataCounter(DMA1);
+000010  480f              LDR      r0,|L4.80|
+000012  f7fffffe          BL       DMA_GetCurrDataCounter
+000016  21c8              MOVS     r1,#0xc8
+000018  1a08              SUBS     r0,r1,r0
+00001a  490e              LDR      r1,|L4.84|
+00001c  8008              STRH     r0,[r1,#0]
+;;;63     
+;;;64         // 处理接收到的数据
+;;;65         if (UART_Communication_DMA_RxCount > 0)
+;;;66         {
+;;;67             // 这里可以添加处理接收数据的代码
+;;;68             // 例如：将接收到的数据复制到另一个缓冲区，或者进行其他处理
+;;;69                 // 将接收到的数据复制到发送缓冲区
+;;;70             // memcpy(UART_Communication_DMA_Data, UART_Communication_DMA_Buffer, UART_Communication_DMA_RxCount);
+;;;71             // UART_DMA_Send(UART_Communication_DMA_Data, UART_Communication_DMA_RxCount);
+;;;72         }
+;;;73     
+;;;74         // 清空接收缓冲区
+;;;75         memset(UART_Communication_DMA_Buffer, 0, sizeof(UART_Communication_DMA_Buffer));
+00001e  21c8              MOVS     r1,#0xc8
+000020  480d              LDR      r0,|L4.88|
+000022  f7fffffe          BL       __aeabi_memclr
+;;;76     
+;;;77         // DMA1重新使能
+;;;78         DMA_SetCurrDataCounter(DMA1, 200); // 重新写入搬运个数
+000026  21c8              MOVS     r1,#0xc8
+000028  4809              LDR      r0,|L4.80|
+00002a  f7fffffe          BL       DMA_SetCurrDataCounter
+;;;79         /*重启DMA1，不然搬运个数写入不生效*/
+;;;80         DMA_Cmd(DMA1, DISABLE);
+00002e  2100              MOVS     r1,#0
+000030  4807              LDR      r0,|L4.80|
+000032  f7fffffe          BL       DMA_Cmd
+;;;81         DMA_Cmd(DMA1, ENABLE);
+000036  2101              MOVS     r1,#1
+000038  4805              LDR      r0,|L4.80|
+00003a  f7fffffe          BL       DMA_Cmd
+;;;82     
+;;;83         // 重新使能UART1 RX触发DMA1
+;;;84         UART_DMACmd(UART1, UART_DMAReq_RX, ENABLE);
+00003e  2201              MOVS     r2,#1
+000040  2140              MOVS     r1,#0x40
+000042  4806              LDR      r0,|L4.92|
+000044  f7fffffe          BL       UART_DMACmd
+                  |L4.72|
+;;;85       }
+;;;86     }
+000048  bd10              POP      {r4,pc}
+;;;87     // UART接收中断处理函数
+                          ENDP
+
+00004a  0000              DCW      0x0000
+                  |L4.76|
+                          DCD      UART_RxFlag
+                  |L4.80|
+                          DCD      0x40010840
+                  |L4.84|
+                          DCD      UART_Communication_DMA_RxCount
+                  |L4.88|
+                          DCD      UART_Communication_DMA_Buffer
+                  |L4.92|
+                          DCD      0x40020080
+
+                          AREA ||i.UART_DMA_Send||, CODE, READONLY, ALIGN=2
+
+                  UART_DMA_Send PROC
+;;;39     
+;;;40     void UART_DMA_Send(uint8_t* data, uint16_t length)
+000000  b570              PUSH     {r4-r6,lr}
+;;;41     {
+000002  4604              MOV      r4,r0
+000004  460d              MOV      r5,r1
+;;;42         memcpy(UART_Communication_DMA_Data, data, length);
+000006  462a              MOV      r2,r5
+000008  4621              MOV      r1,r4
+00000a  480b              LDR      r0,|L5.56|
+00000c  f7fffffe          BL       __aeabi_memcpy
+;;;43         // 设置DMA0的当前数据计数器
+;;;44         DMA_SetCurrDataCounter(DMA0, length);
+000010  4629              MOV      r1,r5
+000012  480a              LDR      r0,|L5.60|
+000014  f7fffffe          BL       DMA_SetCurrDataCounter
+;;;45     
+;;;46         // 软件使能DMA0搬运
+;;;47         DMA_SoftwareTrigger(DMA0);
+000018  4808              LDR      r0,|L5.60|
+00001a  f7fffffe          BL       DMA_SoftwareTrigger
+;;;48     
+;;;49         // 等待DMA0搬运完成
+;;;50         while (DMA_GetFlagStatus(DMA0, DMA_FLAG_TCIF) == RESET);
+00001e  bf00              NOP      
+                  |L5.32|
+000020  2102              MOVS     r1,#2
+000022  4806              LDR      r0,|L5.60|
+000024  f7fffffe          BL       DMA_GetFlagStatus
+000028  2800              CMP      r0,#0
+00002a  d0f9              BEQ      |L5.32|
+;;;51     
+;;;52         // DMA0标志位清零
+;;;53         DMA_ClearFlag(DMA0, DMA_FLAG_TCIF);
+00002c  2102              MOVS     r1,#2
+00002e  4803              LDR      r0,|L5.60|
+000030  f7fffffe          BL       DMA_ClearFlag
+;;;54     }
+000034  bd70              POP      {r4-r6,pc}
+;;;55     
+                          ENDP
+
+000036  0000              DCW      0x0000
+                  |L5.56|
+                          DCD      UART_Communication_DMA_Data
+                  |L5.60|
+                          DCD      0x40010800
 
                           AREA ||.bss||, DATA, NOINIT, ALIGN=0
 
@@ -204,15 +331,19 @@
 000001  00                DCB      0x00
                   UART_Communication_DMA_RxCount
 000002  0000              DCW      0x0000
+                  a
+000004  00                DCB      0x00
+                  b
+000005  00                DCB      0x00
 
 ;*** Start embedded assembler ***
 
 #line 1 "..\\Apps\\UART_Communication_DMA.C"
 	AREA ||.rev16_text||, CODE
 	THUMB
-	EXPORT |__asm___24_UART_Communication_DMA_C_684db807____REV16|
+	EXPORT |__asm___24_UART_Communication_DMA_C_a____REV16|
 #line 463 "..\\CMSIS\\cmsis_armcc.h"
-|__asm___24_UART_Communication_DMA_C_684db807____REV16| PROC
+|__asm___24_UART_Communication_DMA_C_a____REV16| PROC
 #line 464
 
  rev16 r0, r0
@@ -220,9 +351,9 @@
 	ENDP
 	AREA ||.revsh_text||, CODE
 	THUMB
-	EXPORT |__asm___24_UART_Communication_DMA_C_684db807____REVSH|
+	EXPORT |__asm___24_UART_Communication_DMA_C_a____REVSH|
 #line 478
-|__asm___24_UART_Communication_DMA_C_684db807____REVSH| PROC
+|__asm___24_UART_Communication_DMA_C_a____REVSH| PROC
 #line 479
 
  revsh r0, r0

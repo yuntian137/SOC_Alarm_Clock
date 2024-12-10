@@ -21,6 +21,8 @@
         "stdio.h": "c",
         "string.h": "c",
         "UART_Communication_DMA.C": "cpp",
-        "sc32f1xxx_tim.h": "c"
+        "sc32f1xxx_tim.h": "c",
+        "UART_Communication_DMA.H": "cpp",
+        "stdlib.h": "c"
     }
 }

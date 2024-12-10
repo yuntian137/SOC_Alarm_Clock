@@ -35,3 +35,5 @@
 ..\output\mqtt.o: ..\FWLib\SC32F1XXX_Lib\inc\sc32f1xxx_pwr.h
 ..\output\mqtt.o: D:\keil\ARM\ARMCC\Bin\..\include\string.h
 ..\output\mqtt.o: ..\User\HeadFiles\Delay.h
+..\output\mqtt.o: ..\Apps\UART_Communication_DMA.h
+..\output\mqtt.o: D:\keil\ARM\ARMCC\Bin\..\include\stdlib.h

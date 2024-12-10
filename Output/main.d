@@ -47,3 +47,5 @@
 ..\output\main.o: ..\Buzz\Inc\Buzzer.h
 ..\output\main.o: ..\User\HeadFiles\Delay.h
 ..\output\main.o: ..\Drivers\TKDriver\C\sc32f10xx_TK_ParameterAnalysis.h
+..\output\main.o: ..\Mqtt\Inc\mqtt.h
+..\output\main.o: D:\keil\ARM\ARMCC\Bin\..\include\string.h

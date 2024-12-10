@@ -33,3 +33,4 @@
 ..\output\uart_communication_dma.o: ..\FWLib\SC32F1XXX_Lib\inc\sc32f1xxx_tim.h
 ..\output\uart_communication_dma.o: ..\FWLib\SC32F1XXX_Lib\inc\sc32f1xxx_dma.h
 ..\output\uart_communication_dma.o: ..\FWLib\SC32F1XXX_Lib\inc\sc32f1xxx_pwr.h
+..\output\uart_communication_dma.o: D:\keil\ARM\ARMCC\Bin\..\include\string.h

@@ -436,7 +436,7 @@ void SC_TIM3_Init(void)
 	TIM_TimeBaseInitStruct.TIM_WorkMode = TIM_WorkMode_Timer;
 	TIM_TimeBaseInitStruct.TIM_Prescaler = TIM_PRESCALER_32;
 	TIM_TimeBaseInitStruct.TIM_CounterMode = TIM_CounterMode_Up;
-	TIM_TimeBaseInitStruct.TIM_Preload = 200;
+	TIM_TimeBaseInitStruct.TIM_Preload = 2000;
 	TIM_TimeBaseInitStruct.TIM_EXENX = TIM_EXENX_Disable;
 	TIM_TIMBaseInit(TIM3, &TIM_TimeBaseInitStruct);
 	/*Init Struct*/TIM_IC_InitTypeDef TIM_IC_InitStruct;
@@ -921,7 +921,7 @@ void SC_DMA1_Init(void)
 	DMA_InitStruct.DMA_TargetMode = DMA_TargetMode_INC_CIRC;
 	DMA_InitStruct.DMA_SourceMode = DMA_SourceMode_FIXED;
 	DMA_InitStruct.DMA_SrcAddress = (uint32_t)& UART1->UART_DATA;
-	DMA_InitStruct.DMA_DstAddress = (uint32_t)UART_Communication_DMA_Data;
+	DMA_InitStruct.DMA_DstAddress = (uint32_t)UART_Communication_DMA_Buffer;
 	DMA_InitStruct.DMA_DataSize = DMA_DataSize_Byte;
 	DMA_InitStruct.DMA_Burst = DMA_Burst_Disable;
 	DMA_InitStruct.DMA_Request = DMA_Request_UART1_RX;

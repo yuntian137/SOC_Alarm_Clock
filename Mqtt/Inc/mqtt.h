@@ -4,13 +4,17 @@
 #include <string.h>
 #include <stdio.h>
 #include "Delay.h"
+
 #define MAX_BUFFER_SIZE 100 // 定义最大接收和发送的数据大小
+#define WEATHER_FRAME_END 0x23 // 定义天气字符串的尾帧
 
 static volatile uint8_t UART_RxBuffer[MAX_BUFFER_SIZE]; // 接收数据缓冲区
 static volatile uint8_t UART_TxBuffer[MAX_BUFFER_SIZE]; // 发送数据缓冲区
 static volatile uint8_t RxIndex = 0; // 接收数据索引
 static volatile FlagStatus UART_RxComplete = RESET; // 接收完成标志位
 static volatile FlagStatus Flag_usart2_receive_OK = RESET; // 接收OK标志位
+static volatile FlagStatus Flag_weather_received = RESET; // 天气数据接收标志位
+static volatile FlagStatus Wifi_Init_OK = RESET;//初始化完成标志位
 
 #define User_ESP8266_SSID     "scy1"    		//wifi名字
 #define User_ESP8266_PWD      "123456789"      	//wifi密码
@@ -26,6 +30,7 @@ static volatile FlagStatus Flag_usart2_receive_OK = RESET; // 接收OK标志位
 //自定义Topic
 #define User_ESP8266_MQTTServer_Topic  						"/k23m6LAJ0V9/SC32F10TS8/user/Test"  	
 
+FlagStatus Get_Init_Flag(void);
 void USART_TxStr(UART_TypeDef* uart, const char *str);
 void CLR_Buf2(void);
 void WIFI_Init(void);
@@ -37,6 +42,12 @@ void USER_Connect(void);
 void Client_Connect(void);
 void Connect_Aliyun_Server(void);
 void Client_Subscribe(void);
+int Get_Ntp_Time(void);
+int Get_Time(void);
+uint8_t Get_Weather(void);
+void ExtractDateTime(uint8_t* buffer, char* dateTime, size_t maxLen);
+void ParseDateTime(const char* dateTime, int* year, int* month, int* day, int* hour, int* minute, int* second);
+
 void wait_OK(void);
 
 #endif
